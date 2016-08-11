@@ -1,0 +1,33 @@
+﻿<table id="jqGrid"></table>
+<div id="jqGridPager"></div>
+
+
+<script>
+    jQuery("#jqGrid").jqGrid({
+
+                url: "",
+                datatype: "json",
+                mtype: 'GET',
+                colNames: ['Sale Id', 'Quantity', 'Product', 'Customer', 'Date', 'Amount'],
+                colModel: [
+                             { name: 'Id', index: 'Id', width: 50, align: 'left' },
+                             { name: 'Quantity', index: 'Quantity', width: 100, align: 'left' },
+                             { name: 'Product', index: 'Product', width: 100, align: 'left' },
+                             { name: 'Customer', index: 'Customer', width: 100, align: 'left' },
+                             { name: 'Date', index: 'Date', width: 100, align: 'left' },
+                             { name: 'Amount', index: 'Amount', width: 100, align: 'right' }],
+                viewrecords: true,
+                autowidth: true,
+                multiselect: false,
+                height: '100%',
+                width: '100%',
+                rowNum: 10,
+                pager: "#jqGridPager",
+                caption: 'Bugs',
+                emptyrecords: 'No bugs to display',
+                autowidth: true,
+                multiselect: false,
+                rowList: [10, 20, 30, 40, 50],
+                altRows: true
+            });
+</script>

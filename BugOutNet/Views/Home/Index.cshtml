@@ -1,6 +1,103 @@
 ﻿@{
-    ViewBag.Title = "BugOutNet Home";
+    Layout = null;
 }
-<div class="container">
-    Welcome to BugOutNet an ASP.Net MVC bug tracking solution.
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="Description" content="Justin LeCheminant Senior Software Engineer. Showcasing projects, blog, resume, contact info" />
+    <META NAME="ROBOTS" CONTENT="INDEX, NOFOLLOW">
+    <link href="@Url.Content("~/Content/bootstrap.css")" type="text/css" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/bootstrap-theme.min.css")" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/jquery.jqGrid/ui.jqgrid.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/themes/base/all.css")">
+    <script type="text/javascript" src="@Url.Content("~/scripts/jquery-3.1.0.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/scripts/jquery.jqGrid.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/scripts/bootstrap.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/scripts/modernizr-2.8.3.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/scripts/i18n/grid.locale-en.js")"></script>
+    <link rel="icon" type="image/png" href="@Url.Content("~/favicon.ico")" />
+
+    <title>BugOutNet Login</title>
+
+    <style type="text/css">
+        .center-block {
+            font-family: Arial, Georgia, serif;
+            width: 225px;
+            height: 190px;
+            padding: 10px;
+            background-color: #eceadc;
+            color: #ec8007;
+            border: 1px solid grey;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+        }
+    </style> 
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <span class="navbar-brand">BugOutNet</span>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="center-block">
+                @using( Html.BeginForm( "PerformLogin", "Login", FormMethod.Post ) )
+                { 
+                    <fieldset>
+                        <legend>Please Login</legend>
+                        <input type="text" placeholder="username" id="textUsername" name="textUsername" required="required" maxlength="25" />
+                        <input type="password" placeholder="password" id="textPassword" name="textPassword" required="required" maxlength="50" /><br/><br/>
+                        <label>
+                            Remember Me:&nbsp;<input type="checkbox" id="cbRemember" name="cbRemember" checked="checked" />
+                        </label>
+                        <input type="submit" value="Login"/>
+                    </fieldset>
+                }
+            </div>
+        </div>
+    </div> 
+</body>
+</html>
+
+<script>
+    $(document).ready(function () {
+        $("#login").click(function () {
+            var email = $.trim($("#email").val());
+            var password = $.trim($("#password").val());
+            // Checking for blank fields.
+            if (email == '' || password == '') {
+                $('input[type="text"],input[type="password"]').css("border", "2px solid red");
+                $('input[type="text"],input[type="password"]').css("box-shadow", "0 0 3px red");
+                alert("Please fill all fields...!!!!!!");
+            } else {
+                $.post("login.php", { email1: email, password1: password },
+                function (data) {
+                    if (data == 'Invalid Email.......') {
+                        $('input[type="text"]').css({ "border": "2px solid red", "box-shadow": "0 0 3px red" });
+                        $('input[type="password"]').css({ "border": "2px solid #00F5FF", "box-shadow": "0 0 5px #00F5FF" });
+                        alert(data);
+                    } else if (data == 'Email or Password is wrong...!!!!') {
+                        $('input[type="text"],input[type="password"]').css({ "border": "2px solid red", "box-shadow": "0 0 3px red" });
+                        alert(data);
+                    } else if (data == 'Successfully Logged in...') {
+                        $("form")[0].reset();
+                        $('input[type="text"],input[type="password"]').css({ "border": "2px solid #00F5FF", "box-shadow": "0 0 5px #00F5FF" });
+                        alert(data);
+                    } else {
+                        alert(data);
+                    }
+                });
+            }
+        });
+    });
+</script>

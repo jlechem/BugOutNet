@@ -1,39 +1,45 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <title>@ViewBag.Title - BugOutNet</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
-
+    <meta name="Description" content="Justin LeCheminant Senior Software Engineer. Showcasing projects, blog, resume, contact info" />
+    <META NAME="ROBOTS" CONTENT="INDEX, NOFOLLOW">
+    <link href="@Url.Content("~/Content/bootstrap.css")" type="text/css" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/bootstrap-theme.min.css")" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/jquery.jqGrid/ui.jqgrid.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/themes/base/all.css")">
+    <script type="text/javascript" src="@Url.Content("~/scripts/jquery-3.1.0.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/scripts/jquery.jqGrid.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/scripts/bootstrap.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/scripts/modernizr-2.8.3.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/scripts/i18n/grid.locale-en.js")"></script>
+    <link rel="icon" type="image/png" href="@Url.Content("~/favicon.ico")" />
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-static-top">
         <div class="container">
             <div class="navbar-header">
-                <a href="/Home/Index" class="navbar-brand" style="font-weight:bolder">Justin LeCheminant</a>
+                <a href="/Home/Index" class="navbar-brand" style="font-weight:bolder">BugOutNet</a>
             </div>
             <ul class="nav navbar-nav">
-                <li><a href="/Home/Index">Home</a></li>
-                <li><a href="/Blog/Index">Blog</a></li>
-                <li><a href="/Resume/Index">Resume</a></li>
-                <li><a href="/Projects/Index">Projects</a></li>
-                <li><a href="/Books/Index">Books</a></li>
-                <li><a href="/Contact/Index">Contact</a></li>
+                <li><a href="@Url.Action("Index","Home")">Bugs</a></li>
+                <li><a href="@Url.Action("Index","Search")">Search</a></li>
+                <li><a href="@Url.Action("Index","Reports")">Reports</a></li>
+                <li><a href="@Url.Action("Index","Admin")">Admin</a></li>
             </ul>
         </div>
     </div>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
     </div>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+    <div id="footer">
+        <div class="container text-center" style="padding: 20px;">
+            <p class="text-muted">
+                &copy; @DateTime.Now.Year - Justin LeCheminant(BugOutNet)
+            </p>
+        </div>
+    </div>
 </body>
 </html>
