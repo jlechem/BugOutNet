@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="62971aeeac5140faa38a8c5187a37f21" Name="Diagram1">
+        <EntityTypeShape EntityType="BugOutNetModel.Role" Width="1.5" PointX="1" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="BugOutNetModel.User" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="BugOutNetModel.Users_Roles" Width="1.5" PointX="4.125" PointY="1.25" IsExpanded="true" />
+        <AssociationConnector Association="BugOutNetModel.FK_Users_Roles_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="BugOutNetModel.FK_Users_Roles_Users_Roles11" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -42,6 +42,9 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,17 +53,64 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\HashHelper.cs" />
+    <Compile Include="Managers\SessionManager.cs" />
+    <Compile Include="Models\DB\BugOutNetModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BugOutNetModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DB\BugOutNetModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BugOutNetModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DB\BugOutNetModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BugOutNetModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DB\Role.cs">
+      <DependentUpon>BugOutNetModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DB\User.cs">
+      <DependentUpon>BugOutNetModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DB\Users_Roles.cs">
+      <DependentUpon>BugOutNetModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GridModels\BugGridModel.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <EntityDeploy Include="Models\DB\BugOutNetModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>BugOutNetModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Models\DB\BugOutNetModel.edmx.diagram">
+      <DependentUpon>BugOutNetModel.edmx</DependentUpon>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\DB\" />
     <Folder Include="Models\ViewModels\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Models\DB\BugOutNetModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>BugOutNetModel.edmx</DependentUpon>
+      <LastGenOutput>BugOutNetModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\DB\BugOutNetModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>BugOutNetModel.edmx</DependentUpon>
+      <LastGenOutput>BugOutNetModel.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
