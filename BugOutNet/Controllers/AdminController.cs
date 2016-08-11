@@ -1,6 +1,10 @@
-﻿using System;
+﻿using BugOutNet.CustomActionFilters;
+using BugOutNetLibrary.Helpers;
+using BugOutNetLibrary.Models.DB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
 
@@ -9,81 +13,76 @@ namespace BugOutNet.Controllers
     public class AdminController : Controller
     {
         // GET: Admin
+        [AdminActionFilter]
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: Admin/Details/5
-        public ActionResult Details(int id)
+        /// <summary>
+        /// Creates the user.
+        /// </summary>
+        /// <param name="userName">Name of the user.</param>
+        /// <param name="password">The password.</param>
+        /// <returns></returns>
+        public ActionResult CreateUser( string textUsername, string textPassword, bool cbRemember = false )
         {
             return View();
         }
 
-        // GET: Admin/Create
-        public ActionResult Create()
+        private static string CreateSalt( int size )
         {
-            return View();
-        }
-
-        // POST: Admin/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
+            //Generate a cryptographic random number.
+            using( RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider() )
             {
-                // TODO: Add insert logic here
+                byte[] buff = new byte[size];
+                rng.GetBytes( buff );
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
+                // Return a Base64 string representation of the random number.
+                return Convert.ToBase64String( buff );
             }
         }
 
-        // GET: Admin/Edit/5
-        public ActionResult Edit(int id)
+        /// <summary>
+        /// Creates the admin account.
+        /// </summary>
+        public void CreateAdminAccount()
         {
-            return View();
-        }
-
-        // POST: Admin/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
+            using( var db = new Entities() )
             {
-                // TODO: Add update logic here
+                User newUser = new User();
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+                newUser.UserName = "admin";
+                newUser.Salt = CreateSalt( 10 );
+                newUser.Password = HashHelper.HashPassword( "password" + newUser.Salt );
+                newUser.EmailAddress = "admin@admin.com";
+                newUser.IsVerified = true;
+                newUser.IsBlocked = false;
+                newUser.AccessFailedCount = 0;
+                newUser.LastLogin = DateTime.Now;
+                newUser.AutoLogin = false;
+                newUser.IsAdmin = true;
 
-        // GET: Admin/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+                db.Users.Add( newUser );
 
-        // POST: Admin/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
+                newUser = new User();
+                newUser.UserName = "jlechem";
+                newUser.Salt = CreateSalt( 10 );
+                newUser.Password = HashHelper.HashPassword( "#Icarus69" + newUser.Salt );
+                newUser.EmailAddress = "jlechem@gmail.com";
+                newUser.IsVerified = true;
+                newUser.IsBlocked = false;
+                newUser.AccessFailedCount = 0;
+                newUser.LastLogin = DateTime.Now;
+                newUser.AutoLogin = false;
+                newUser.IsAdmin = true;
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
+                db.Users.Add( newUser );
+
+                db.SaveChanges();
+
             }
         }
+       
     }
 }

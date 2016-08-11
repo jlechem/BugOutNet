@@ -15,19 +15,23 @@
     <script type="text/javascript" src="@Url.Content("~/scripts/bootstrap.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/scripts/modernizr-2.8.3.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/scripts/i18n/grid.locale-en.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/scripts/jquery.unobtrusive-ajax.min.js")"></script>
     <link rel="icon" type="image/png" href="@Url.Content("~/favicon.ico")" />
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-static-top">
         <div class="container">
             <div class="navbar-header">
-                <a href="/Home/Index" class="navbar-brand" style="font-weight:bolder">BugOutNet</a>
+                <span class="navbar-brand" style="font-weight:bolder">BugOutNet</span>
             </div>
             <ul class="nav navbar-nav">
-                <li><a href="@Url.Action("Index","Home")">Bugs</a></li>
+                <li><a href="@Url.Action("Index","Bugs")">Bugs</a></li>
                 <li><a href="@Url.Action("Index","Search")">Search</a></li>
                 <li><a href="@Url.Action("Index","Reports")">Reports</a></li>
                 <li><a href="@Url.Action("Index","Admin")">Admin</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="@Url.Action("Logoff","Login")">Logoff</a></li>
             </ul>
         </div>
     </div>

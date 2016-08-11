@@ -17,15 +17,14 @@
     <script type="text/javascript" src="@Url.Content("~/scripts/bootstrap.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/scripts/modernizr-2.8.3.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/scripts/i18n/grid.locale-en.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/scripts/jquery.unobtrusive-ajax.min.js")"></script>
     <link rel="icon" type="image/png" href="@Url.Content("~/favicon.ico")" />
-
     <title>BugOutNet Login</title>
-
     <style type="text/css">
         .center-block {
             font-family: Arial, Georgia, serif;
-            width: 225px;
-            height: 190px;
+            width: 300px;
+            height: 250px;
             padding: 10px;
             background-color: #eceadc;
             color: #ec8007;
@@ -38,7 +37,6 @@
             margin: auto;
         }
     </style> 
-
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-static-top">
@@ -51,16 +49,17 @@
     <div class="container">
         <div class="row">
             <div class="center-block">
-                @using( Html.BeginForm( "PerformLogin", "Login", FormMethod.Post ) )
-                { 
+                @using( Ajax.BeginForm( "PerformLogin", "Login", new AjaxOptions() { OnFailure= "onFailure", OnSuccess= "onSuccess" }  ) )
+                {
+                    <span id="spanError" style="color: red;"></span>
                     <fieldset>
                         <legend>Please Login</legend>
-                        <input type="text" placeholder="username" id="textUsername" name="textUsername" required="required" maxlength="25" />
-                        <input type="password" placeholder="password" id="textPassword" name="textPassword" required="required" maxlength="50" /><br/><br/>
-                        <label>
+                        <input class="form-control" type="text" placeholder="username" id="textUsername" name="textUsername" required="required" maxlength="25" />
+                        <input class="form-control" type="password" placeholder="password" id="textPassword" name="textPassword" required="required" maxlength="50" />
+                        <label class="form-control">
                             Remember Me:&nbsp;<input type="checkbox" id="cbRemember" name="cbRemember" checked="checked" />
                         </label>
-                        <input type="submit" value="Login"/>
+                        <input class="form-control btn btn-primary" type="submit" value="Login" data-loading-text="<i class='icon-spinner icon-spin icon-large'></i> Attempting Login" />
                     </fieldset>
                 }
             </div>
@@ -70,34 +69,18 @@
 </html>
 
 <script>
-    $(document).ready(function () {
-        $("#login").click(function () {
-            var email = $.trim($("#email").val());
-            var password = $.trim($("#password").val());
-            // Checking for blank fields.
-            if (email == '' || password == '') {
-                $('input[type="text"],input[type="password"]').css("border", "2px solid red");
-                $('input[type="text"],input[type="password"]').css("box-shadow", "0 0 3px red");
-                alert("Please fill all fields...!!!!!!");
-            } else {
-                $.post("login.php", { email1: email, password1: password },
-                function (data) {
-                    if (data == 'Invalid Email.......') {
-                        $('input[type="text"]').css({ "border": "2px solid red", "box-shadow": "0 0 3px red" });
-                        $('input[type="password"]').css({ "border": "2px solid #00F5FF", "box-shadow": "0 0 5px #00F5FF" });
-                        alert(data);
-                    } else if (data == 'Email or Password is wrong...!!!!') {
-                        $('input[type="text"],input[type="password"]').css({ "border": "2px solid red", "box-shadow": "0 0 3px red" });
-                        alert(data);
-                    } else if (data == 'Successfully Logged in...') {
-                        $("form")[0].reset();
-                        $('input[type="text"],input[type="password"]').css({ "border": "2px solid #00F5FF", "box-shadow": "0 0 5px #00F5FF" });
-                        alert(data);
-                    } else {
-                        alert(data);
-                    }
-                });
-            }
-        });
-    });
+    function onFailure(data) {
+        alert(data.ErrorMessage);
+    }
+
+    function onSuccess(data) {
+        if (data.Success){
+            $("#spanError").html("");        
+            window.location = "@Url.Action( "Index", "Bugs" )";
+        }
+        else {
+            $("#spanError").html("Invalid username/password");
+        }
+        
+    }
 </script>

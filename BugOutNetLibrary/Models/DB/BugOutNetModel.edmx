@@ -5,6 +5,14 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="BugOutNetModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Projects">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="2000" Nullable="false" />
+        </EntityType>
         <EntityType Name="Roles">
           <Key>
             <PropertyRef Name="Id" />
@@ -19,21 +27,57 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserName" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Password" Type="binary" MaxLength="64" Nullable="false" />
+          <Property Name="Password" Type="varbinary(max)" Nullable="false" />
           <Property Name="EmailAddress" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="IsVerified" Type="bit" Nullable="false" />
           <Property Name="IsBlocked" Type="bit" Nullable="false" />
           <Property Name="AccessFailedCount" Type="int" Nullable="false" />
-          <Property Name="LastLogin" Type="datetime" Nullable="false" />
+          <Property Name="LastLogin" Type="datetime" />
+          <Property Name="Avatar" Type="varbinary(max)" />
+          <Property Name="AutoLogin" Type="bit" Nullable="false" />
+          <Property Name="IsAdmin" Type="bit" Nullable="false" />
+          <Property Name="Salt" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users_Projects">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProjectId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Users_Roles">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK_Users_Projects_Projects">
+          <End Role="Projects" Type="Self.Projects" Multiplicity="1" />
+          <End Role="Users_Projects" Type="Self.Users_Projects" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Projects">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users_Projects">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Projects_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Users_Projects" Type="Self.Users_Projects" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users_Projects">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Users_Roles_Users">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="Users_Roles" Type="Self.Users_Roles" Multiplicity="*" />
@@ -59,9 +103,19 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="BugOutNetModelStoreContainer">
+          <EntitySet Name="Projects" EntityType="Self.Projects" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users_Projects" EntityType="Self.Users_Projects" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users_Roles" EntityType="Self.Users_Roles" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Users_Projects_Projects" Association="Self.FK_Users_Projects_Projects">
+            <End Role="Projects" EntitySet="Projects" />
+            <End Role="Users_Projects" EntitySet="Users_Projects" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Projects_Users" Association="Self.FK_Users_Projects_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Users_Projects" EntitySet="Users_Projects" />
+          </AssociationSet>
           <AssociationSet Name="FK_Users_Roles_Users" Association="Self.FK_Users_Roles_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Users_Roles" EntitySet="Users_Roles" />
@@ -75,6 +129,15 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BugOutNetModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Project">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Users_Projects" Relationship="Self.FK_Users_Projects_Projects" FromRole="Projects" ToRole="Users_Projects" />
+        </EntityType>
         <EntityType Name="Role">
           <Key>
             <PropertyRef Name="Id" />
@@ -82,7 +145,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Users_Roles" Relationship="BugOutNetModel.FK_Users_Roles_Users_Roles11" FromRole="Role" ToRole="Users_Roles" />
+          <NavigationProperty Name="Users_Roles" Relationship="Self.FK_Users_Roles_Users_Roles1" FromRole="Roles" ToRole="Users_Roles" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -90,24 +153,75 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Password" Type="Binary" MaxLength="64" FixedLength="true" Nullable="false" />
+          <Property Name="Password" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
           <Property Name="EmailAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="IsVerified" Type="Boolean" Nullable="false" />
           <Property Name="IsBlocked" Type="Boolean" Nullable="false" />
           <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
-          <Property Name="LastLogin" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastLogin" Type="DateTime" Precision="3" />
+          <Property Name="Avatar" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="AutoLogin" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Users_Projects" Relationship="Self.FK_Users_Projects_Users" FromRole="Users" ToRole="Users_Projects" />
           <NavigationProperty Name="Users_Roles" Relationship="Self.FK_Users_Roles_Users" FromRole="Users" ToRole="Users_Roles" />
+          <Property Name="IsAdmin" Type="Boolean" Nullable="false" />
+          <Property Name="Salt" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Users_Projects">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProjectId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Project" Relationship="Self.FK_Users_Projects_Projects" FromRole="Users_Projects" ToRole="Projects" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Users_Projects_Users" FromRole="Users_Projects" ToRole="Users" />
         </EntityType>
         <EntityType Name="Users_Roles">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Role" Relationship="Self.FK_Users_Roles_Users_Roles1" FromRole="Users_Roles" ToRole="Roles" />
           <NavigationProperty Name="User" Relationship="Self.FK_Users_Roles_Users" FromRole="Users_Roles" ToRole="Users" />
-          <NavigationProperty Name="Role" Relationship="BugOutNetModel.FK_Users_Roles_Users_Roles11" FromRole="Users_Roles" ToRole="Role" />
         </EntityType>
+        <Association Name="FK_Users_Projects_Projects">
+          <End Role="Projects" Type="Self.Project" Multiplicity="1" />
+          <End Role="Users_Projects" Type="Self.Users_Projects" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Projects">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users_Projects">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Roles_Users_Roles1">
+          <End Role="Roles" Type="Self.Role" Multiplicity="1" />
+          <End Role="Users_Roles" Type="Self.Users_Roles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users_Roles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Projects_Users">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="Users_Projects" Type="Self.Users_Projects" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users_Projects">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Users_Roles_Users">
           <End Role="Users" Type="Self.User" Multiplicity="1" />
           <End Role="Users_Roles" Type="Self.Users_Roles" Multiplicity="*" />
@@ -120,37 +234,44 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="BugOutNetEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Projects" EntityType="Self.Project" />
           <EntitySet Name="Roles" EntityType="Self.Role" />
           <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="Users_Projects" EntityType="Self.Users_Projects" />
           <EntitySet Name="Users_Roles" EntityType="Self.Users_Roles" />
+          <AssociationSet Name="FK_Users_Projects_Projects" Association="Self.FK_Users_Projects_Projects">
+            <End Role="Projects" EntitySet="Projects" />
+            <End Role="Users_Projects" EntitySet="Users_Projects" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Roles_Users_Roles1" Association="Self.FK_Users_Roles_Users_Roles1">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Users_Roles" EntitySet="Users_Roles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Projects_Users" Association="Self.FK_Users_Projects_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Users_Projects" EntitySet="Users_Projects" />
+          </AssociationSet>
           <AssociationSet Name="FK_Users_Roles_Users" Association="Self.FK_Users_Roles_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Users_Roles" EntitySet="Users_Roles" />
           </AssociationSet>
-          <AssociationSet Name="FK_Users_Roles_Users_Roles11" Association="BugOutNetModel.FK_Users_Roles_Users_Roles11">
-            <End Role="Role" EntitySet="Roles" />
-            <End Role="Users_Roles" EntitySet="Users_Roles" />
-          </AssociationSet>
         </EntityContainer>
-        <Association Name="FK_Users_Roles_Users_Roles11">
-          <End Type="BugOutNetModel.Role" Role="Role" Multiplicity="1" />
-          <End Type="BugOutNetModel.Users_Roles" Role="Users_Roles" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Role">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Users_Roles">
-              <PropertyRef Name="RoleId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="BugOutNetModelStoreContainer" CdmEntityContainer="BugOutNetEntities">
+        <EntityContainerMapping StorageEntityContainer="BugOutNetModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="Projects">
+            <EntityTypeMapping TypeName="BugOutNetModel.Project">
+              <MappingFragment StoreEntitySet="Projects">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Roles">
             <EntityTypeMapping TypeName="BugOutNetModel.Role">
               <MappingFragment StoreEntitySet="Roles">
@@ -163,6 +284,8 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="BugOutNetModel.User">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Salt" ColumnName="Salt" />
+                <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
@@ -171,6 +294,17 @@
                 <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
                 <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
                 <ScalarProperty Name="LastLogin" ColumnName="LastLogin" />
+                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
+                <ScalarProperty Name="AutoLogin" ColumnName="AutoLogin" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users_Projects">
+            <EntityTypeMapping TypeName="BugOutNetModel.Users_Projects">
+              <MappingFragment StoreEntitySet="Users_Projects">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

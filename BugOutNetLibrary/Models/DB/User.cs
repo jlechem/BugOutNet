@@ -17,6 +17,7 @@ namespace BugOutNetLibrary.Models.DB
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
+            this.Users_Projects = new HashSet<Users_Projects>();
             this.Users_Roles = new HashSet<Users_Roles>();
         }
     
@@ -27,8 +28,14 @@ namespace BugOutNetLibrary.Models.DB
         public bool IsVerified { get; set; }
         public bool IsBlocked { get; set; }
         public int AccessFailedCount { get; set; }
-        public System.DateTime LastLogin { get; set; }
+        public Nullable<System.DateTime> LastLogin { get; set; }
+        public byte[] Avatar { get; set; }
+        public bool AutoLogin { get; set; }
+        public bool IsAdmin { get; set; }
+        public string Salt { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Users_Projects> Users_Projects { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Users_Roles> Users_Roles { get; set; }
     }

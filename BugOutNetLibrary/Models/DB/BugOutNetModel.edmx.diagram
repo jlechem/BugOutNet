@@ -4,12 +4,16 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="62971aeeac5140faa38a8c5187a37f21" Name="Diagram1">
-        <EntityTypeShape EntityType="BugOutNetModel.Role" Width="1.5" PointX="1" PointY="4.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="BugOutNetModel.User" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="BugOutNetModel.Users_Roles" Width="1.5" PointX="4.125" PointY="1.25" IsExpanded="true" />
+      <Diagram DiagramId="b42828a3c4b1476791cc12c4bd67d5c3" Name="Diagram1">
+        <EntityTypeShape EntityType="BugOutNetModel.Project" Width="1.5" PointX="3.875" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="BugOutNetModel.Role" Width="1.5" PointX="5.5" PointY="0.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="BugOutNetModel.User" Width="1.5" PointX="0.75" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="BugOutNetModel.Users_Projects" Width="1.5" PointX="1.125" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="BugOutNetModel.Users_Roles" Width="1.5" PointX="3.125" PointY="0.625" IsExpanded="true" />
+        <AssociationConnector Association="BugOutNetModel.FK_Users_Projects_Projects" ManuallyRouted="false" />
+        <AssociationConnector Association="BugOutNetModel.FK_Users_Roles_Users_Roles1" ManuallyRouted="false" />
+        <AssociationConnector Association="BugOutNetModel.FK_Users_Projects_Users" ManuallyRouted="false" />
         <AssociationConnector Association="BugOutNetModel.FK_Users_Roles_Users" ManuallyRouted="false" />
-        <AssociationConnector Association="BugOutNetModel.FK_Users_Roles_Users_Roles11" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

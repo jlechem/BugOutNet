@@ -1,7 +1,5 @@
-﻿using BugOutNetLibrary.Models;
+﻿using BugOutNetLibrary.Models.DB;
 using System.Web;
-using System;
-using System.Collections.Generic;
 
 namespace BugOutNetLibrary.Managers
 {
@@ -24,5 +22,6 @@ namespace BugOutNetLibrary.Managers
                 HttpContext.Current.Session["User"] = value;
             }
         }
+
     }
 }

@@ -40,6 +40,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
@@ -55,6 +56,7 @@
   <ItemGroup>
     <Compile Include="Helpers\HashHelper.cs" />
     <Compile Include="Managers\SessionManager.cs" />
+    <Compile Include="Managers\SettingsManager.cs" />
     <Compile Include="Models\DB\BugOutNetModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -70,17 +72,23 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>BugOutNetModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\DB\Project.cs">
+      <DependentUpon>BugOutNetModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DB\Role.cs">
       <DependentUpon>BugOutNetModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\User.cs">
       <DependentUpon>BugOutNetModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DB\Users_Projects.cs">
+      <DependentUpon>BugOutNetModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DB\Users_Roles.cs">
       <DependentUpon>BugOutNetModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GridModels\BugGridModel.cs" />
-    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\ViewModels\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -93,9 +101,6 @@
       <DependentUpon>BugOutNetModel.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Models\DB\BugOutNetModel.Context.tt">

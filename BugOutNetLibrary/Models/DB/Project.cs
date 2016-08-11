@@ -12,13 +12,19 @@ namespace BugOutNetLibrary.Models.DB
     using System;
     using System.Collections.Generic;
     
-    public partial class Users_Roles
+    public partial class Project
     {
-        public int Id { get; set; }
-        public int RoleId { get; set; }
-        public int UserId { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Project()
+        {
+            this.Users_Projects = new HashSet<Users_Projects>();
+        }
     
-        public virtual Role Role { get; set; }
-        public virtual User User { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Users_Projects> Users_Projects { get; set; }
     }
 }
