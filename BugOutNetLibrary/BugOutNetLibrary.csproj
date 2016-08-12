@@ -103,7 +103,11 @@
       <DependentUpon>BugOutNetModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GridModels\BugGridModel.cs" />
+    <Compile Include="Models\GridModels\CategoryGridModel.cs" />
+    <Compile Include="Models\GridModels\PriortiesGridModel.cs" />
     <Compile Include="Models\GridModels\ProjectGridModel.cs" />
+    <Compile Include="Models\GridModels\StatusesGridModel.cs" />
+    <Compile Include="Models\GridModels\UsersGridModel.cs" />
     <Compile Include="Models\ViewModels\CategoryViewModel.cs" />
     <Compile Include="Models\ViewModels\ProjectViewModel.cs" />
     <Compile Include="Models\ViewModels\UserViewModel.cs" />
