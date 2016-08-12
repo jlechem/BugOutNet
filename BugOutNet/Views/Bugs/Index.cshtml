@@ -1,33 +1,47 @@
-﻿<table id="jqGrid"></table>
-<div id="jqGridPager"></div>
+﻿@model  IEnumerable<BugOutNetLibrary.Models.GridModels.BugGridModel>
 
+@{
+    ViewBag.Title = "BugOutNet - Bugs";
+}
+
+<div class="container">
+    <div>
+        <span>Project:&nbsp;</span>@*@Html.DropDownList("ddlProjects")*@
+    </div>
+    <hr />
+    <table id="jqGrid"></table>
+    <div id="jqGridPager"></div>
+</div>
 
 <script>
     jQuery("#jqGrid").jqGrid({
-
-                url: "",
+                url: "@Url.Action( "GetBugs","Bugs", new { projectId = 0 }  )",
                 datatype: "json",
                 mtype: 'GET',
-                colNames: ['Sale Id', 'Quantity', 'Product', 'Customer', 'Date', 'Amount'],
+                colNames: ['Bug Id', 'Name', 'Description', 'Project', 'Category', 'Priority','Status','Assigned To','Last Updated By','Last Updated'],
                 colModel: [
                              { name: 'Id', index: 'Id', width: 50, align: 'left' },
-                             { name: 'Quantity', index: 'Quantity', width: 100, align: 'left' },
-                             { name: 'Product', index: 'Product', width: 100, align: 'left' },
-                             { name: 'Customer', index: 'Customer', width: 100, align: 'left' },
-                             { name: 'Date', index: 'Date', width: 100, align: 'left' },
-                             { name: 'Amount', index: 'Amount', width: 100, align: 'right' }],
+                             { name: 'Name', index: 'Name', width: 100, align: 'left' },
+                             { name: 'Description', index: 'Description', width: 100, align: 'left' },
+                             { name: 'Project', index: 'Project', width: 100, align: 'left' },
+                             { name: 'Category', index: 'Category', width: 100, align: 'left' },
+                             { name: 'Priority', index: 'Priority', width: 100, align: 'right' },
+                             { name: 'Status', index: 'Status', width: 100, align: 'right' },
+                             { name: 'AssignedTo', index: 'AssignedTo', width: 100, align: 'right' },
+                             { name: 'LastUpdatedBy', index: 'LastUpdatedBy', width: 100, align: 'right' },
+                             { name: 'LastUpdatedOn', index: 'LastUpdatedOn', width: 100, align: 'right' }],
                 viewrecords: true,
                 autowidth: true,
                 multiselect: false,
                 height: '100%',
                 width: '100%',
-                rowNum: 10,
+                rowNum: 20,
                 pager: "#jqGridPager",
                 caption: 'Bugs',
                 emptyrecords: 'No bugs to display',
-                autowidth: true,
-                multiselect: false,
                 rowList: [10, 20, 30, 40, 50],
-                altRows: true
+                altRows: true,
+                loadonce: true,
+                loadtext: "Loading Bugs...",
             });
 </script>

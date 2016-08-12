@@ -629,11 +629,14 @@
     <Content Include="Views\Shared\_Login.cshtml" />
     <Content Include="Views\Admin\_Users.cshtml" />
     <Content Include="Views\Admin\_Categories.cshtml" />
-    <Content Include="Views\Admin\_Severities.cshtml" />
+    <Content Include="Views\Admin\_Statuses.cshtml" />
     <Content Include="Views\Bugs\Index.cshtml" />
     <Content Include="Views\Install\Index.cshtml" />
     <Content Include="Views\Reports\Index.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
+    <Content Include="Views\Admin\_Projects.cshtml" />
+    <Content Include="Views\Admin\_Priorities.cshtml" />
+    <Content Include="Views\Admin\_Settings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />

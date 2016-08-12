@@ -5,6 +5,53 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="BugOutNetModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BugComments">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Comment" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="BugId" Type="int" Nullable="false" />
+          <Property Name="CreatorId" Type="int" Nullable="false" />
+          <Property Name="Created" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Bugs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="CreatorId" Type="int" Nullable="false" />
+          <Property Name="ProjectId" Type="int" Nullable="false" />
+          <Property Name="CategoryId" Type="int" Nullable="false" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
+          <Property Name="PriorityId" Type="int" Nullable="false" />
+          <Property Name="AssignedToId" Type="int" Nullable="false" />
+          <Property Name="Created" Type="datetime" />
+          <Property Name="LatUpdated" Type="datetime" />
+          <Property Name="LastUpdatedId" Type="int" />
+        </EntityType>
+        <EntityType Name="Categories">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="25" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="CreatorId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Priorities">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="CreatorId" Type="int" Nullable="false" />
+          <Property Name="Created" Type="datetime" />
+        </EntityType>
         <EntityType Name="Projects">
           <Key>
             <PropertyRef Name="Id" />
@@ -12,6 +59,9 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="2000" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatorId" Type="int" Nullable="false" />
+          <Property Name="Created" Type="datetime" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
@@ -20,6 +70,18 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreatorId" Type="int" Nullable="false" />
+          <Property Name="Created" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Statuses">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="CreatorId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -37,6 +99,7 @@
           <Property Name="AutoLogin" Type="bit" Nullable="false" />
           <Property Name="IsAdmin" Type="bit" Nullable="false" />
           <Property Name="Salt" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DefaultProjectId" Type="int" />
         </EntityType>
         <EntityType Name="Users_Projects">
           <Key>
@@ -54,6 +117,150 @@
           <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK_BugComments_Bugs">
+          <End Role="Bugs" Type="Self.Bugs" Multiplicity="1" />
+          <End Role="BugComments" Type="Self.BugComments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bugs">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BugComments">
+              <PropertyRef Name="BugId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bugs_AssignedTo">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Bugs" Type="Self.Bugs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bugs">
+              <PropertyRef Name="AssignedToId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bugs_Categories">
+          <End Role="Categories" Type="Self.Categories" Multiplicity="1" />
+          <End Role="Bugs" Type="Self.Bugs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bugs">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bugs_Priority">
+          <End Role="Priorities" Type="Self.Priorities" Multiplicity="1" />
+          <End Role="Bugs" Type="Self.Bugs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Priorities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bugs">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bugs_Projects">
+          <End Role="Projects" Type="Self.Projects" Multiplicity="1" />
+          <End Role="Bugs" Type="Self.Bugs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Projects">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bugs">
+              <PropertyRef Name="PriorityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bugs_Status">
+          <End Role="Statuses" Type="Self.Statuses" Multiplicity="1" />
+          <End Role="Bugs" Type="Self.Bugs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Statuses">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bugs">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bugs_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Bugs" Type="Self.Bugs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bugs">
+              <PropertyRef Name="CreatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Categories_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Categories" Type="Self.Categories" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Categories">
+              <PropertyRef Name="CreatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Priorities_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Priorities" Type="Self.Priorities" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Priorities">
+              <PropertyRef Name="CreatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Projects_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Projects" Type="Self.Projects" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Projects">
+              <PropertyRef Name="CreatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Roles_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Roles" Type="Self.Roles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Roles">
+              <PropertyRef Name="CreatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Statuses_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Statuses" Type="Self.Statuses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Statuses">
+              <PropertyRef Name="CreatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Users_Projects_Projects">
           <End Role="Projects" Type="Self.Projects" Multiplicity="1" />
           <End Role="Users_Projects" Type="Self.Users_Projects" Multiplicity="*" />
@@ -103,11 +310,64 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="BugOutNetModelStoreContainer">
+          <EntitySet Name="BugComments" EntityType="Self.BugComments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Bugs" EntityType="Self.Bugs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Priorities" EntityType="Self.Priorities" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Projects" EntityType="Self.Projects" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Statuses" EntityType="Self.Statuses" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users_Projects" EntityType="Self.Users_Projects" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users_Roles" EntityType="Self.Users_Roles" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_BugComments_Bugs" Association="Self.FK_BugComments_Bugs">
+            <End Role="Bugs" EntitySet="Bugs" />
+            <End Role="BugComments" EntitySet="BugComments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bugs_AssignedTo" Association="Self.FK_Bugs_AssignedTo">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Bugs" EntitySet="Bugs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bugs_Categories" Association="Self.FK_Bugs_Categories">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="Bugs" EntitySet="Bugs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bugs_Priority" Association="Self.FK_Bugs_Priority">
+            <End Role="Priorities" EntitySet="Priorities" />
+            <End Role="Bugs" EntitySet="Bugs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bugs_Projects" Association="Self.FK_Bugs_Projects">
+            <End Role="Projects" EntitySet="Projects" />
+            <End Role="Bugs" EntitySet="Bugs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bugs_Status" Association="Self.FK_Bugs_Status">
+            <End Role="Statuses" EntitySet="Statuses" />
+            <End Role="Bugs" EntitySet="Bugs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bugs_Users" Association="Self.FK_Bugs_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Bugs" EntitySet="Bugs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Categories_Users" Association="Self.FK_Categories_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Categories" EntitySet="Categories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Priorities_Users" Association="Self.FK_Priorities_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Priorities" EntitySet="Priorities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Projects_Users" Association="Self.FK_Projects_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Projects" EntitySet="Projects" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Roles_Users" Association="Self.FK_Roles_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Roles" EntitySet="Roles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Statuses_Users" Association="Self.FK_Statuses_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Statuses" EntitySet="Statuses" />
+          </AssociationSet>
           <AssociationSet Name="FK_Users_Projects_Projects" Association="Self.FK_Users_Projects_Projects">
             <End Role="Projects" EntitySet="Projects" />
             <End Role="Users_Projects" EntitySet="Users_Projects" />
@@ -129,42 +389,205 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BugOutNetModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BugComments" EntityType="BugOutNetModel.BugComment" />
+          <EntitySet Name="Bugs" EntityType="BugOutNetModel.Bug" />
+          <EntitySet Name="Categories" EntityType="BugOutNetModel.Category" />
+          <EntitySet Name="Priorities" EntityType="BugOutNetModel.Priority" />
+          <EntitySet Name="Projects" EntityType="BugOutNetModel.Project" />
+          <EntitySet Name="Roles" EntityType="BugOutNetModel.Role" />
+          <EntitySet Name="Statuses" EntityType="BugOutNetModel.Status" />
+          <EntitySet Name="Users" EntityType="BugOutNetModel.User" />
+          <EntitySet Name="Users_Projects" EntityType="BugOutNetModel.Users_Projects" />
+          <EntitySet Name="Users_Roles" EntityType="BugOutNetModel.Users_Roles" />
+          <AssociationSet Name="FK_BugComments_Bugs" Association="BugOutNetModel.FK_BugComments_Bugs">
+            <End Role="Bug" EntitySet="Bugs" />
+            <End Role="BugComment" EntitySet="BugComments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bugs_AssignedTo" Association="BugOutNetModel.FK_Bugs_AssignedTo">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Bug" EntitySet="Bugs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bugs_Categories" Association="BugOutNetModel.FK_Bugs_Categories">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Bug" EntitySet="Bugs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bugs_Priority" Association="BugOutNetModel.FK_Bugs_Priority">
+            <End Role="Priority" EntitySet="Priorities" />
+            <End Role="Bug" EntitySet="Bugs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bugs_Projects" Association="BugOutNetModel.FK_Bugs_Projects">
+            <End Role="Project" EntitySet="Projects" />
+            <End Role="Bug" EntitySet="Bugs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bugs_Status" Association="BugOutNetModel.FK_Bugs_Status">
+            <End Role="Status" EntitySet="Statuses" />
+            <End Role="Bug" EntitySet="Bugs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bugs_Users" Association="BugOutNetModel.FK_Bugs_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Bug" EntitySet="Bugs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Categories_Users" Association="BugOutNetModel.FK_Categories_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Category" EntitySet="Categories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Priorities_Users" Association="BugOutNetModel.FK_Priorities_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Priority" EntitySet="Priorities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Projects_Users" Association="BugOutNetModel.FK_Projects_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Project" EntitySet="Projects" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Projects_Projects" Association="BugOutNetModel.FK_Users_Projects_Projects">
+            <End Role="Project" EntitySet="Projects" />
+            <End Role="Users_Projects" EntitySet="Users_Projects" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Roles_Users" Association="BugOutNetModel.FK_Roles_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Role" EntitySet="Roles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Roles_Users_Roles1" Association="BugOutNetModel.FK_Users_Roles_Users_Roles1">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="Users_Roles" EntitySet="Users_Roles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Statuses_Users" Association="BugOutNetModel.FK_Statuses_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Status" EntitySet="Statuses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Projects_Users" Association="BugOutNetModel.FK_Users_Projects_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Users_Projects" EntitySet="Users_Projects" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Roles_Users" Association="BugOutNetModel.FK_Users_Roles_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Users_Roles" EntitySet="Users_Roles" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="BugComment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Comment" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="BugId" Type="Int32" Nullable="false" />
+          <Property Name="CreatorId" Type="Int32" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Bug" Relationship="BugOutNetModel.FK_BugComments_Bugs" FromRole="BugComment" ToRole="Bug" />
+        </EntityType>
+        <EntityType Name="Bug">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatorId" Type="Int32" Nullable="false" />
+          <Property Name="ProjectId" Type="Int32" Nullable="false" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <Property Name="PriorityId" Type="Int32" Nullable="false" />
+          <Property Name="AssignedToId" Type="Int32" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="BugComments" Relationship="BugOutNetModel.FK_BugComments_Bugs" FromRole="Bug" ToRole="BugComment" />
+          <NavigationProperty Name="User" Relationship="BugOutNetModel.FK_Bugs_AssignedTo" FromRole="Bug" ToRole="User" />
+          <NavigationProperty Name="Category" Relationship="BugOutNetModel.FK_Bugs_Categories" FromRole="Bug" ToRole="Category" />
+          <NavigationProperty Name="Priority" Relationship="BugOutNetModel.FK_Bugs_Priority" FromRole="Bug" ToRole="Priority" />
+          <NavigationProperty Name="Project" Relationship="BugOutNetModel.FK_Bugs_Projects" FromRole="Bug" ToRole="Project" />
+          <NavigationProperty Name="Status" Relationship="BugOutNetModel.FK_Bugs_Status" FromRole="Bug" ToRole="Status" />
+          <NavigationProperty Name="User1" Relationship="BugOutNetModel.FK_Bugs_Users" FromRole="Bug" ToRole="User" />
+          <Property Name="LatUpdated" Type="DateTime" Precision="3" />
+          <Property Name="LastUpdatedId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatorId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Bugs" Relationship="BugOutNetModel.FK_Bugs_Categories" FromRole="Category" ToRole="Bug" />
+          <NavigationProperty Name="User" Relationship="BugOutNetModel.FK_Categories_Users" FromRole="Category" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Priority">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatorId" Type="Int32" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Bugs" Relationship="BugOutNetModel.FK_Bugs_Priority" FromRole="Priority" ToRole="Bug" />
+          <NavigationProperty Name="User" Relationship="BugOutNetModel.FK_Priorities_Users" FromRole="Priority" ToRole="User" />
+        </EntityType>
         <EntityType Name="Project">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Users_Projects" Relationship="Self.FK_Users_Projects_Projects" FromRole="Projects" ToRole="Users_Projects" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="CreatorId" Type="Int32" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Bugs" Relationship="BugOutNetModel.FK_Bugs_Projects" FromRole="Project" ToRole="Bug" />
+          <NavigationProperty Name="User" Relationship="BugOutNetModel.FK_Projects_Users" FromRole="Project" ToRole="User" />
+          <NavigationProperty Name="Users_Projects" Relationship="BugOutNetModel.FK_Users_Projects_Projects" FromRole="Project" ToRole="Users_Projects" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Users_Roles" Relationship="Self.FK_Users_Roles_Users_Roles1" FromRole="Roles" ToRole="Users_Roles" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatorId" Type="Int32" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="User" Relationship="BugOutNetModel.FK_Roles_Users" FromRole="Role" ToRole="User" />
+          <NavigationProperty Name="Users_Roles" Relationship="BugOutNetModel.FK_Users_Roles_Users_Roles1" FromRole="Role" ToRole="Users_Roles" />
+        </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatorId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Bugs" Relationship="BugOutNetModel.FK_Bugs_Status" FromRole="Status" ToRole="Bug" />
+          <NavigationProperty Name="User" Relationship="BugOutNetModel.FK_Statuses_Users" FromRole="Status" ToRole="User" />
         </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Password" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
-          <Property Name="EmailAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="EmailAddress" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="IsVerified" Type="Boolean" Nullable="false" />
           <Property Name="IsBlocked" Type="Boolean" Nullable="false" />
           <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
           <Property Name="LastLogin" Type="DateTime" Precision="3" />
           <Property Name="Avatar" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="AutoLogin" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Users_Projects" Relationship="Self.FK_Users_Projects_Users" FromRole="Users" ToRole="Users_Projects" />
-          <NavigationProperty Name="Users_Roles" Relationship="Self.FK_Users_Roles_Users" FromRole="Users" ToRole="Users_Roles" />
           <Property Name="IsAdmin" Type="Boolean" Nullable="false" />
           <Property Name="Salt" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DefaultProjectId" Type="Int32" />
+          <NavigationProperty Name="Bugs" Relationship="BugOutNetModel.FK_Bugs_AssignedTo" FromRole="User" ToRole="Bug" />
+          <NavigationProperty Name="Bugs1" Relationship="BugOutNetModel.FK_Bugs_Users" FromRole="User" ToRole="Bug" />
+          <NavigationProperty Name="Categories" Relationship="BugOutNetModel.FK_Categories_Users" FromRole="User" ToRole="Category" />
+          <NavigationProperty Name="Priorities" Relationship="BugOutNetModel.FK_Priorities_Users" FromRole="User" ToRole="Priority" />
+          <NavigationProperty Name="Projects" Relationship="BugOutNetModel.FK_Projects_Users" FromRole="User" ToRole="Project" />
+          <NavigationProperty Name="Roles" Relationship="BugOutNetModel.FK_Roles_Users" FromRole="User" ToRole="Role" />
+          <NavigationProperty Name="Statuses" Relationship="BugOutNetModel.FK_Statuses_Users" FromRole="User" ToRole="Status" />
+          <NavigationProperty Name="Users_Projects" Relationship="BugOutNetModel.FK_Users_Projects_Users" FromRole="User" ToRole="Users_Projects" />
+          <NavigationProperty Name="Users_Roles" Relationship="BugOutNetModel.FK_Users_Roles_Users" FromRole="User" ToRole="Users_Roles" />
         </EntityType>
         <EntityType Name="Users_Projects">
           <Key>
@@ -173,8 +596,8 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ProjectId" Type="Int32" Nullable="false" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Project" Relationship="Self.FK_Users_Projects_Projects" FromRole="Users_Projects" ToRole="Projects" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Users_Projects_Users" FromRole="Users_Projects" ToRole="Users" />
+          <NavigationProperty Name="Project" Relationship="BugOutNetModel.FK_Users_Projects_Projects" FromRole="Users_Projects" ToRole="Project" />
+          <NavigationProperty Name="User" Relationship="BugOutNetModel.FK_Users_Projects_Users" FromRole="Users_Projects" ToRole="User" />
         </EntityType>
         <EntityType Name="Users_Roles">
           <Key>
@@ -183,14 +606,134 @@
           <Property Name="Id" Type="Int32" Nullable="false" />
           <Property Name="RoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Role" Relationship="Self.FK_Users_Roles_Users_Roles1" FromRole="Users_Roles" ToRole="Roles" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Users_Roles_Users" FromRole="Users_Roles" ToRole="Users" />
+          <NavigationProperty Name="Role" Relationship="BugOutNetModel.FK_Users_Roles_Users_Roles1" FromRole="Users_Roles" ToRole="Role" />
+          <NavigationProperty Name="User" Relationship="BugOutNetModel.FK_Users_Roles_Users" FromRole="Users_Roles" ToRole="User" />
         </EntityType>
-        <Association Name="FK_Users_Projects_Projects">
-          <End Role="Projects" Type="Self.Project" Multiplicity="1" />
-          <End Role="Users_Projects" Type="Self.Users_Projects" Multiplicity="*" />
+        <Association Name="FK_BugComments_Bugs">
+          <End Type="BugOutNetModel.Bug" Role="Bug" Multiplicity="1" />
+          <End Type="BugOutNetModel.BugComment" Role="BugComment" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Projects">
+            <Principal Role="Bug">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BugComment">
+              <PropertyRef Name="BugId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bugs_AssignedTo">
+          <End Type="BugOutNetModel.User" Role="User" Multiplicity="1" />
+          <End Type="BugOutNetModel.Bug" Role="Bug" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bug">
+              <PropertyRef Name="AssignedToId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bugs_Categories">
+          <End Type="BugOutNetModel.Category" Role="Category" Multiplicity="1" />
+          <End Type="BugOutNetModel.Bug" Role="Bug" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bug">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bugs_Priority">
+          <End Type="BugOutNetModel.Priority" Role="Priority" Multiplicity="1" />
+          <End Type="BugOutNetModel.Bug" Role="Bug" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Priority">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bug">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bugs_Projects">
+          <End Type="BugOutNetModel.Project" Role="Project" Multiplicity="1" />
+          <End Type="BugOutNetModel.Bug" Role="Bug" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bug">
+              <PropertyRef Name="PriorityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bugs_Status">
+          <End Type="BugOutNetModel.Status" Role="Status" Multiplicity="1" />
+          <End Type="BugOutNetModel.Bug" Role="Bug" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bug">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bugs_Users">
+          <End Type="BugOutNetModel.User" Role="User" Multiplicity="1" />
+          <End Type="BugOutNetModel.Bug" Role="Bug" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bug">
+              <PropertyRef Name="CreatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Categories_Users">
+          <End Type="BugOutNetModel.User" Role="User" Multiplicity="1" />
+          <End Type="BugOutNetModel.Category" Role="Category" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Category">
+              <PropertyRef Name="CreatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Priorities_Users">
+          <End Type="BugOutNetModel.User" Role="User" Multiplicity="1" />
+          <End Type="BugOutNetModel.Priority" Role="Priority" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Priority">
+              <PropertyRef Name="CreatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Projects_Users">
+          <End Type="BugOutNetModel.User" Role="User" Multiplicity="1" />
+          <End Type="BugOutNetModel.Project" Role="Project" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Project">
+              <PropertyRef Name="CreatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Projects_Projects">
+          <End Type="BugOutNetModel.Project" Role="Project" Multiplicity="1" />
+          <End Type="BugOutNetModel.Users_Projects" Role="Users_Projects" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Users_Projects">
@@ -198,11 +741,23 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Users_Roles_Users_Roles1">
-          <End Role="Roles" Type="Self.Role" Multiplicity="1" />
-          <End Role="Users_Roles" Type="Self.Users_Roles" Multiplicity="*" />
+        <Association Name="FK_Roles_Users">
+          <End Type="BugOutNetModel.User" Role="User" Multiplicity="1" />
+          <End Type="BugOutNetModel.Role" Role="Role" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Roles">
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Role">
+              <PropertyRef Name="CreatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Roles_Users_Roles1">
+          <End Type="BugOutNetModel.Role" Role="Role" Multiplicity="1" />
+          <End Type="BugOutNetModel.Users_Roles" Role="Users_Roles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Users_Roles">
@@ -210,11 +765,23 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Users_Projects_Users">
-          <End Role="Users" Type="Self.User" Multiplicity="1" />
-          <End Role="Users_Projects" Type="Self.Users_Projects" Multiplicity="*" />
+        <Association Name="FK_Statuses_Users">
+          <End Type="BugOutNetModel.User" Role="User" Multiplicity="1" />
+          <End Type="BugOutNetModel.Status" Role="Status" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Users">
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Status">
+              <PropertyRef Name="CreatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Projects_Users">
+          <End Type="BugOutNetModel.User" Role="User" Multiplicity="1" />
+          <End Type="BugOutNetModel.Users_Projects" Role="Users_Projects" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Users_Projects">
@@ -223,10 +790,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Users_Roles_Users">
-          <End Role="Users" Type="Self.User" Multiplicity="1" />
-          <End Role="Users_Roles" Type="Self.Users_Roles" Multiplicity="*" />
+          <End Type="BugOutNetModel.User" Role="User" Multiplicity="1" />
+          <End Type="BugOutNetModel.Users_Roles" Role="Users_Roles" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Users">
+            <Principal Role="User">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Users_Roles">
@@ -234,86 +801,131 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Projects" EntityType="Self.Project" />
-          <EntitySet Name="Roles" EntityType="Self.Role" />
-          <EntitySet Name="Users" EntityType="Self.User" />
-          <EntitySet Name="Users_Projects" EntityType="Self.Users_Projects" />
-          <EntitySet Name="Users_Roles" EntityType="Self.Users_Roles" />
-          <AssociationSet Name="FK_Users_Projects_Projects" Association="Self.FK_Users_Projects_Projects">
-            <End Role="Projects" EntitySet="Projects" />
-            <End Role="Users_Projects" EntitySet="Users_Projects" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Users_Roles_Users_Roles1" Association="Self.FK_Users_Roles_Users_Roles1">
-            <End Role="Roles" EntitySet="Roles" />
-            <End Role="Users_Roles" EntitySet="Users_Roles" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Users_Projects_Users" Association="Self.FK_Users_Projects_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Users_Projects" EntitySet="Users_Projects" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Users_Roles_Users" Association="Self.FK_Users_Roles_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Users_Roles" EntitySet="Users_Roles" />
-          </AssociationSet>
-        </EntityContainer>
-      </Schema>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="BugOutNetModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="BugComments">
+            <EntityTypeMapping TypeName="BugOutNetModel.BugComment">
+              <MappingFragment StoreEntitySet="BugComments">
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
+                <ScalarProperty Name="BugId" ColumnName="BugId" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Bugs">
+            <EntityTypeMapping TypeName="BugOutNetModel.Bug">
+              <MappingFragment StoreEntitySet="Bugs">
+                <ScalarProperty Name="LastUpdatedId" ColumnName="LastUpdatedId" />
+                <ScalarProperty Name="LatUpdated" ColumnName="LatUpdated" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="AssignedToId" ColumnName="AssignedToId" />
+                <ScalarProperty Name="PriorityId" ColumnName="PriorityId" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="BugOutNetModel.Category">
+              <MappingFragment StoreEntitySet="Categories">
+                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Priorities">
+            <EntityTypeMapping TypeName="BugOutNetModel.Priority">
+              <MappingFragment StoreEntitySet="Priorities">
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Projects">
             <EntityTypeMapping TypeName="BugOutNetModel.Project">
               <MappingFragment StoreEntitySet="Projects">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Roles">
             <EntityTypeMapping TypeName="BugOutNetModel.Role">
               <MappingFragment StoreEntitySet="Roles">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Statuses">
+            <EntityTypeMapping TypeName="BugOutNetModel.Status">
+              <MappingFragment StoreEntitySet="Statuses">
+                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="BugOutNetModel.User">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="DefaultProjectId" ColumnName="DefaultProjectId" />
                 <ScalarProperty Name="Salt" ColumnName="Salt" />
                 <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
-                <ScalarProperty Name="IsVerified" ColumnName="IsVerified" />
-                <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
-                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
-                <ScalarProperty Name="LastLogin" ColumnName="LastLogin" />
-                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
                 <ScalarProperty Name="AutoLogin" ColumnName="AutoLogin" />
+                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
+                <ScalarProperty Name="LastLogin" ColumnName="LastLogin" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
+                <ScalarProperty Name="IsVerified" ColumnName="IsVerified" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Users_Projects">
             <EntityTypeMapping TypeName="BugOutNetModel.Users_Projects">
               <MappingFragment StoreEntitySet="Users_Projects">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Users_Roles">
             <EntityTypeMapping TypeName="BugOutNetModel.Users_Roles">
               <MappingFragment StoreEntitySet="Users_Roles">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

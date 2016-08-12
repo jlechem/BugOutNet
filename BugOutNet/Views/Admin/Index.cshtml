@@ -1,5 +1,28 @@
 ﻿@{
-    ViewBag.Title = "Bugs";
+    ViewBag.Title = "BugOutNet - Admin";
 }
+<div class="container">
+    <ul class="nav nav-tabs">
+        <li class="tab-pane active"><a data-toggle="tab" href="#projects">Projects</a></li>
+        <li class="tab-pane"><a data-toggle="tab" href="#categories">Categories</a></li>
+        <li class="tab-pane"><a data-toggle="tab" href="#statuses">Statuses</a></li>
+        <li class="tab-pane"><a data-toggle="tab" href="#priorities">Priorities</a></li>
+        <li class="tab-pane"><a data-toggle="tab" href="#users">Users</a></li>
+        <li class="tab-pane"><a data-toggle="tab" href="#settings">Settings</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade active in" id="projects">@Html.Partial("_Projects")</div>
+        <div class="tab-pane fade" id="categories">@Html.Partial( "_Categories" )</div>
+        <div class="tab-pane fade" id="statuses">@Html.Partial( "_Statuses" )</div>
+        <div class="tab-pane fade" id="priorities">@Html.Partial( "_Priorities" )</div>
+        <div class="tab-pane fade" id="users">@Html.Partial( "_Users" )</div>
+        <div class="tab-pane fade" id="settings">@Html.Partial( "_Settings" )</div>
+    </div>
+</div>
 
-<h2>Admin</h2>
+<script>
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var target = $(e.target).attr("href") // activated tab
+        //alert(target);
+    });
+</script>

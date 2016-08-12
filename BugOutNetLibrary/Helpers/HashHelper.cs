@@ -22,5 +22,24 @@ namespace BugOutNetLibrary.Helpers
                 return shaM.ComputeHash( data );
             }
         }
+
+        /// <summary>
+        /// Creates the salt.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <returns></returns>
+        public static string CreateSalt( int size )
+        {
+            //Generate a cryptographic random number.
+            using( RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider() )
+            {
+                byte[] buff = new byte[size];
+                rng.GetBytes( buff );
+
+                // Return a Base64 string representation of the random number.
+                return Convert.ToBase64String( buff );
+            }
+        }
+
     }
 }
