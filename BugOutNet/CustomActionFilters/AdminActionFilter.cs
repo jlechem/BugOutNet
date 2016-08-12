@@ -24,8 +24,8 @@ namespace BugOutNet.CustomActionFilters
                 // make sure user has admin role
                 if( !SessionManager.User.IsAdmin)
                 {
-                    // no logged in user means a re-direct to the login page
-                    filterContext.Result = new RedirectToRouteResult( new RouteValueDictionary( new { action = "Index", controller = "Home" } ) );
+                    // no logged in user means a re-direct to the bugs page
+                    filterContext.Result = new RedirectToRouteResult( new RouteValueDictionary( new { action = "Index", controller = "Bugs" } ) );
                 }
             }
 

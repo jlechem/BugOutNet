@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BugOutNetLibrary.Models.ViewModels
 {
-    public class User
+    public class UserViewModel
     {
     }
 }

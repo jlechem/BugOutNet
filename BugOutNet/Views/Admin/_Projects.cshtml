@@ -1,0 +1,107 @@
+﻿@{
+    ViewBag.Title = "BugOutNet - Projects";
+}
+
+<div class="container" style="height: 500px;">
+    <div style="padding-bottom: 10px; padding-top: 10px;">
+        <button type="button" id="buttonNew" class="btn btn-primary btn-sm" onclick="newButtonClick(); return false;">Add New Project</button>
+    </div>
+    <table id="projectGrid" class="scroll"></table>
+    <div id="projectGridPager"></div> 
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        jQuery("#projectGrid").jqGrid(
+        {
+            url: "@Url.Action( "GetProjects", "Projects" )",
+            datatype: "json",
+            mtype: 'GET',
+            colNames: ['Project Id', 'Name', 'Description', 'Created On'],
+            colModel: [
+                         { name: 'Id', index: 'Id', width: 30, align: 'left', editrules: { edithidden: true } },
+                         { name: 'Name', index: 'Name', width: 100, align: 'left', editable: true, editrules: { required: true } },
+                         { name: 'Description', index: 'Description', width: 300, align: 'left', editable: true, edittype: "textarea", editoptions: { cols: 60, rows: 10 }, editrules: { required: true } },
+                         { name: 'Created', index: 'Created', width: 60, align: 'left', editrules: { edithidden: true }, formatter: "date", formatoptions: { newformat: "m/d/Y" } }],
+            pager: "#projectGridPager",
+            viewrecords: true,
+            autowidth: true,
+            multiselect: false,
+            height: '100%',
+            width: '100%',
+            rowNum: 20,
+            caption: 'Projects',
+            emptyrecords: 'No Projects',
+            rowList: [10, 20, 30, 40, 50],
+            altRows: true,
+            loadonce: false,
+            loadtext: "Loading Projects...",
+            jsonReader: {
+                root: "rows",
+                page: "page",
+                total: "total",
+                records: "records",
+                repeatitems: false,
+                Id: "0"
+            }
+        });
+
+        $("#projectGrid").jqGrid('navGrid', '#projectGridPager',
+                {
+                    add: true,
+                    edit: true,
+                    del: true,
+                    search: false,
+                    view: false,
+                    refresh: false,
+                    addtext: "",
+                    addtitle: "Add New Project"
+                },
+                // edit options
+                {
+                    url: "@Url.Action("Edit","Projects")",
+                    addCaption: "Add Project",
+                    editCaption: "Edit Project",
+                    bSubmit: "Submit",
+                    bCancel: "Cancel",
+                    bClose: "Close",
+                    saveData: "Data has been changed! Save changes?",
+                    bYes: "Yes",
+                    bNo: "No",
+                    bExit: "Cancel",
+                    width: 550,
+                    closeAfterEdit: true,
+                    resize: false
+                },
+                // add options
+                {
+                    addCaption: "Add Project",
+                    editCaption: "Edit Project",
+                    url: "@Url.Action( "Create", "Projects" )",
+                    closeAfterAdd: true,
+                    width: 550,
+                    resize: false
+                },
+                // delete
+                {
+                    caption: "Delete",
+                    url: "@Url.Action( "Delete", "Projects" )",
+                    closeAfterAdd: true,
+                    msg: "Are you sure you want to delete this project?",
+                    bSubmit: "Delete",
+                    bCancel: "Cancel",
+                    width: 370,
+                    height: 140,
+                    resize: false
+                },                //other fucking options                // search                {},                {
+                    closeOnEscape: true
+                });
+    });
+
+
+    function newButtonClick() {
+
+    }
+
+</script>

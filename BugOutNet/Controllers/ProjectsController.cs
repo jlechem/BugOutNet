@@ -1,10 +1,12 @@
 ﻿using BugOutNet.CustomActionFilters;
+using BugOutNetLibrary.Managers;
 using BugOutNetLibrary.Models.DB;
 using BugOutNetLibrary.Models.GridModels;
 using BugOutNetLibrary.Repos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -23,6 +25,7 @@ namespace BugOutNet.Controllers
         /// </summary>
         /// <returns></returns>
         [AdminActionFilter]
+        //[ValidateAntiForgeryToken]
         public ActionResult GetProjects( string sidx, string sort, int page, int rows )
         {
             sort = ( sort == null ) ? "" : sort;
@@ -35,7 +38,7 @@ namespace BugOutNet.Controllers
                     Id = project.Id,
                     Name = project.Name,
                     Description = project.Description,
-                    Created = project.Created,
+                    Created = project.Created.HasValue ? project.Created.Value : (DateTime?)null,
                     CreatedBy = _db.Users.FirstOrDefault( user => user.Id == project.CreatorId ).UserName
                 } );
 
@@ -61,30 +64,90 @@ namespace BugOutNet.Controllers
                 rows = projects
             };
 
-            return Json( projects, JsonRequestBehavior.AllowGet );
+            return Json( jsonData, JsonRequestBehavior.AllowGet );
 
         }
 
+        /// <summary>
+        /// Edits the specified model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost]
+        [AdminActionFilter]
+        //[ValidateAntiForgeryToken]
         public ActionResult Edit(ProjectGridModel model)
         {
             if( model != null && ModelState.IsValid )
             {
+                try
+                {
 
+                    var project = _db.Projects.Find( model.Id );
+
+                    if( project != null )
+                    {
+                        project.Name = model.Name;
+                        project.Description = model.Name;
+
+                        _db.SaveChanges();
+
+                        return new HttpStatusCodeResult( HttpStatusCode.OK );
+
+                    }
+                    else
+                    {
+                        return HttpNotFound( "Project: " + model.Name + " not found." );
+                    }
+                }
+                catch( Exception ex )
+                {
+                    return new HttpStatusCodeResult( HttpStatusCode.InternalServerError, ex.ToString() );
+                }
             }
 
-            return View();
+            return new HttpStatusCodeResult( HttpStatusCode.InternalServerError );
 
         }
 
+        /// <summary>
+        /// Creates the specified model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
         [HttpPost]
+        [AdminActionFilter]
+        //[ValidateAntiForgeryToken]
         public ActionResult Create( [Bind( Exclude = "Id" )] ProjectGridModel model )
         {
             if( model != null && ModelState.IsValid )
             {
+                try
+                {
+                    _db.Projects.Add(
+                        new Project
+                        {
+                            Created = DateTime.Now,
+                            CreatorId = SessionManager.User.Id,
+                            IsActive = true,
+                            Name = model.Name,
+                            Description = model.Description
+                        } );
+
+                    _db.SaveChanges();
+                    
+                }
+                catch(Exception ex)
+                {
+                    return new HttpStatusCodeResult( HttpStatusCode.InternalServerError, ex.ToString() );
+                }
+
+                return new HttpStatusCodeResult( HttpStatusCode.OK );
 
             }
 
-            return View();
+            return new HttpStatusCodeResult( HttpStatusCode.InternalServerError );
+
         }
 
         /// <summary>
@@ -92,10 +155,32 @@ namespace BugOutNet.Controllers
         /// </summary>
         /// <param name="Id">The identifier.</param>
         /// <returns></returns>
+        [AdminActionFilter]
+        //[ValidateAntiForgeryToken]
         public ActionResult Delete(int Id )
         {
-            return View();
-        }
+            try
+            {
 
+                var project = _db.Projects.Find( Id );
+
+                if( project == null )
+                {
+                    return HttpNotFound( "Project Id: " + Id + " not found." );
+                }
+                else
+                {
+                    _db.Projects.Remove( project );
+                    _db.SaveChanges();
+                }
+            }
+            catch( Exception ex )
+            {
+                return new HttpStatusCodeResult( HttpStatusCode.InternalServerError, ex.ToString() );
+            }
+
+            return new HttpStatusCodeResult( HttpStatusCode.OK );
+
+        }
     }
 }
