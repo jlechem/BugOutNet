@@ -31,7 +31,6 @@
     <script type="text/javascript" src="@Url.Content("~/scripts/jquery.unobtrusive-ajax.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/scripts/modernizr-2.8.3.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/scripts/bootstrap.min.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/scripts/Site.js")"></script>
     <link rel="icon" type="image/png" href="@Url.Content("~/favicon.ico")" />
 
     <style>
@@ -69,15 +68,7 @@
         </div>
     </div>
     <div class="container body-content">
-        <div id="target" class="loading">
-            <div class="loading-overlay">
-                <p class="loading-spinner">
-                    <span class="loading-icon"></span>
-                    <span class="loading-text"></span>
-                </p>
-                @RenderBody()
-            </div>
-        </div>
+        @RenderBody()
     </div>
     <div id="footer">
         <div class="container text-center" style="padding: 20px;">

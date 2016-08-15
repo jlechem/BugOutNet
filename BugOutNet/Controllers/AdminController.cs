@@ -61,7 +61,7 @@ namespace BugOutNet.Controllers
                     break;
 
                 case "users":
-                    viewName = "~/Views/Admin/_Users.chstml";
+                    viewName = "~/Views/Admin/_Users.cshtml";
                     break;
 
                 case "settings":
