@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace BugOutNetLibrary.Models.GridModels
 {
@@ -15,7 +16,7 @@ namespace BugOutNetLibrary.Models.GridModels
         public string LastUpdatedBy { get; set; }
 
         [DisplayFormat( ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}" )]
-        public string LastUpdatedOn { get; set; }
+        public DateTime? LastUpdatedOn { get; set; }
 
     }
 }

@@ -104,6 +104,8 @@
     </Compile>
     <Compile Include="Models\GridModels\BugGridModel.cs" />
     <Compile Include="Models\GridModels\CategoryGridModel.cs" />
+    <Compile Include="Models\GridModels\GridModel.cs" />
+    <Compile Include="Models\GridModels\PrioritiesGridModel.cs" />
     <Compile Include="Models\GridModels\PriortiesGridModel.cs" />
     <Compile Include="Models\GridModels\ProjectGridModel.cs" />
     <Compile Include="Models\GridModels\StatusesGridModel.cs" />
