@@ -11,7 +11,7 @@ using System.Web.Mvc;
 
 namespace BugOutNet.Controllers
 {
-    public class CategoriesController : Controller
+    public class StatusesController : Controller
     {
         #region Fields
 
@@ -31,28 +31,28 @@ namespace BugOutNet.Controllers
             int pageIndex = Convert.ToInt32( page ) - 1;
             int pageSize = rows;
 
-            var projects = _db.Categories.Select(
-                project => new CategoryGridModel
+            var statuses = _db.Statuses.Select(
+                status => new StatusesGridModel
                 {
-                    Id = project.Id,
-                    Name = project.Name,
-                    Description = project.Description,
-                    Created = project.Created,
-                    CreatedBy = _db.Users.FirstOrDefault( user => user.Id == project.CreatorId ).UserName
+                    Id = status.Id,
+                    Name = status.Name,
+                    Description = status.Description,
+                    Created = status.Created,
+                    CreatedBy = _db.Users.FirstOrDefault( user => user.Id == status.CreatorId ).UserName
                 } );
 
-            int totalRecords = projects.Count();
+            int totalRecords = statuses.Count();
             var totalPages = (int)Math.Ceiling( (float)totalRecords / (float)rows );
 
             if( sort.ToUpper() == "DESC" )
             {
-                projects = projects.OrderByDescending( t => t.Id );
-                projects = projects.Skip( pageIndex * pageSize ).Take( pageSize );
+                statuses = statuses.OrderByDescending( t => t.Id );
+                statuses = statuses.Skip( pageIndex * pageSize ).Take( pageSize );
             }
             else
             {
-                projects = projects.OrderBy( t => t.Id );
-                projects = projects.Skip( pageIndex * pageSize ).Take( pageSize );
+                statuses = statuses.OrderBy( t => t.Id );
+                statuses = statuses.Skip( pageIndex * pageSize ).Take( pageSize );
             }
 
             var jsonData = new
@@ -60,7 +60,7 @@ namespace BugOutNet.Controllers
                 total = totalPages,
                 page,
                 records = totalRecords,
-                rows = projects
+                rows = statuses
             };
 
             return Json( jsonData, JsonRequestBehavior.AllowGet );
@@ -75,28 +75,26 @@ namespace BugOutNet.Controllers
         [HttpPost]
         [AdminActionFilter]
         //[ValidateAntiForgeryToken]
-        public ActionResult Edit( CategoryGridModel model )
+        public ActionResult Edit( StatusesGridModel model )
         {
             if( model != null && ModelState.IsValid )
             {
                 try
                 {
+                    var status = _db.Statuses.Find( model.Id );
 
-                    var category = _db.Categories.Find( model.Id );
-
-                    if( category != null )
+                    if( status != null )
                     {
-                        category.Name = model.Name;
-                        category.Description = model.Description;
+                        status.Name = model.Name;
+                        status.Description = model.Description;
 
                         _db.SaveChanges();
 
                         return new HttpStatusCodeResult( HttpStatusCode.OK );
-
                     }
                     else
                     {
-                        return HttpNotFound( "Category: " + model.Name + " not found." );
+                        return HttpNotFound( "Status: " + model.Name + " not found." );
                     }
                 }
                 catch( Exception ex )
@@ -117,14 +115,14 @@ namespace BugOutNet.Controllers
         [HttpPost]
         [AdminActionFilter]
         //[ValidateAntiForgeryToken]
-        public ActionResult Create( [Bind( Exclude = "Id" )] CategoryGridModel model )
+        public ActionResult Create( [Bind( Exclude = "Id" )] StatusesGridModel model )
         {
             if( model != null && ModelState.IsValid )
             {
                 try
                 {
-                    _db.Categories.Add(
-                        new Category
+                    _db.Statuses.Add(
+                        new Status
                         {
                             Created = DateTime.Now,
                             CreatorId = SessionManager.User.Id,
@@ -159,16 +157,15 @@ namespace BugOutNet.Controllers
         {
             try
             {
+                var status = _db.Statuses.Find( Id );
 
-                var category = _db.Categories.Find( Id );
-
-                if( category == null )
+                if( status == null )
                 {
-                    return HttpNotFound( "Category Id: " + Id + " not found." );
+                    return HttpNotFound( "Status Id: " + Id + " not found." );
                 }
                 else
                 {
-                    _db.Categories.Remove( category );
+                    _db.Statuses.Remove( status );
                     _db.SaveChanges();
                 }
             }

@@ -21,21 +21,6 @@
     <link rel="icon" type="image/png" href="@Url.Content("~/favicon.ico")" />
     <title>BugOutNet Login</title>
     <style type="text/css">
-        .center-block {
-            font-family: Arial, Georgia, serif;
-            width: 300px;
-            height: 250px;
-            padding: 10px;
-            background-color: #eceadc;
-            color: #ec8007;
-            border: 1px solid grey;
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            margin: auto;
-        }
     </style> 
 </head>
 <body>
@@ -46,20 +31,24 @@
             </div>
         </div>
     </div>
-    <div class="container">
+    <div class="container" style="width: 300px;">
         <div class="row">
             <div class="center-block">
                 @using( Ajax.BeginForm( "PerformLogin", "Login", new AjaxOptions() { OnFailure= "onFailure", OnSuccess= "onSuccess" }  ) )
                 {
                     <span id="spanError" style="color: red;"></span>
                     <fieldset>
-                        <legend>Please Login</legend>
-                        <input class="form-control" type="text" placeholder="username" id="textUsername" name="textUsername" required="required" maxlength="25" />
-                        <input class="form-control" type="password" placeholder="password" id="textPassword" name="textPassword" required="required" maxlength="50" />
-                        <label class="form-control">
-                            Remember Me:&nbsp;<input type="checkbox" id="cbRemember" name="cbRemember" checked="checked" />
-                        </label>
-                        <input class="form-control btn btn-primary" type="submit" value="Login" data-loading-text="<i class='icon-spinner icon-spin icon-large'></i> Attempting Login" />
+                        <h2 class="form-signin-heading">Please sign in</h2>
+                        <label for="textUsername" class="sr-only">Username</label>
+                        <input type="text" id="textUsername" name="textUsername" class="form-control" placeholder="Username" required autofocus>
+                        <label for="textPassword" class="sr-only">Password</label>
+                        <input type="password" id="textPassword" name="textPassword" class="form-control" placeholder="Password" required>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="cbRemember" name="cbRemember" checked="checked"> Remember me
+                            </label>
+                        </div>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit"  data-loading-text="<i class='icon-spinner icon-spin icon-large'></i> Attempting Login">Sign in</button>
                     </fieldset>
                 }
             </div>

@@ -11,7 +11,7 @@ using System.Web.Mvc;
 
 namespace BugOutNet.Controllers
 {
-    public class CategoriesController : Controller
+    public class PrioritiesController : Controller
     {
         #region Fields
 
@@ -20,8 +20,12 @@ namespace BugOutNet.Controllers
         #endregion
 
         /// <summary>
-        /// Gets the projects.
+        /// Gets the prioriites.
         /// </summary>
+        /// <param name="sidx">The sidx.</param>
+        /// <param name="sort">The sort.</param>
+        /// <param name="page">The page.</param>
+        /// <param name="rows">The rows.</param>
         /// <returns></returns>
         [AdminActionFilter]
         //[ValidateAntiForgeryToken]
@@ -31,28 +35,28 @@ namespace BugOutNet.Controllers
             int pageIndex = Convert.ToInt32( page ) - 1;
             int pageSize = rows;
 
-            var projects = _db.Categories.Select(
-                project => new CategoryGridModel
+            var priorities = _db.Priorities.Select(
+                priority => new PrioritiesGridModel
                 {
-                    Id = project.Id,
-                    Name = project.Name,
-                    Description = project.Description,
-                    Created = project.Created,
-                    CreatedBy = _db.Users.FirstOrDefault( user => user.Id == project.CreatorId ).UserName
+                    Id = priority.Id,
+                    Name = priority.Name,
+                    Description = priority.Description,
+                    Created = priority.Created,
+                    CreatedBy = _db.Users.FirstOrDefault( user => user.Id == priority.CreatorId ).UserName
                 } );
 
-            int totalRecords = projects.Count();
+            int totalRecords = priorities.Count();
             var totalPages = (int)Math.Ceiling( (float)totalRecords / (float)rows );
 
             if( sort.ToUpper() == "DESC" )
             {
-                projects = projects.OrderByDescending( t => t.Id );
-                projects = projects.Skip( pageIndex * pageSize ).Take( pageSize );
+                priorities = priorities.OrderByDescending( t => t.Id );
+                priorities = priorities.Skip( pageIndex * pageSize ).Take( pageSize );
             }
             else
             {
-                projects = projects.OrderBy( t => t.Id );
-                projects = projects.Skip( pageIndex * pageSize ).Take( pageSize );
+                priorities = priorities.OrderBy( t => t.Id );
+                priorities = priorities.Skip( pageIndex * pageSize ).Take( pageSize );
             }
 
             var jsonData = new
@@ -60,7 +64,7 @@ namespace BugOutNet.Controllers
                 total = totalPages,
                 page,
                 records = totalRecords,
-                rows = projects
+                rows = priorities
             };
 
             return Json( jsonData, JsonRequestBehavior.AllowGet );
@@ -75,28 +79,26 @@ namespace BugOutNet.Controllers
         [HttpPost]
         [AdminActionFilter]
         //[ValidateAntiForgeryToken]
-        public ActionResult Edit( CategoryGridModel model )
+        public ActionResult Edit( PrioritiesGridModel model )
         {
             if( model != null && ModelState.IsValid )
             {
                 try
                 {
+                    var priority = _db.Priorities.Find( model.Id );
 
-                    var category = _db.Categories.Find( model.Id );
-
-                    if( category != null )
+                    if( priority != null )
                     {
-                        category.Name = model.Name;
-                        category.Description = model.Description;
+                        priority.Name = model.Name;
+                        priority.Description = model.Description;
 
                         _db.SaveChanges();
 
                         return new HttpStatusCodeResult( HttpStatusCode.OK );
-
                     }
                     else
                     {
-                        return HttpNotFound( "Category: " + model.Name + " not found." );
+                        return HttpNotFound( "Priority: " + model.Name + " not found." );
                     }
                 }
                 catch( Exception ex )
@@ -117,14 +119,14 @@ namespace BugOutNet.Controllers
         [HttpPost]
         [AdminActionFilter]
         //[ValidateAntiForgeryToken]
-        public ActionResult Create( [Bind( Exclude = "Id" )] CategoryGridModel model )
+        public ActionResult Create( [Bind( Exclude = "Id" )] PrioritiesGridModel model )
         {
             if( model != null && ModelState.IsValid )
             {
                 try
                 {
-                    _db.Categories.Add(
-                        new Category
+                    _db.Priorities.Add(
+                        new Priority
                         {
                             Created = DateTime.Now,
                             CreatorId = SessionManager.User.Id,
@@ -159,16 +161,15 @@ namespace BugOutNet.Controllers
         {
             try
             {
+                var priority = _db.Priorities.Find( Id );
 
-                var category = _db.Categories.Find( Id );
-
-                if( category == null )
+                if( priority == null )
                 {
-                    return HttpNotFound( "Category Id: " + Id + " not found." );
+                    return HttpNotFound( "Priority Id: " + Id + " not found." );
                 }
                 else
                 {
-                    _db.Categories.Remove( category );
+                    _db.Priorities.Remove( priority );
                     _db.SaveChanges();
                 }
             }
@@ -180,6 +181,5 @@ namespace BugOutNet.Controllers
             return new HttpStatusCodeResult( HttpStatusCode.OK );
 
         }
-
     }
 }

@@ -3,6 +3,7 @@ using BugOutNetLibrary.Helpers;
 using BugOutNetLibrary.Models.DB;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
@@ -29,6 +30,52 @@ namespace BugOutNet.Controllers
         public ActionResult CreateUser( string textUsername, string textPassword, bool cbRemember = false )
         {
             return View();
+        }
+
+        /// <summary>
+        /// Gets the menu data.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        [AdminActionFilter]
+        public ActionResult GetMenuData(string name)
+        {
+            string viewName = String.Empty;
+
+            switch( name.ToLower(CultureInfo.InvariantCulture))
+            {
+                case "projects":
+                    viewName = "~/Views/Admin/_Projects.cshtml";
+                    break;
+
+                case "categories":
+                    viewName = "~/Views/Admin/_Categories.cshtml";
+                    break;
+
+                case "statuses":
+                    viewName = "~/Views/Admin/_Statuses.cshtml";
+                    break;
+
+                case "priorities":
+                    viewName = "~/Views/Admin/_Priorities.cshtml";
+                    break;
+
+                case "users":
+                    viewName = "~/Views/Admin/_Users.chstml";
+                    break;
+
+                case "settings":
+                    viewName = "~/Views/Admin/_Settings.cshtml";
+                    break;
+
+                default:
+                    viewName = "~/Views/Admin/_Projects.cshtml";
+                    break;
+
+            }
+
+            return PartialView( viewName );
+
         }
 
         /// <summary>

@@ -12,25 +12,37 @@
     @*
         These are the standard UI themes, below are the custom ones
         <link rel="stylesheet" href="@Url.Content("~/Content/themes/base/all.css")">
-    <link rel="stylesheet" href="@Url.Content("~/Content/themes/base/jquery-ui.min.css")">*@
+        <link rel="stylesheet" href="@Url.Content("~/Content/themes/base/jquery-ui.min.css")">
+        <script type="text/javascript" src="@Url.Content("~/scripts/jquery-ui-1.12.0.min.js")"></script>
+    *@
 
     @* These themes are used for the Excitebike theme which is blueis *@
-    @*<link rel="stylesheet" href="@Url.Content("~/Content/themes/Excitebike/jquery-ui-min.css")" />
+    @*<link rel="stylesheet" href="@Url.Content("~/Content/themes/Excitebike/jquery-ui.min.css")" />
     <link rel="stylesheet" href="@Url.Content("~/Content/themes/Excitebike/jquery-ui.structure.min.css")" />
     <link rel="stylesheet" href="@Url.Content("~/Content/themes/Excitebike/jquery-ui.theme.min.css")" />*@
 
-    <link rel="stylesheet" href="@Url.Content("~/Content/themes/BlackTile/jquery-ui-min.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/themes/BlackTile/jquery-ui.min.css")" />
     <link rel="stylesheet" href="@Url.Content("~/Content/themes/BlackTile/jquery-ui.structure.min.css")" />
     <link rel="stylesheet" href="@Url.Content("~/Content/themes/BlackTile/jquery-ui.theme.min.css")" />
 
     <script type="text/javascript" src="@Url.Content("~/scripts/jquery-3.1.0.min.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/scripts/jquery-ui-1.12.0.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/scripts/i18n/grid.locale-en.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/scripts/jquery.jqGrid.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/scripts/jquery.unobtrusive-ajax.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/scripts/modernizr-2.8.3.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/scripts/bootstrap.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/scripts/Site.js")"></script>
     <link rel="icon" type="image/png" href="@Url.Content("~/favicon.ico")" />
+
+    <style>
+    .ui-jqgrid .ui-jqgrid-htable th {
+        height: 3em !important;
+    }
+    .ui-jqgrid tr.jqgrow td{
+        height: 2em !important;
+    }
+    </style>
+
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-static-top">
@@ -57,7 +69,15 @@
         </div>
     </div>
     <div class="container body-content">
-        @RenderBody()
+        <div id="target" class="loading">
+            <div class="loading-overlay">
+                <p class="loading-spinner">
+                    <span class="loading-icon"></span>
+                    <span class="loading-text"></span>
+                </p>
+                @RenderBody()
+            </div>
+        </div>
     </div>
     <div id="footer">
         <div class="container text-center" style="padding: 20px;">

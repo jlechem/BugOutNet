@@ -88,7 +88,7 @@ namespace BugOutNet.Controllers
                     if( project != null )
                     {
                         project.Name = model.Name;
-                        project.Description = model.Name;
+                        project.Description = model.Description;
 
                         _db.SaveChanges();
 
@@ -106,7 +106,7 @@ namespace BugOutNet.Controllers
                 }
             }
 
-            return new HttpStatusCodeResult( HttpStatusCode.InternalServerError );
+            return new HttpStatusCodeResult( HttpStatusCode.BadRequest );
 
         }
 
@@ -146,7 +146,7 @@ namespace BugOutNet.Controllers
 
             }
 
-            return new HttpStatusCodeResult( HttpStatusCode.InternalServerError );
+            return new HttpStatusCodeResult( HttpStatusCode.BadRequest );
 
         }
 
