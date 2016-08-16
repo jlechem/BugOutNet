@@ -1,4 +1,5 @@
-﻿using BugOutNetLibrary.Helpers;
+﻿using BugOutNetLibrary.Constants;
+using BugOutNetLibrary.Helpers;
 using BugOutNetLibrary.Managers;
 using BugOutNetLibrary.Models.DB;
 using System;
@@ -11,8 +12,6 @@ namespace BugOutNet.Controllers
 {
     public class LoginController : Controller
     {
-        private const string BUGOUTCOOKIE = "BugOutNet";
-
         private Entities _db = new Entities();
 
         public ActionResult Index()
@@ -96,11 +95,11 @@ namespace BugOutNet.Controllers
         public ActionResult Logoff()
         {
             // clear the session, remove the cookie, and send them to the logon page
-            var cookie = Request.Cookies[BUGOUTCOOKIE];
+            var cookie = Request.Cookies[Constants.BugOutCookeName];
 
             if( cookie != null)
             {
-                Request.Cookies.Remove( BUGOUTCOOKIE );
+                Request.Cookies.Remove( Constants.BugOutCookeName );
                 Request.Cookies.Clear();
             }
 
@@ -142,7 +141,7 @@ namespace BugOutNet.Controllers
             // create a new cookie if needed
             if( cookie == null )
             {
-                cookie = new HttpCookie( BUGOUTCOOKIE );
+                cookie = new HttpCookie( Constants.BugOutCookeName );
             }
             
             // set our values
@@ -151,7 +150,7 @@ namespace BugOutNet.Controllers
             cookie.Expires = expires;
 
             // if it's not there add it, otherwise update it
-            if( Request.Cookies[BUGOUTCOOKIE] == null )
+            if( Request.Cookies[Constants.BugOutCookeName] == null )
             {
                 Response.Cookies.Add( cookie );
             }
@@ -166,7 +165,7 @@ namespace BugOutNet.Controllers
         /// </summary>
         private void WriteLogonCookie( int id )
         {
-            var cookie = Request.Cookies[BUGOUTCOOKIE];
+            var cookie = Request.Cookies[Constants.BugOutCookeName];
             var guid = Guid.NewGuid().ToString();
             var now = DateTime.Now;
 

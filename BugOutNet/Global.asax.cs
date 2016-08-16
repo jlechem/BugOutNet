@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BugOutNet.Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,9 +14,16 @@ namespace BugOutNet
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
+            FilterConfig.RegisterGlobalFilters( GlobalFilters.Filters );
+            RouteConfig.RegisterRoutes( RouteTable.Routes );
+            BundleConfig.RegisterBundles( BundleTable.Bundles );
+
+            // cause the cache to load
+            CacheManager.GetProjects();
+            CacheManager.GetCategories();
+            CacheManager.GetPriorities();
+            CacheManager.GetStatuses();
+
         }
     }
 }

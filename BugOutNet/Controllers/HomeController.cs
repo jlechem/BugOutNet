@@ -6,14 +6,13 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
 using BugOutNetLibrary.Managers;
+using BugOutNetLibrary.Constants;
 
 namespace BugOutNet.Controllers
 {
     public class HomeController : Controller
     {
         private Entities _db = new Entities();
-
-        private const string BUGOUTCOOKIE = "BugOutNet";
 
         public ActionResult Index()
         {
@@ -24,7 +23,7 @@ namespace BugOutNet.Controllers
             // OK we need to check if they've got an auto login or not!!!
 
             // read the cookie and get the token and expiration date (we'll set this for eternity I guess)
-            var cookie = Request.Cookies[BUGOUTCOOKIE];
+            var cookie = Request.Cookies[Constants.BugOutCookeName];
 
             if( cookie != null )
             {
@@ -62,7 +61,7 @@ namespace BugOutNet.Controllers
             else
             {
                 // destroy cookie
-                Request.Cookies.Remove( BUGOUTCOOKIE );
+                Request.Cookies.Remove( Constants.BugOutCookeName );
                 Request.Cookies.Clear();
 
                 // destory token
