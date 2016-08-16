@@ -100,6 +100,11 @@
           <Property Name="IsAdmin" Type="bit" Nullable="false" />
           <Property Name="Salt" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="DefaultProjectId" Type="int" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Address" Type="nvarchar" MaxLength="255" />
+          <Property Name="Address2" Type="nvarchar" MaxLength="255" />
+          <Property Name="Created" Type="datetime" />
         </EntityType>
         <EntityType Name="Users_Projects">
           <Key>
@@ -588,6 +593,11 @@
           <NavigationProperty Name="Statuses" Relationship="BugOutNetModel.FK_Statuses_Users" FromRole="User" ToRole="Status" />
           <NavigationProperty Name="Users_Projects" Relationship="BugOutNetModel.FK_Users_Projects_Users" FromRole="User" ToRole="Users_Projects" />
           <NavigationProperty Name="Users_Roles" Relationship="BugOutNetModel.FK_Users_Roles_Users" FromRole="User" ToRole="Users_Roles" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Address2" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="Users_Projects">
           <Key>
@@ -895,6 +905,11 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="BugOutNetModel.User">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Address2" ColumnName="Address2" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="DefaultProjectId" ColumnName="DefaultProjectId" />
                 <ScalarProperty Name="Salt" ColumnName="Salt" />
                 <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />

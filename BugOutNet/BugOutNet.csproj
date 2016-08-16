@@ -480,6 +480,7 @@
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\StatusesController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="CustomActionFilters\AdminActionFilter.cs" />
     <Compile Include="CustomActionFilters\UserActionFilter.cs" />
     <Compile Include="Global.asax.cs">
@@ -696,7 +697,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="Views\Statuses\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

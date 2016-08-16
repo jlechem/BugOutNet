@@ -25,7 +25,7 @@ namespace BugOutNetLibrary.Models.GridModels
         /// </value>
         [Required( AllowEmptyStrings = false, ErrorMessage = "Name is required." )]
         [StringLength( 100 )]
-        public string Name { get; set; }
+        public string Username { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
@@ -34,8 +34,8 @@ namespace BugOutNetLibrary.Models.GridModels
         /// The description.
         /// </value>
         [Required( AllowEmptyStrings = false, ErrorMessage = "Description is required." )]
-        [StringLength( 2000 )]
-        public string Description { get; set; }
+        [StringLength( 100 )]
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the created by.
@@ -43,7 +43,7 @@ namespace BugOutNetLibrary.Models.GridModels
         /// <value>
         /// The created by.
         /// </value>
-        public string CreatedBy { get; set; }
+        public string EmailAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the created.
