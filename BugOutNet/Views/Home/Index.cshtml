@@ -8,17 +8,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="Description" content="Justin LeCheminant Senior Software Engineer. Showcasing projects, blog, resume, contact info" />
     <META NAME="ROBOTS" CONTENT="INDEX, NOFOLLOW">
-    <link href="@Url.Content("~/Content/bootstrap.css")" type="text/css" rel="stylesheet" />
-    <link href="@Url.Content("~/Content/bootstrap-theme.min.css")" type="text/css" rel="stylesheet" />
-    <link rel="stylesheet" href="@Url.Content("~/Content/jquery.jqGrid/ui.jqgrid.css")" />
-    <link rel="stylesheet" href="@Url.Content("~/Content/themes/base/all.css")">
-    <script type="text/javascript" src="@Url.Content("~/scripts/jquery-3.1.0.min.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/scripts/jquery.jqGrid.min.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/scripts/bootstrap.min.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/scripts/modernizr-2.8.3.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/scripts/i18n/grid.locale-en.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/scripts/jquery.unobtrusive-ajax.min.js")"></script>
-    <link rel="icon" type="image/png" href="@Url.Content("~/favicon.ico")" />
+    <link href="@Url.Content( "~/Content/bootstrap.css" )" type="text/css" rel="stylesheet" />
+    <link href="@Url.Content( "~/Content/bootstrap-theme.min.css" )" type="text/css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="@Url.Content( "~/Content/themes/base/jquery-ui.min.css" )" />
+    <link rel="stylesheet" href="@Url.Content( "~/Content/jquery.jqGrid/ui.jqgrid.css" )" />
+
+    <script type="text/javascript" src="@Url.Content( "~/scripts/jquery-3.1.0.min.js" )"></script>
+    <script type="text/javascript" src="@Url.Content( "~/scripts/jquery-ui-1.12.0.min.js" )"></script>
+    <script type="text/javascript" src="@Url.Content( "~/scripts/i18n/grid.locale-en.js" )"></script>
+    <script type="text/javascript" src="@Url.Content( "~/scripts/jquery.jqGrid.min.js" )"></script>
+    <script type="text/javascript" src="@Url.Content( "~/scripts/jquery.unobtrusive-ajax.min.js" )"></script>
+    <script type="text/javascript" src="@Url.Content( "~/scripts/modernizr-2.8.3.js" )"></script>
+
+    <script type="text/javascript" src="@Url.Content( "~/scripts/bootstrap.min.js" )"></script>
+
+    <link rel="icon" type="image/png" href="@Url.Content( "~/favicon.ico" )" />
     <title>BugOutNet Login</title>
     <style type="text/css">
     </style> 
@@ -31,10 +36,10 @@
             </div>
         </div>
     </div>
-    <div class="container" style="width: 300px;">
+    <div class="container" style="width: 300px;" id="loginDiv">
         <div class="row">
             <div class="center-block">
-                @using( Ajax.BeginForm( "PerformLogin", "Login", new AjaxOptions() { OnFailure= "onFailure", OnSuccess= "onSuccess" }  ) )
+                @using( Ajax.BeginForm( "PerformLogin", "Login", new AjaxOptions() { OnBegin="onBegin", OnComplete="onComplete", OnFailure = "onFailure", OnSuccess= "onSuccess" }  ) )
                 {
                     <span id="spanError" style="color: red;"></span>
                     <fieldset>
@@ -52,12 +57,24 @@
                     </fieldset>
                 }
             </div>
+            <div id="loading" style="text-align:center; z-index: 9000; display:none;" class="center-block">
+                <img src="~/Content/images/loading.gif" style="border:none;" />
+            </div>
         </div>
     </div> 
 </body>
 </html>
 
 <script>
+    function onBegin() {
+        $("#loginDiv").hide();
+        $("#loading").show();
+    }
+
+    function onComplete() {
+        $("#loading").hide();
+    }
+
     function onFailure(data) {
         alert(data.ErrorMessage);
     }
@@ -68,6 +85,7 @@
             window.location = "@Url.Action( "Index", "Bugs" )";
         }
         else {
+            $("#loginDiv").show();
             $("#spanError").html("Invalid username/password");
         }
         
