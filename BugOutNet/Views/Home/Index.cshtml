@@ -39,8 +39,9 @@
     <div class="container" style="width: 300px;" id="loginDiv">
         <div class="row">
             <div class="center-block">
-                @using( Ajax.BeginForm( "PerformLogin", "Login", new AjaxOptions() { OnBegin="onBegin", OnComplete="onComplete", OnFailure = "onFailure", OnSuccess= "onSuccess" }  ) )
+                @using( Ajax.BeginForm( "PerformLogin", "Login", new AjaxOptions() { OnBegin = "onBegin", OnComplete = "onComplete", OnFailure = "onFailure", OnSuccess = "onSuccess" } ) )
                 {
+                    @Html.AntiForgeryToken()
                     <span id="spanError" style="color: red;"></span>
                     <fieldset>
                         <h2 class="form-signin-heading">Please sign in</h2>
@@ -50,7 +51,7 @@
                         <input type="password" id="textPassword" name="textPassword" class="form-control" placeholder="Password" required>
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" id="cbRemember" name="cbRemember" checked="checked"> Remember me
+                                <input type="checkbox" id="cbRemember" name="cbRemember" value="true" checked="checked"> Remember me
                             </label>
                         </div>
                         <button class="btn btn-lg btn-primary btn-block" type="submit"  data-loading-text="<i class='icon-spinner icon-spin icon-large'></i> Attempting Login">Sign in</button>
@@ -66,6 +67,10 @@
 </html>
 
 <script>
+    var salt = "";
+    var password = "";
+    var hash = "";
+
     function onBegin() {
         $("#loginDiv").hide();
         $("#loading").show();

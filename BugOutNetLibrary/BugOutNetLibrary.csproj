@@ -93,6 +93,9 @@
     <Compile Include="Models\DB\Status.cs">
       <DependentUpon>BugOutNetModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DB\Token.cs">
+      <DependentUpon>BugOutNetModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DB\User.cs">
       <DependentUpon>BugOutNetModel.tt</DependentUpon>
     </Compile>
