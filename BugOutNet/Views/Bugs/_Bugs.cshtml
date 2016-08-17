@@ -1,0 +1,72 @@
+﻿<div>
+    <div style="float: left;">
+        <h4><span class="label label-primary">Projects:&nbsp;</span>&nbsp;&nbsp;@Html.DropDownList( "ddlProjects", BugOutNet.Classes.CacheManager.GetProjects(), "All" )</h4>
+    </div>
+    <div style="float:right; text-align: right"><button type="button" class="btn btn-primary" onclick="addNewBug();">Add New Bug</button></div>
+</div>
+<hr />
+<div style="clear: both;">
+    <table id="jqGrid"></table>
+    <div id="jqGridPager"></div>
+</div>
+
+<script>
+    function addNewBug() {
+        $("#divBugsContainer").html("");
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action( "GetBugView", "Bugs" )',
+            data: {
+                name: "addbug"
+            },
+            beforeSend: function () {
+                $("#divBugsContainer").hide();
+            },
+            success: function (result) {
+                $('#divBugsContainer').html(result);
+            },
+            complete: function () {
+                $("#divBugsContainer").show();
+            }
+        });
+
+    }
+    
+    jQuery("#jqGrid").jqGrid({
+                url: "@Url.Action( "GetBugs","Bugs", new { projectId = 0 }  )",
+                datatype: "json",
+                mtype: 'GET',
+                colNames: ['Bug Id', 'Name', 'Description', 'Project', 'Category', 'Priority','Status','Assigned To'],
+                colModel: [
+                             { name: 'Id', index: 'Id', align: 'left', width: 60 },
+                             { name: 'Name', index: 'Name', align: 'left', width: 90 },
+                             { name: 'Description', index: 'Description', align: 'left', width: 200 },
+                             { name: 'Project', index: 'Project', align: 'left', width: 60 },
+                             { name: 'Category', index: 'Category', align: 'left', width: 60 },
+                             { name: 'Priority', index: 'Priority', align: 'left', width: 60 },
+                             { name: 'Status', index: 'Status', align: 'left', width: 50 },
+                             { name: 'AssignedTo', index: 'AssignedTo', align: 'left', width: 100 }],
+                viewrecords: true,
+                autowidth: true,
+                shrinkToFit: true,
+                multiselect: false,
+                height: '100%',
+                width: '100%',
+                rowNum: 20,
+                pager: "#jqGridPager",
+                caption: 'Bugs',
+                emptyrecords: 'No bugs to display',
+                rowList: [10, 20, 30, 40, 50],
+                altRows: true,
+                loadtext: "Loading Bugs...",
+                jsonReader: {
+                    root: "rows",
+                    page: "page",
+                    total: "total",
+                    records: "records",
+                    repeatitems: false,
+                    Id: "0"
+                }
+            });
+</script>

@@ -28,7 +28,7 @@ namespace BugOutNetLibrary.Models.DB
         public int CategoryId { get; set; }
         public int StatusId { get; set; }
         public int PriorityId { get; set; }
-        public int AssignedToId { get; set; }
+        public Nullable<int> AssignedToId { get; set; }
         public Nullable<System.DateTime> Created { get; set; }
         public Nullable<System.DateTime> LatUpdated { get; set; }
         public Nullable<int> LastUpdatedId { get; set; }

@@ -24,9 +24,9 @@ namespace BugOutNetLibrary.Models.DB
             this.Projects = new HashSet<Project>();
             this.Roles = new HashSet<Role>();
             this.Statuses = new HashSet<Status>();
+            this.Tokens = new HashSet<Token>();
             this.Users_Projects = new HashSet<Users_Projects>();
             this.Users_Roles = new HashSet<Users_Roles>();
-            this.Tokens = new HashSet<Token>();
         }
     
         public int Id { get; set; }
@@ -63,10 +63,10 @@ namespace BugOutNetLibrary.Models.DB
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Status> Statuses { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Token> Tokens { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Users_Projects> Users_Projects { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Users_Roles> Users_Roles { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Token> Tokens { get; set; }
     }
 }

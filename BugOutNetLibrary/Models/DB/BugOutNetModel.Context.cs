@@ -32,9 +32,9 @@ namespace BugOutNetLibrary.Models.DB
         public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Status> Statuses { get; set; }
+        public virtual DbSet<Token> Tokens { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Users_Projects> Users_Projects { get; set; }
         public virtual DbSet<Users_Roles> Users_Roles { get; set; }
-        public virtual DbSet<Token> Tokens { get; set; }
     }
 }

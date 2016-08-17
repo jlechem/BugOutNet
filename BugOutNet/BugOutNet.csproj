@@ -697,6 +697,9 @@
     <Content Include="Views\Admin\_Projects.cshtml" />
     <Content Include="Views\Admin\_Priorities.cshtml" />
     <Content Include="Views\Admin\_Settings.cshtml" />
+    <Content Include="Views\Bugs\_AddBug.cshtml" />
+    <Content Include="Views\Bugs\_EditBug.cshtml" />
+    <Content Include="Views\Bugs\_Bugs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />

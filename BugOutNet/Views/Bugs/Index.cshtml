@@ -1,48 +1,7 @@
-﻿@model  IEnumerable<BugOutNetLibrary.Models.GridModels.BugGridModel>
-
-@{
+﻿@{
     ViewBag.Title = "BugOutNet - Bugs";
 }
 
-<div class="container">
-    <div>
-        <span>Project:&nbsp;</span>@*@Html.DropDownList("ddlProjects")*@
-    </div>
-    <hr />
-    <table id="jqGrid"></table>
-    <div id="jqGridPager"></div>
+<div class="container" id="divBugsContainer">
+   @Html.Partial("_Bugs")
 </div>
-
-<script>
-    jQuery("#jqGrid").jqGrid({
-                url: "@Url.Action( "GetBugs","Bugs", new { projectId = 0 }  )",
-                datatype: "json",
-                mtype: 'GET',
-                colNames: ['Bug Id', 'Name', 'Description', 'Project', 'Category', 'Priority','Status','Assigned To','Last Updated By','Last Updated'],
-                colModel: [
-                             { name: 'Id', index: 'Id', align: 'left' },
-                             { name: 'Name', index: 'Name', align: 'left' },
-                             { name: 'Description', index: 'Description', align: 'left' },
-                             { name: 'Project', index: 'Project', align: 'left' },
-                             { name: 'Category', index: 'Category', align: 'left' },
-                             { name: 'Priority', index: 'Priority', align: 'right' },
-                             { name: 'Status', index: 'Status', align: 'left' },
-                             { name: 'AssignedTo', index: 'AssignedTo', align: 'left' },
-                             { name: 'LastUpdatedBy', index: 'LastUpdatedBy', align: 'left' },
-                             { name: 'LastUpdatedOn', index: 'LastUpdatedOn', align: 'left' }],
-                viewrecords: true,
-                autowidth: true,
-                shrinkToFit: true,
-                multiselect: false,
-                height: '100%',
-                width: '100%',
-                rowNum: 20,
-                pager: "#jqGridPager",
-                caption: 'Bugs',
-                emptyrecords: 'No bugs to display',
-                rowList: [10, 20, 30, 40, 50],
-                altRows: true,
-                loadonce: true,
-                loadtext: "Loading Bugs...",
-            });
-</script>

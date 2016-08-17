@@ -52,6 +52,16 @@ namespace BugOutNet.Classes
         }
 
         /// <summary>
+        /// Gets the specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
+        private static object Get( string key )
+        {
+            return s_Cache[key];
+        }
+
+        /// <summary>
         /// Determines whether [contains] [the specified key].
         /// </summary>
         /// <param name="key">The key.</param>
@@ -64,65 +74,119 @@ namespace BugOutNet.Classes
         /// <summary>
         /// Gets the projects.
         /// </summary>
-        public static void GetProjects()
+        public static List<SelectListItem> GetProjects()
         {
-            using( var db = new Entities() )
+            var projects = Get( ProjectsCacheKey ) as List<SelectListItem>;
+            
+            if( projects == null)
             {
-                var projects = db.Projects.Select( project =>
-                new SelectListItem
+                using( var db = new Entities() )
                 {
-                    Text = project.Name,
-                    Value = project.Id.ToString()
-                } ).ToList();
+                    projects = db.Projects.Select( project =>
+                    new SelectListItem
+                    {
+                        Text = project.Name,
+                        Value = project.Id.ToString()
+                    } ).ToList();
+
+                    //projects.Insert(0, new SelectListItem() { Text = "All", Value = "0" } );
+
+                }
+
+                Add( ProjectsCacheKey, projects );
+
             }
+
+            return projects;
+
+            
         }
 
         /// <summary>
         /// Gets the categories.
         /// </summary>
-        public static void GetCategories()
+        public static List<SelectListItem> GetCategories()
         {
-            using( var db = new Entities() )
+            var categories = Get( CagtegoriesCacheKey ) as List<SelectListItem>;
+
+            if( categories == null )
             {
-                var projects = db.Categories.Select( category =>
-                new SelectListItem
+                using( var db = new Entities() )
                 {
-                    Text = category.Name,
-                    Value = category.Id.ToString()
-                } ).ToList();
+                    categories = db.Categories.Select( category =>
+                    new SelectListItem
+                    {
+                        Text = category.Name,
+                        Value = category.Id.ToString()
+                    } ).ToList();
+
+                    //categories.Insert( 0, new SelectListItem() { Text = "All", Value = "0" } );
+
+                    Add( CagtegoriesCacheKey, categories );
+
+                }
             }
+           
+            return categories;
+
         }
 
         /// <summary>
         /// Gets the statuses.
         /// </summary>
-        public static void GetStatuses()
+        public static List<SelectListItem> GetStatuses()
         {
-            using( var db = new Entities() )
+            var statuses = Get( StatusesCacheKey ) as List<SelectListItem>;
+
+            if( statuses == null )
             {
-                var projects = db.Statuses.Select( status =>
-                new SelectListItem
+                using( var db = new Entities() )
                 {
-                    Text = status.Name,
-                    Value = status.Id.ToString()
-                } ).ToList();
+                    statuses = db.Statuses.Select( status =>
+                    new SelectListItem
+                    {
+                        Text = status.Name,
+                        Value = status.Id.ToString()
+                    } ).ToList();
+
+                    //statuses.Insert( 0, new SelectListItem() { Text = "All", Value = "0" } );
+
+                    Add( StatusesCacheKey, statuses );
+
+                }
             }
+
+            return statuses;
+
         }
 
         /// <summary>
         /// Gets the priorities.
         /// </summary>
-        public static void GetPriorities()
+        public static List<SelectListItem> GetPriorities()
         {
-            using( var db = new Entities() )
+            var priorities = Get( PrioritiesCacheKey ) as List<SelectListItem>;
+
+            if( priorities == null )
             {
-                var projects = db.Priorities.Select( priority =>
-                new SelectListItem
+                using( var db = new Entities() )
                 {
-                    Text = priority.Name,
-                    Value = priority.Id.ToString()
-                } ).ToList();
+                    priorities = db.Priorities.Select( priority =>
+                    new SelectListItem
+                    {
+                        Text = priority.Name,
+                        Value = priority.Id.ToString()
+                    } ).ToList();
+
+                    //priorities.Insert( 0, new SelectListItem() { Text = "All", Value = "0" } );
+
+                    Add( PrioritiesCacheKey, priorities );
+
+                }
             }
+            
+            return priorities;
+
         }
 
 
