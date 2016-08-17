@@ -6,6 +6,7 @@ using BugOutNetLibrary.Models.ViewModels;
 using BugOutNetLibrary.Repos;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -30,35 +31,21 @@ namespace BugOutNet.Controllers
         /// <param name="projectId">The project identifier.</param>
         /// <returns></returns>
         [UserActionFilter]
-        public ActionResult GetBugs(int projectId, string sidx, string sort, int page, int rows )
+        public ActionResult GetBugs(int projectId, string sidx, string sord, int page, int rows )
         {
-            IQueryable<Bug> bugs = _db.Bugs;
+            sord = ( sord == null ) ? "" : sord;
+            int pageIndex = Convert.ToInt32( page ) - 1;
+            int pageSize = rows;
+
+            var tempBugs = _db.Bugs.Where( x => x.Id > 0 );
 
             // 0 means all projects
             if( projectId > 0 )
             {
-                bugs = bugs.Where( bug => bug.ProjectId == projectId );
+                tempBugs = tempBugs.Where( bug => bug.ProjectId == projectId );
             }
 
-            sort = ( sort == null ) ? "" : sort;
-            int pageIndex = Convert.ToInt32( page ) - 1;
-            int pageSize = rows;
-
-            int totalRecords = bugs.Count();            
-            var totalPages = (int)Math.Ceiling( (float)totalRecords / (float)rows );
-
-            if( sort.ToUpper() == "DESC" )
-            {
-                bugs = bugs.OrderByDescending( t => t.Id );
-                bugs = bugs.Skip( pageIndex * pageSize ).Take( pageSize );
-            }
-            else
-            {
-                bugs = bugs.OrderBy( t => t.Id );
-                bugs = bugs.Skip( pageIndex * pageSize ).Take( pageSize );
-            }
-
-            var bugModel = bugs.Select( bug =>
+            var bugs = tempBugs.Select( bug =>
                 new BugGridModel
                 {
                     Id = bug.Id,
@@ -72,12 +59,104 @@ namespace BugOutNet.Controllers
                     LastUpdatedOn = bug.LatUpdated
                 } );
 
+            int totalRecords = bugs.Count();            
+            var totalPages = (int)Math.Ceiling( (float)totalRecords / (float)rows );
+
+            if( sord.ToUpper( CultureInfo.InvariantCulture ) == "DESC" )
+            {
+                switch( sidx.ToUpper( CultureInfo.InvariantCulture ) )
+                {
+                    case "ID":
+                        bugs = bugs.OrderByDescending( t => t.Id );
+                        break;
+
+                    case "NAME":
+                        bugs = bugs.OrderByDescending( t => t.Name );
+                        break;
+
+                    case "DESCRIPTION":
+                        bugs = bugs.OrderByDescending( t => t.Description );
+                        break;
+
+                    case "PROJECT":
+                        bugs = bugs.OrderByDescending( t => t.Project );
+                        break;
+
+                    case "CATEGORY":
+                        bugs = bugs.OrderByDescending( t => t.Category );
+                        break;
+
+                    case "PRIORITY":
+                        bugs = bugs.OrderByDescending( t => t.Priority );
+                        break;
+
+                    case "STATUS":
+                        bugs = bugs.OrderByDescending( t => t.Status );
+                        break;
+
+                    case "ASSIGNEDTO":
+                        bugs = bugs.OrderByDescending( t => t.AssignedTo );
+                        break;
+
+                    default:
+                        bugs = bugs.OrderByDescending( t => t.Id );
+                        break;
+
+                }
+
+                bugs = bugs.Skip( pageIndex * pageSize ).Take( pageSize );
+            }
+            else
+            {
+                switch( sidx.ToUpper( CultureInfo.InvariantCulture ) )
+                {
+
+                    case "ID":
+                        bugs = bugs.OrderBy( t => t.Id );
+                        break;
+
+                    case "NAME":
+                        bugs = bugs.OrderBy( t => t.Name );
+                        break;
+
+                    case "DESCRIPTION":
+                        bugs = bugs.OrderBy( t => t.Description );
+                        break;
+
+                    case "PROJECT":
+                        bugs = bugs.OrderBy( t => t.Project );
+                        break;
+
+                    case "CATEGORY":
+                        bugs = bugs.OrderBy( t => t.Category );
+                        break;
+
+                    case "PRIORITY":
+                        bugs = bugs.OrderBy( t => t.Priority );
+                        break;
+
+                    case "STATUS":
+                        bugs = bugs.OrderBy( t => t.Status );
+                        break;
+
+                    case "ASSIGNEDTO":
+                        bugs = bugs.OrderBy( t => t.AssignedTo );
+                        break;
+
+                    default:
+                        bugs = bugs.OrderBy( t => t.Id );
+                        break;
+                }
+
+                bugs = bugs.Skip( pageIndex * pageSize ).Take( pageSize );
+            }
+            
             var jsonData = new
             {
                 total = totalPages,
                 page,
                 records = totalRecords,
-                rows = bugModel
+                rows = bugs
             };
 
             return Json( jsonData, JsonRequestBehavior.AllowGet );

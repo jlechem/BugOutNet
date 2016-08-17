@@ -4,6 +4,7 @@ using BugOutNetLibrary.Models.DB;
 using BugOutNetLibrary.Models.GridModels;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -16,10 +17,10 @@ namespace BugOutNet.Controllers
         Entities _db = new Entities();
 
         [AdminActionFilter]
-        public ActionResult Get( string sidx, string sort, int page, int rows )
+        public ActionResult Get( string sidx, string sord, int page, int rows )
         {
             // check if we have a sort, null means nothing
-            sort = ( sort == null ) ? "" : sort;
+            sord = ( sord == null ) ? "" : sord;
 
             // get the page index into an int (which page we're on)
             int pageIndex = Convert.ToInt32( page ) - 1;
@@ -46,18 +47,68 @@ namespace BugOutNet.Controllers
             var totalPages = (int)Math.Ceiling( (float)totalRecords / (float)rows );
 
             // check which direction if any we're sorting
-            if( sort.ToUpper() == "DESC" )
+            if( sord.ToUpper( CultureInfo.InvariantCulture ) == "DESC" )
             {
-                // you need to look at the sidx (sorting index) this will be a column name
-                // use the correct item in your source to sort the column correctly
-                users = users.OrderByDescending( t => t.Id );
+                switch( sidx.ToUpper( CultureInfo.InvariantCulture ) )
+                {
+                    case "ID":
+                        users = users.OrderByDescending( t => t.Id );
+                        break;
+
+                    case "USERNAME":
+                        users = users.OrderByDescending( t => t.Username );
+                        break;
+
+                    case "NAME":
+                        users = users.OrderByDescending( t => t.Name );
+                        break;
+
+                    case "EMAILADDRESS":
+                        users = users.OrderByDescending( t => t.EmailAddress );
+                        break;
+
+                    case "CREATED":
+                        users = users.OrderByDescending( t => t.Created );
+                        break;
+
+                    default:
+                        users = users.OrderByDescending( t => t.Id );
+                        break;
+
+                }
+
                 users = users.Skip( pageIndex * pageSize ).Take( pageSize );
             }
             else
             {
-                // you need to look at the sidx (sorting index) this will be a column name
-                // use the correct item in your source to sort the column correctly
-                users = users.OrderBy( t => t.Id );
+                switch( sidx.ToUpper( CultureInfo.InvariantCulture ) )
+                {
+
+                    case "ID":
+                        users = users.OrderBy( t => t.Id );
+                        break;
+
+                    case "USERNAME":
+                        users = users.OrderBy( t => t.Username );
+                        break;
+
+                    case "NAME":
+                        users = users.OrderBy( t => t.Name );
+                        break;
+
+                    case "EMAILADDRESS":
+                        users = users.OrderBy( t => t.EmailAddress );
+                        break;
+
+                    case "CREATED":
+                        users = users.OrderBy( t => t.Created );
+                        break;
+
+                    default:
+                        users = users.OrderBy( t => t.Id );
+                        break;
+                }
+
                 users = users.Skip( pageIndex * pageSize ).Take( pageSize );
             }
 

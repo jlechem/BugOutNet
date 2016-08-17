@@ -4,6 +4,7 @@ using BugOutNetLibrary.Models.DB;
 using BugOutNetLibrary.Models.GridModels;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -29,9 +30,9 @@ namespace BugOutNet.Controllers
         /// <returns></returns>
         [AdminActionFilter]
         //[ValidateAntiForgeryToken]
-        public ActionResult Get( string sidx, string sort, int page, int rows )
+        public ActionResult Get( string sidx, string sord, int page, int rows )
         {
-            sort = ( sort == null ) ? "" : sort;
+            sord = ( sord == null ) ? "" : sord;
             int pageIndex = Convert.ToInt32( page ) - 1;
             int pageSize = rows;
 
@@ -48,14 +49,60 @@ namespace BugOutNet.Controllers
             int totalRecords = priorities.Count();
             var totalPages = (int)Math.Ceiling( (float)totalRecords / (float)rows );
 
-            if( sort.ToUpper() == "DESC" )
+            if( sord.ToUpper( CultureInfo.InvariantCulture ) == "DESC" )
             {
-                priorities = priorities.OrderByDescending( t => t.Id );
+                switch( sidx.ToUpper( CultureInfo.InvariantCulture ) )
+                {
+                    case "ID":
+                        priorities = priorities.OrderByDescending( t => t.Id );
+                        break;
+
+                    case "NAME":
+                        priorities = priorities.OrderByDescending( t => t.Name );
+                        break;
+
+                    case "DESCRIPTION":
+                        priorities = priorities.OrderByDescending( t => t.Description );
+                        break;
+
+                    case "CREATED":
+                        priorities = priorities.OrderByDescending( t => t.Created );
+                        break;
+
+                    default:
+                        priorities = priorities.OrderByDescending( t => t.Id );
+                        break;
+
+                }
+
                 priorities = priorities.Skip( pageIndex * pageSize ).Take( pageSize );
             }
             else
             {
-                priorities = priorities.OrderBy( t => t.Id );
+                switch( sidx.ToUpper( CultureInfo.InvariantCulture ) )
+                {
+
+                    case "ID":
+                        priorities = priorities.OrderBy( t => t.Id );
+                        break;
+
+                    case "NAME":
+                        priorities = priorities.OrderBy( t => t.Name );
+                        break;
+
+                    case "DESCRIPTION":
+                        priorities = priorities.OrderBy( t => t.Description );
+                        break;
+
+                    case "CREATED":
+                        priorities = priorities.OrderBy( t => t.Created );
+                        break;
+
+                    default:
+                        priorities = priorities.OrderBy( t => t.Id );
+                        break;
+                }
+
                 priorities = priorities.Skip( pageIndex * pageSize ).Take( pageSize );
             }
 

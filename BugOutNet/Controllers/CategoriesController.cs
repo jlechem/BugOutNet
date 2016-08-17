@@ -4,6 +4,7 @@ using BugOutNetLibrary.Models.DB;
 using BugOutNetLibrary.Models.GridModels;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -25,34 +26,80 @@ namespace BugOutNet.Controllers
         /// <returns></returns>
         [AdminActionFilter]
         //[ValidateAntiForgeryToken]
-        public ActionResult Get( string sidx, string sort, int page, int rows )
+        public ActionResult Get( string sidx, string sord, int page, int rows )
         {
-            sort = ( sort == null ) ? "" : sort;
+            sord = ( sord == null ) ? "" : sord;
             int pageIndex = Convert.ToInt32( page ) - 1;
             int pageSize = rows;
 
-            var projects = _db.Categories.Select(
-                project => new CategoryGridModel
+            var categories = _db.Categories.Select(
+                category => new CategoryGridModel
                 {
-                    Id = project.Id,
-                    Name = project.Name,
-                    Description = project.Description,
-                    Created = project.Created,
-                    CreatedBy = _db.Users.FirstOrDefault( user => user.Id == project.CreatorId ).UserName
+                    Id = category.Id,
+                    Name = category.Name,
+                    Description = category.Description,
+                    Created = category.Created,
+                    CreatedBy = _db.Users.FirstOrDefault( user => user.Id == category.CreatorId ).UserName
                 } );
 
-            int totalRecords = projects.Count();
+            int totalRecords = categories.Count();
             var totalPages = (int)Math.Ceiling( (float)totalRecords / (float)rows );
 
-            if( sort.ToUpper() == "DESC" )
+            if( sord.ToUpper( CultureInfo.InvariantCulture ) == "DESC" )
             {
-                projects = projects.OrderByDescending( t => t.Id );
-                projects = projects.Skip( pageIndex * pageSize ).Take( pageSize );
+                switch( sidx.ToUpper( CultureInfo.InvariantCulture ) )
+                {
+                    case "ID":
+                        categories = categories.OrderByDescending( t => t.Id );
+                        break;
+
+                    case "NAME":
+                        categories = categories.OrderByDescending( t => t.Name );
+                        break;
+
+                    case "DESCRIPTION":
+                        categories = categories.OrderByDescending( t => t.Description );
+                        break;
+
+                    case "CREATED":
+                        categories = categories.OrderByDescending( t => t.Created );
+                        break;
+
+                    default:
+                        categories = categories.OrderByDescending( t => t.Id );
+                        break;
+
+                }
+
+                categories = categories.Skip( pageIndex * pageSize ).Take( pageSize );
             }
             else
             {
-                projects = projects.OrderBy( t => t.Id );
-                projects = projects.Skip( pageIndex * pageSize ).Take( pageSize );
+                switch( sidx.ToUpper( CultureInfo.InvariantCulture ) )
+                {
+
+                    case "ID":
+                        categories = categories.OrderBy( t => t.Id );
+                        break;
+
+                    case "NAME":
+                        categories = categories.OrderBy( t => t.Name );
+                        break;
+
+                    case "DESCRIPTION":
+                        categories = categories.OrderBy( t => t.Description );
+                        break;
+
+                    case "CREATED":
+                        categories = categories.OrderBy( t => t.Created );
+                        break;
+
+                    default:
+                        categories = categories.OrderBy( t => t.Id );
+                        break;
+                }
+
+                categories = categories.Skip( pageIndex * pageSize ).Take( pageSize );
             }
 
             var jsonData = new
@@ -60,7 +107,7 @@ namespace BugOutNet.Controllers
                 total = totalPages,
                 page,
                 records = totalRecords,
-                rows = projects
+                rows = categories
             };
 
             return Json( jsonData, JsonRequestBehavior.AllowGet );
