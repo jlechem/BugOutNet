@@ -104,7 +104,7 @@ namespace BugOutNet.Controllers
                         {
                             Name = model.Name,
                             Description = model.Description,
-                            AssignedToId = null,
+                            AssignedToId = model.AssigntedToId,
                             ProjectId = model.ProjectId,
                             CategoryId = model.CategoryId,
                             PriorityId = model.PriorityId,

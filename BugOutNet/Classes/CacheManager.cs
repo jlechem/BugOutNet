@@ -19,6 +19,7 @@ namespace BugOutNet.Classes
         private static string CagtegoriesCacheKey = "Catergory-All";
         private static string StatusesCacheKey = "Status-All";
         private static string PrioritiesCacheKey = "Priority-All";
+        private static string UsersCacheKey = "User-All";
 
         #endregion
 
@@ -88,9 +89,7 @@ namespace BugOutNet.Classes
                         Text = project.Name,
                         Value = project.Id.ToString()
                     } ).ToList();
-
-                    //projects.Insert(0, new SelectListItem() { Text = "All", Value = "0" } );
-
+                    
                 }
 
                 Add( ProjectsCacheKey, projects );
@@ -119,9 +118,7 @@ namespace BugOutNet.Classes
                         Text = category.Name,
                         Value = category.Id.ToString()
                     } ).ToList();
-
-                    //categories.Insert( 0, new SelectListItem() { Text = "All", Value = "0" } );
-
+                    
                     Add( CagtegoriesCacheKey, categories );
 
                 }
@@ -148,9 +145,7 @@ namespace BugOutNet.Classes
                         Text = status.Name,
                         Value = status.Id.ToString()
                     } ).ToList();
-
-                    //statuses.Insert( 0, new SelectListItem() { Text = "All", Value = "0" } );
-
+                    
                     Add( StatusesCacheKey, statuses );
 
                 }
@@ -177,9 +172,7 @@ namespace BugOutNet.Classes
                         Text = priority.Name,
                         Value = priority.Id.ToString()
                     } ).ToList();
-
-                    //priorities.Insert( 0, new SelectListItem() { Text = "All", Value = "0" } );
-
+                    
                     Add( PrioritiesCacheKey, priorities );
 
                 }
@@ -189,6 +182,64 @@ namespace BugOutNet.Classes
 
         }
 
+        /// <summary>
+        /// Gets the users.
+        /// </summary>
+        /// <returns></returns>
+        public static List<SelectListItem> GetUsers()
+        {
+            var users = Get( UsersCacheKey ) as List<SelectListItem>;
+
+            if( users == null )
+            {
+                using( var db = new Entities() )
+                {
+                    users = db.Users.Select( priority =>
+                    new SelectListItem
+                    {
+                        Text = priority.UserName,
+                        Value = priority.Id.ToString()
+                    } ).ToList();
+                    
+                    Add( UsersCacheKey, users );
+
+                }
+            }
+
+            return users;
+        }
+
+        /// <summary>
+        /// Gets the users.
+        /// </summary>
+        /// <param name="user">The user to add.</param>
+        /// <returns></returns>
+        public static List<SelectListItem> GetUsers(User user)
+        {
+            using( var db = new Entities() )
+            {
+                // add the new user
+                db.Users.Add( user );
+                db.SaveChanges();
+
+                // remove the old users from the cache
+                Remove( UsersCacheKey );
+
+                // create a new list of users
+                var users = db.Users.Select( priority =>
+                   new SelectListItem
+                   {
+                       Text = priority.UserName,
+                       Value = priority.Id.ToString()
+                   } ).ToList();
+
+                // add it back to the cache
+                Add( UsersCacheKey, users );
+
+                return users;
+
+            }
+        }
 
     }
 }

@@ -13,8 +13,8 @@
                     <label>Category:</label>@Html.DropDownListFor( model => model.CategoryId, BugOutNet.Classes.CacheManager.GetCategories(), new { @class = "form-control" } )
                     <label>Priority:</label>@Html.DropDownListFor( model => model.PriorityId, BugOutNet.Classes.CacheManager.GetPriorities(), new { @class = "form-control" } )
                     <label>Status:</label>@Html.DropDownListFor( model => model.StatusId, BugOutNet.Classes.CacheManager.GetStatuses(), new { @class = "form-control" } )
-                    <label>Assigned To:</label>@Html.DropDownListFor( model => model.AssigntedToId, BugOutNet.Classes.CacheManager.GetProjects(), new { @class = "form-control" } )
-                    <label>Description:</label>@Html.TextAreaFor( model => model.Description, new { @class = "form-control", placeholder = "Description", required = "required", autofocus = "true" } )<br/>
+                    <label>Assigned To:</label>@Html.DropDownListFor( model => model.AssigntedToId, BugOutNet.Classes.CacheManager.GetUsers(), new { @class = "form-control" } )
+                    <label>Description:</label>@Html.TextAreaFor( model => model.Description, new { @class = "form-control", placeholder = "Description", required = "required" } )<br/>
                     <button type="submit" class="btn btn-primary" value="buttonSave" id="buttonSave">Save Bug</button>
                     <button type="button" class="btn btn-primary" onclick="onCancel();">Cancel</button>
                 </fieldset>
@@ -37,6 +37,7 @@
                 $("#divBugsContainer").hide();
             },
             success: function (result) {
+                $("#divBugsContainer").html("");
                 $('#divBugsContainer').html(result);
             },
             complete: function () {

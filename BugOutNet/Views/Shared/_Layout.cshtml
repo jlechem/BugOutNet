@@ -11,11 +11,26 @@
     <link href="@Url.Content( "~/Content/bootstrap.css" )" type="text/css" rel="stylesheet" />
     <link href="@Url.Content( "~/Content/bootstrap-theme.min.css" )" type="text/css" rel="stylesheet" />
     
-    <link rel="stylesheet" href="@Url.Content( "~/Content/themes/base/jquery-ui.min.css" )" />
+    @*This is standard uncomment for standard grid theme*@
+    @*<link rel="stylesheet" href="@Url.Content( "~/Content/themes/base/jquery-ui.min.css" )" />*@
+
+    @*These 3 are custom and can be switch out for a different theme or commented out for standard*@
+    <link rel="stylesheet" href="@Url.Content( "~/Content/themes/BlackTile/jquery-ui.min.css" )" />
+    <link rel="stylesheet" href="@Url.Content( "~/Content/themes/BlackTile/jquery-ui.structure.min.css" )" />
+    <link rel="stylesheet" href="@Url.Content( "~/Content/themes/BlackTile/jquery-ui.theme.min.css" )" />
+
+    @*this is required don't change*@
     <link rel="stylesheet" href="@Url.Content( "~/Content/jquery.jqGrid/ui.jqgrid.css" )" />
 
+    @*this is required don't change*@
     <script type="text/javascript" src="@Url.Content( "~/scripts/jquery-3.1.0.min.js" )"></script>
-    <script type="text/javascript" src="@Url.Content( "~/scripts/jquery-ui-1.12.0.min.js" )"></script>
+    
+    @*This is standard, un comment for standard grid themes*@
+    @*<script type="text/javascript" src="@Url.Content( "~/scripts/jquery-ui-1.12.0.min.js" )"></script>*@
+    
+    @*This 1 is custom and can be switch out for a different theme or commented out for standard*@
+    <script type="text/javascript" src="@Url.Content( "~/Content/themes/BlackTile/jquery-ui.min.js" )"></script>
+
     <script type="text/javascript" src="@Url.Content( "~/scripts/i18n/grid.locale-en.js" )"></script>
     <script type="text/javascript" src="@Url.Content( "~/scripts/jquery.jqGrid.min.js" )"></script>
     <script type="text/javascript" src="@Url.Content( "~/scripts/jquery.unobtrusive-ajax.min.js" )"></script>
@@ -44,7 +59,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img src="http://justin-lecheminant.com/favicon.png" /><span class="caret"></span></a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img src="http://justin-lecheminant.com/favicon.png" style="width: 20px; height: 20px; border: none;" /><span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">Profile</a></li>
                         <li><a href="#">Settings</a></li>

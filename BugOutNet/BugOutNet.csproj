@@ -700,6 +700,8 @@
     <Content Include="Views\Bugs\_AddBug.cshtml" />
     <Content Include="Views\Bugs\_EditBug.cshtml" />
     <Content Include="Views\Bugs\_Bugs.cshtml" />
+    <Content Include="Views\Admin\_AddUser.cshtml" />
+    <Content Include="Views\Admin\_EditUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
