@@ -32,16 +32,17 @@
             type: 'GET',
             url: '@Url.Action( "GetBugView", "Bugs" )',
             data: {
-                name: "bugs"
+                bugstyle: "bugs"
             },
             beforeSend: function () {
                 $("#divBugsContainer").hide();
+                $("#divSpinner").show();
             },
             success: function (result) {
-                $("#divBugsContainer").html("");
                 $('#divBugsContainer').html(result);
             },
             complete: function () {
+                $("#divSpinner").hide();
                 $("#divBugsContainer").show();
             }
         });

@@ -18,20 +18,43 @@
             type: 'GET',
             url: '@Url.Action( "GetBugView", "Bugs" )',
             data: {
-                name: 'addbug'
+                bugstyle: 'addbug'
             },
             beforeSend: function () {
                 $("#divBugsContainer").hide();
+                $("#divSpinner").show();
             },
             success: function (result) {
                 $('#divBugsContainer').html(result);
             },
             complete: function () {
+                $("#divSpinner").hide();
                 $("#divBugsContainer").show();
             }
         });
-
     }
+
+    function editBug() {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action( "GetBugView", "Bugs" )',
+            data: {
+                bugstyle: 'editbug'
+            },
+            beforeSend: function () {
+                $("#divBugsContainer").hide();
+                $("#divSpinner").show();
+            },
+            success: function (result) {
+                $('#divBugsContainer').html(result);
+            },
+            complete: function () {
+                $("#divSpinner").hide();
+                $("#divBugsContainer").show();
+            }
+        });
+    }
+
     $(document).ready(function () {
         jQuery("#jqGrid").jqGrid({
             url: "@Url.Action( "GetBugs","Bugs", new { projectId = 0 }  )",
@@ -39,14 +62,15 @@
             mtype: 'GET',
             colNames: ['Bug Id', 'Name', 'Description', 'Project', 'Category', 'Priority', 'Status', 'Assigned To'],
             colModel: [
-                         { name: 'Id', index: 'Id', align: 'left', width: 60 },
-                         { name: 'Name', index: 'Name', align: 'left', width: 90 },
-                         { name: 'Description', index: 'Description', align: 'left', width: 200 },
-                         { name: 'Project', index: 'Project', align: 'left', width: 60 },
-                         { name: 'Category', index: 'Category', align: 'left', width: 60 },
-                         { name: 'Priority', index: 'Priority', align: 'left', width: 60 },
-                         { name: 'Status', index: 'Status', align: 'left', width: 50 },
-                         { name: 'AssignedTo', index: 'AssignedTo', align: 'left', width: 100 }],
+                        { name: 'Id', index: 'Id', align: 'left', width: 60 },
+                        { name: 'edit', index: 'edit', width: 90, formatter: addLink },
+                        //{ name: 'Name', index: 'Name', align: 'left', width: 90 },
+                        { name: 'Description', index: 'Description', align: 'left', width: 200 },
+                        { name: 'Project', index: 'Project', align: 'left', width: 60 },
+                        { name: 'Category', index: 'Category', align: 'left', width: 60 },
+                        { name: 'Priority', index: 'Priority', align: 'left', width: 60 },
+                        { name: 'Status', index: 'Status', align: 'left', width: 50 },
+                        { name: 'AssignedTo', index: 'AssignedTo', align: 'left', width: 100 }],
             viewrecords: true,
             autowidth: true,
             shrinkToFit: true,
@@ -71,4 +95,9 @@
             }
         });
     });
+
+    function addLink(cellvalue, options, rowObject) {
+        return "<a href='#' type='button' title='Slet' onclick=\"editBug()\" >" + rowObject.Name + "</a>";
+    }
+
 </script>

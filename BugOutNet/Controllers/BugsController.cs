@@ -31,7 +31,7 @@ namespace BugOutNet.Controllers
         /// <param name="projectId">The project identifier.</param>
         /// <returns></returns>
         [UserActionFilter]
-        public ActionResult GetBugs(int projectId, string sidx, string sord, int page, int rows )
+        public ActionResult GetBugs( int projectId, string sidx, string sord, int page, int rows )
         {
             sord = ( sord == null ) ? "" : sord;
             int pageIndex = Convert.ToInt32( page ) - 1;
@@ -59,7 +59,7 @@ namespace BugOutNet.Controllers
                     LastUpdatedOn = bug.LatUpdated
                 } );
 
-            int totalRecords = bugs.Count();            
+            int totalRecords = bugs.Count();
             var totalPages = (int)Math.Ceiling( (float)totalRecords / (float)rows );
 
             if( sord.ToUpper( CultureInfo.InvariantCulture ) == "DESC" )
@@ -150,7 +150,7 @@ namespace BugOutNet.Controllers
 
                 bugs = bugs.Skip( pageIndex * pageSize ).Take( pageSize );
             }
-            
+
             var jsonData = new
             {
                 total = totalPages,
@@ -196,17 +196,17 @@ namespace BugOutNet.Controllers
 
                     _db.SaveChanges();
                 }
-                catch(Exception ex)
+                catch( Exception ex )
                 {
                     return new HttpStatusCodeResult( HttpStatusCode.InternalServerError, ex.ToString() );
-                } 
+                }
             }
             else
             {
                 return new HttpStatusCodeResult( HttpStatusCode.BadRequest );
             }
 
-            return RedirectToAction("Index","Bugs");
+            return RedirectToAction( "Index", "Bugs" );
 
         }
 
@@ -216,11 +216,11 @@ namespace BugOutNet.Controllers
         /// <param name="name">The name.</param>
         /// <returns></returns>
         [UserActionFilter]
-        public ActionResult GetBugView( string name )
+        public ActionResult GetBugView( string bugstyle )
         {
             string viewName = String.Empty;
 
-            switch( name )
+            switch( bugstyle.ToLower( CultureInfo.InvariantCulture ) )
             {
                 case "bugs":
                     viewName = "_Bugs";
@@ -228,6 +228,10 @@ namespace BugOutNet.Controllers
 
                 case "addbug":
                     viewName = "_AddBug";
+                    break;
+
+                case "editbug":
+                    viewName = "_EditBug";
                     break;
 
                 default:
