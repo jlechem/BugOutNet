@@ -41,7 +41,6 @@
             <div class="center-block">
                 @using( Ajax.BeginForm( "PerformLogin", "Login", new AjaxOptions() { OnBegin = "onBegin", OnComplete = "onComplete", OnFailure = "onFailure", OnSuccess = "onSuccess" } ) )
                 {
-                    @Html.AntiForgeryToken()
                     <span id="spanError" style="color: red;"></span>
                     <fieldset>
                         <h2 class="form-signin-heading">Please sign in</h2>

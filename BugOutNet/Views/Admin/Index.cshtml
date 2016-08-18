@@ -2,6 +2,9 @@
     ViewBag.Title = "BugOutNet - Admin";
 }
 <div class="container">
+    <div style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);" id="divLoader">
+        <img src="~/Content/images/loading.gif" />
+    </div>
     <ul class="nav nav-tabs">
         <li class="tab-pane active"><a data-toggle="tab" class="toggle-loading" href="#content">Projects</a></li>
         <li class="tab-pane"><a data-toggle="tab" class="toggle-loading" href="#content">Categories</a></li>
@@ -27,13 +30,15 @@
              data: {
                  name: target
              },
-             beforeSend: function(){
+             beforeSend: function () {
+                 $("#divLoader").show();
                  $("#divContent").hide();
              },
              success: function (result) {
                  $('#content').html(result);
              },
              complete: function () {
+                 $("#divLoader").hide();
                  $("#divContent").show();
              }
          });

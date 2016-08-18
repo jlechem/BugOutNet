@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,6 +42,14 @@ namespace BugOutNetLibrary.Models.ViewModels
         /// The first name.
         /// </value>
         public string FirstName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the last name.
+        /// </summary>
+        /// <value>
+        /// The last name.
+        /// </value>
+        public string LastName { get; set; }
 
         /// <summary>
         /// Gets or sets the address1.
@@ -96,7 +105,24 @@ namespace BugOutNetLibrary.Models.ViewModels
         /// <value>
         /// The default project identifier.
         /// </value>
-        public int DefaultProjectId { get; set; }
+        public int? DefaultProjectId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the password.
+        /// </summary>
+        /// <value>
+        /// The password.
+        /// </value>
+        public string Password { get; set; }
+
+        /// <summary>
+        /// Gets or sets the confirm password.
+        /// </summary>
+        /// <value>
+        /// The confirm password.
+        /// </value>
+        [CompareAttribute( "Password", ErrorMessage = "Passwords don't match" )]
+        public string ConfirmPassword { get; set; }
 
         #endregion
 

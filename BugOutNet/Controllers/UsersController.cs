@@ -1,7 +1,9 @@
 ﻿using BugOutNet.CustomActionFilters;
+using BugOutNetLibrary.Helpers;
 using BugOutNetLibrary.Managers;
 using BugOutNetLibrary.Models.DB;
 using BugOutNetLibrary.Models.GridModels;
+using BugOutNetLibrary.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -16,6 +18,14 @@ namespace BugOutNet.Controllers
     {
         Entities _db = new Entities();
 
+        /// <summary>
+        /// Gets the users.
+        /// </summary>
+        /// <param name="sidx">The sidx.</param>
+        /// <param name="sord">The sord.</param>
+        /// <param name="page">The page.</param>
+        /// <param name="rows">The rows.</param>
+        /// <returns></returns>
         [AdminActionFilter]
         public ActionResult Get( string sidx, string sord, int page, int rows )
         {
@@ -125,5 +135,192 @@ namespace BugOutNet.Controllers
             return Json( jsonData, JsonRequestBehavior.AllowGet );
 
         }
+
+        [HttpPost]
+        [AdminActionFilter]
+        public ActionResult Add(UserViewModel model)
+        {
+            if( model != null && ModelState.IsValid )
+            {
+                try
+                {
+                    string salt = HashHelper.CreateSalt( 10 );
+
+                    // save the bug into the DB
+                    _db.Users.Add(
+                        new User
+                        {
+                            UserName = model.UserName,
+                            FirstName = model.FirstName,
+                            LastName = model.LastName,
+                            IsAdmin = model.IsAdmin,
+                            IsBlocked = model.IsBlocked,
+                            IsVerified = model.IsVerified,
+                            EmailAddress = model.EmailAddress,
+                            Created = DateTime.Now,
+                            Salt = salt,
+                            Password = HashHelper.HashPassword( model.Password + salt ),
+                            DefaultProjectId = model.DefaultProjectId,
+                            AccessFailedCount = 0,
+                            AutoLogin = false
+                        } );
+
+                    _db.SaveChanges();
+                }
+                catch( Exception ex )
+                {
+                    return new HttpStatusCodeResult( HttpStatusCode.InternalServerError, ex.ToString() );
+                }
+            }
+            else
+            {
+                return new HttpStatusCodeResult( HttpStatusCode.BadRequest );
+            }
+
+            return new HttpStatusCodeResult( HttpStatusCode.OK );
+        }
+
+        [HttpPost]
+        [AdminActionFilter]
+        public ActionResult Edit( UserViewModel model )
+        {
+            if( model != null && ModelState.IsValid )
+            {
+                try
+                {
+                    string salt = HashHelper.CreateSalt( 10 );
+
+                    User user = _db.Users.Find( model.Id );
+
+                    if( user != null )
+                    {
+                        user.UserName = model.UserName;
+                        user.FirstName = model.FirstName;
+                        user.LastName = model.LastName;
+                        user.EmailAddress = model.EmailAddress;
+                        user.IsAdmin = model.IsAdmin;
+                        user.IsBlocked = model.IsBlocked;
+                        user.IsVerified = model.IsVerified;
+                        user.DefaultProjectId = model.DefaultProjectId;
+                        user.Salt = salt;
+                        user.Password = HashHelper.HashPassword( model.Password + salt );
+
+                        _db.SaveChanges();
+                    }
+                }
+                catch( Exception ex )
+                {
+                    return new HttpStatusCodeResult( HttpStatusCode.InternalServerError, ex.ToString() );
+                }
+            }
+            else
+            {
+                return new HttpStatusCodeResult( HttpStatusCode.BadRequest );
+            }
+
+            return RedirectToAction( "Index", "Bugs" );
+        }
+
+        [AdminActionFilter]
+        public ActionResult Delete(int id )
+        {
+            if( id == SessionManager.User.Id)
+            {
+                return new HttpStatusCodeResult( HttpStatusCode.BadRequest, "You cannot delete your own account." );
+            }
+
+            try
+            {
+                var user = _db.Users.Find( id );
+
+                if( user == null )
+                {
+                    return HttpNotFound( "User Id: " + id + " not found." );
+                }
+                else
+                {
+                    _db.Users.Remove( user );
+                    _db.SaveChanges();
+                }
+            }
+            catch( Exception ex )
+            {
+                return new HttpStatusCodeResult( HttpStatusCode.InternalServerError, ex.ToString() );
+            }
+
+            return new HttpStatusCodeResult( HttpStatusCode.OK );
+        }
+
+        /// <summary>
+        /// Gets the partial view.
+        /// </summary>
+        /// <param name="viewname">The viewname.</param>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        [AdminActionFilter]
+        public ActionResult GetPartialView(string viewname, int? id = null )
+        {
+            string partialViewName = String.Empty;
+
+            switch( viewname.ToLower( CultureInfo.InvariantCulture ) )
+            {
+                case "users":
+                    partialViewName = "~/Views/Admin/_UsersGrid.cshtml";
+                    break;
+
+                case "adduser":
+                    partialViewName = "~/Views/Admin/_AddUser.cshtml";
+                    break;
+
+                case "edituser":
+                    partialViewName = "~/Views/Admin/_EditUser.cshtml";
+
+                    UserViewModel model = GetUserViewModel( id.Value );
+
+                    if( model != null )
+                    {
+                        return PartialView( partialViewName, model );
+                    }
+
+                    return PartialView( partialViewName );
+
+                default:
+                    break;
+
+            }
+
+            return PartialView( partialViewName );
+
+        }
+
+        /// <summary>
+        /// Gets the user view model.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        private UserViewModel GetUserViewModel(int id)
+        {
+            UserViewModel model = null;
+
+            User user = _db.Users.Find( id );
+
+            if( user != null )
+            {
+                model = new UserViewModel();
+
+                model.Id = user.Id;
+                model.UserName = user.UserName;
+                model.FirstName = user.FirstName;
+                model.LastName = user.LastName;
+                model.EmailAddress = user.EmailAddress;
+                model.IsAdmin = user.IsAdmin;
+                model.IsBlocked = user.IsVerified;
+                model.IsVerified = user.IsVerified;
+                model.DefaultProjectId = user.DefaultProjectId;
+            }
+
+            return model;
+        }
+
     }
 }

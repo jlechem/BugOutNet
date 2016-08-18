@@ -162,6 +162,22 @@ namespace BugOutNetLibrary.Models.ViewModels
         /// </value>
         public string LastUpatedBy { get; set; }
 
+        /// <summary>
+        /// Gets or sets the comments.
+        /// </summary>
+        /// <value>
+        /// The comments.
+        /// </value>
+        List<BugCommentViewModel> Comments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the attachments.
+        /// </summary>
+        /// <value>
+        /// The attachments.
+        /// </value>
+        List<BugAttachmentViewModel> Attachments { get; set; }
+
         #endregion
 
         /// <summary>

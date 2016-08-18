@@ -116,6 +116,8 @@
     <Compile Include="Models\GridModels\ProjectGridModel.cs" />
     <Compile Include="Models\GridModels\StatusesGridModel.cs" />
     <Compile Include="Models\GridModels\UsersGridModel.cs" />
+    <Compile Include="Models\ViewModels\BugAttachmentViewModel.cs" />
+    <Compile Include="Models\ViewModels\BugCommentViewModel.cs" />
     <Compile Include="Models\ViewModels\BugViewModel.cs" />
     <Compile Include="Models\ViewModels\CategoryViewModel.cs" />
     <Compile Include="Models\ViewModels\ProjectViewModel.cs" />

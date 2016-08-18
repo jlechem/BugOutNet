@@ -1,1 +1,114 @@
-﻿
+﻿@model  BugOutNetLibrary.Models.ViewModels.UserViewModel
+
+@using( Ajax.BeginForm( "Edit", "Users", new AjaxOptions { HttpMethod = "POST", OnBegin = "onBegin", OnComplete = "onComplete", OnFailure = "onFailure", OnSuccess = "onSuccess" } ) )
+{
+    <div class="container" style="width: 750px; padding-top: 5px;">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <fieldset style="padding: 5px;">
+                    <h3 class="form-signin-heading">Edit User</h3>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label">Username:</label>
+                        <div class="col-xs-10">
+                            @Html.TextBoxFor( model => model.UserName, new { @class = "form-control", placeholder = "Username", required = "required", autofocus = "true", maxlength = "50" } )
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label">Password:</label>
+                        <div class="col-xs-10">
+                            @Html.PasswordFor( model => model.Password, new { @class = "form-control", placeholder = "Password", required = "required", maxlength = "50" } )
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label">Confirm Password:</label>
+                        <div class="col-xs-10">
+                            @Html.PasswordFor( model => model.ConfirmPassword, new { @class = "form-control", placeholder = "Confirm Password", required = "required", maxlength = "50" } )
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label">Email Address:</label>
+                        <div class="col-xs-10">
+                            @Html.TextBoxFor( model => model.EmailAddress, new { @class = "form-control", placeholder = "Email Address", required = "required", maxlength = "50", type = "email" } )
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label">First Name:</label>
+                        <div class="col-xs-10">
+                            @Html.TextBoxFor( model => model.FirstName, new { @class = "form-control", placeholder = "First Name", maxlength = "50" } )
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label">Last Name:</label>
+                        <div class="col-xs-10">
+                            @Html.TextBoxFor( model => model.LastName, new { @class = "form-control", placeholder = "Last Name", maxlength = "50" } )
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label">Is Verified:</label>
+                        <div class="col-xs-10">
+                            @Html.CheckBoxFor( model => model.IsVerified, new { @class = "form-control control-label.text-left", placeholder = "Is Verified" } )
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label">Is Admin:</label>
+                        <div class="col-xs-10">
+                            @Html.CheckBoxFor( model => model.IsAdmin, new { @class = "form-control control-label.text-left", placeholder = "Is Admin" } )
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label">Default Project:</label>
+                        <div class="col-xs-10">
+                            @Html.DropDownListFor( model => model.DefaultProjectId, BugOutNet.Classes.CacheManager.GetProjects(), new { @class = "form-control" } )
+                        </div>
+                    </div>
+                    <br />
+                    <button type="submit" class="btn btn-primary" value="buttonSave" id="buttonSave">Save USer</button>
+                    <button type="button" class="btn btn-primary" onclick="onCancel();">Cancel</button>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    function onBegin(data) {
+        $("#divUsersContent").hide();
+        $("#divLoader").show();
+    }
+
+    function onComplete(data) {
+        $("#divLoader").hide();
+        $("#divUsersContent").show();
+    }
+
+    function onFailure(data) {
+        $('#divUsersContent').html(result);
+    }
+
+    function onSuccess(data) {
+        $('#divUsersContent').html(result);
+    }
+
+    function onCancel() {
+        $("#divUsersContent").html("");
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action( "GetPartialView", "Users" )',
+            data: {
+                viewname: "users"
+            },
+            beforeSend: function () {
+                $("#divUsersContent").hide();
+                $("#divLoader").show();
+            },
+            success: function (result) {
+                $('#divUsersContent').html(result);
+            },
+            complete: function () {
+                $("#divLoader").hide();
+                $("#divUsersContent").show();
+            }
+        });
+
+    }
+</script>

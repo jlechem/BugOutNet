@@ -206,7 +206,6 @@ namespace BugOutNet.Controllers
         {
             try
             {
-
                 var category = _db.Categories.Find( Id );
 
                 if( category == null )

@@ -63,9 +63,8 @@
             mtype: 'GET',
             colNames: ['Bug Id', 'Name', 'Description', 'Project', 'Category', 'Priority', 'Status', 'Assigned To'],
             colModel: [
-                        { name: 'Id', index: 'Id', align: 'left', width: 60 },
+                        { name: 'Id', index: 'Id', key: true, align: 'left', width: 60 },
                         { name: 'edit', index: 'edit', width: 90, formatter: addLink },
-                        //{ name: 'Name', index: 'Name', align: 'left', width: 90 },
                         { name: 'Description', index: 'Description', align: 'left', width: 200 },
                         { name: 'Project', index: 'Project', align: 'left', width: 60 },
                         { name: 'Category', index: 'Category', align: 'left', width: 60 },

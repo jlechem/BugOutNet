@@ -210,6 +210,13 @@ namespace BugOutNet.Controllers
 
         }
 
+        [HttpPost]
+        [UserActionFilter]
+        public ActionResult Edit(BugViewModel model)
+        {
+            return View();
+        }
+
         /// <summary>
         /// Gets the bug view.
         /// </summary>

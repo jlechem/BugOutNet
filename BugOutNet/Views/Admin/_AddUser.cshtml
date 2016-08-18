@@ -1,45 +1,114 @@
 ﻿@model  BugOutNetLibrary.Models.ViewModels.UserViewModel
 
-<div class="container" style="width: 600px;">
+@using( Ajax.BeginForm( "Add", "Users", new AjaxOptions { HttpMethod = "POST", OnBegin= "onBegin", OnComplete= "onComplete", OnFailure= "onFailure", OnSuccess= "onSuccess" } ) )
+{
+<div class="container" style="width: 750px; padding-top: 5px;">
     <div class="panel panel-default">
         <div class="panel-body">
             <fieldset style="padding: 5px;">
-                @Html.AntiForgeryToken()
-                <h3 class="form-signin-heading">New Bug</h3>
-                <label>Username:</label>@Html.TextBoxFor( model => model.UserName, new { @class = "form-control", placeholder = "Name", required = "required", autofocus = "true", maxlength = "50" } )
-                <label>Project:</label>@Html.DropDownListFor( model => model., BugOutNet.Classes.CacheManager.GetProjects(), new { @class = "form-control" } )
-                <label>Category:</label>@Html.DropDownListFor( model => model.CategoryId, BugOutNet.Classes.CacheManager.GetCategories(), new { @class = "form-control" } )
-                <label>Priority:</label>@Html.DropDownListFor( model => model.PriorityId, BugOutNet.Classes.CacheManager.GetPriorities(), new { @class = "form-control" } )
-                <label>Status:</label>@Html.DropDownListFor( model => model.StatusId, BugOutNet.Classes.CacheManager.GetStatuses(), new { @class = "form-control" } )
-                <label>Assigned To:</label>@Html.DropDownListFor( model => model.AssigntedToId, BugOutNet.Classes.CacheManager.GetUsers(), new { @class = "form-control" } )
-                <label>Description:</label>@Html.TextAreaFor( model => model.Description, new { @class = "form-control", placeholder = "Description", required = "required" } )<br />
+                <h3 class="form-signin-heading">New User</h3>
+                <div class="form-group row">
+                    <label class="col-xs-2 col-form-label">Username:</label>
+                    <div class="col-xs-10">
+                        @Html.TextBoxFor( model => model.UserName, new { @class = "form-control", placeholder = "Username", required = "required", autofocus = "true", maxlength = "50" } )
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-xs-2 col-form-label">Password:</label>
+                    <div class="col-xs-10">
+                        @Html.PasswordFor( model => model.Password, new { @class = "form-control", placeholder = "Password", required = "required", maxlength = "50" } )
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-xs-2 col-form-label">Confirm Password:</label>
+                    <div class="col-xs-10">
+                        @Html.PasswordFor( model => model.ConfirmPassword, new { @class = "form-control", placeholder = "Confirm Password", required = "required", maxlength = "50" } )
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-xs-2 col-form-label">Email Address:</label>
+                    <div class="col-xs-10">
+                        @Html.TextBoxFor( model => model.EmailAddress, new { @class = "form-control", placeholder = "Email Address", required = "required", maxlength = "50", type = "email" } )
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-xs-2 col-form-label">First Name:</label>
+                    <div class="col-xs-10">
+                        @Html.TextBoxFor( model => model.FirstName, new { @class = "form-control", placeholder = "First Name", maxlength = "50" } )
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-xs-2 col-form-label">Last Name:</label>
+                    <div class="col-xs-10">
+                        @Html.TextBoxFor( model => model.LastName, new { @class = "form-control", placeholder = "Last Name", maxlength = "50" } )
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-xs-2 col-form-label">Is Verified:</label>
+                    <div class="col-xs-10">
+                        @Html.CheckBoxFor( model => model.IsVerified, new { @class = "form-control control-label.text-left", placeholder = "Is Verified" } )
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-xs-2 col-form-label">Is Admin:</label>
+                    <div class="col-xs-10">
+                        @Html.CheckBoxFor( model => model.IsAdmin, new { @class = "form-control control-label.text-left", placeholder = "Is Admin" } )
+                    </div>
+                </div>
+                <div class="form-group row"> 
+                    <label class="col-xs-2 col-form-label">Default Project:</label>
+                    <div class="col-xs-10">
+                        @Html.DropDownListFor( model => model.DefaultProjectId, BugOutNet.Classes.CacheManager.GetProjects(), new { @class = "form-control" } )
+                    </div>
+                </div>
+                <br />
                 <button type="submit" class="btn btn-primary" value="buttonSave" id="buttonSave">Save USer</button>
                 <button type="button" class="btn btn-primary" onclick="onCancel();">Cancel</button>
             </fieldset>
         </div>
     </div>
 </div>
-function onCancel() {
-        $("#divBugsContainer").html("");
+}
+<script>
+    function onBegin(data) {
+        $("#divUsersContent").hide();
+        $("#divLoader").show();
+    }
+
+    function onComplete(data) {
+        $("#divLoader").hide();
+        $("#divUsersContent").show();
+    }
+
+    function onFailure(data) {
+        $('#divUsersContent').html(result);
+    }
+
+    function onSuccess(data) {
+        $('#divUsersContent').html(result);
+    }
+
+    function onCancel() {
+        $("#divUsersContent").html("");
 
         $.ajax({
             type: 'GET',
-            url: '@Url.Action( "GetBugView", "Bugs" )',
+            url: '@Url.Action( "GetPartialView", "Users" )',
             data: {
-            bugstyle: "bugs"
+                viewname: "users"
             },
             beforeSend: function () {
-            $("#divBugsContainer").hide();
-            $("#divSpinner").show();
+                $("#divUsersContent").hide();
+                $("#divLoader").show();
             },
             success: function (result) {
-            $('#divBugsContainer').html(result);
+                $('#divUsersContent').html(result);
             },
             complete: function () {
-            $("#divSpinner").hide();
-            $("#divBugsContainer").show();
+                $("#divLoader").hide();
+                $("#divUsersContent").show();
             }
-            });
+        });
 
-            }
-            </script>
+    }
+</script>

@@ -20,7 +20,7 @@
             mtype: 'GET',
             colNames: ['Priority Id', 'Name', 'Description', 'Created On'],
             colModel: [
-                         { name: 'Id', index: 'Id', width: 50, align: 'left', editrules: { edithidden: true } },
+                         { name: 'Id', index: 'Id', key: true, width: 50, align: 'left', editrules: { edithidden: true } },
                          { name: 'Name', index: 'Name', width: 100, align: 'left', editable: true, editrules: { required: true } },
                          { name: 'Description', index: 'Description', width: 300, align: 'left', editable: true, edittype: "textarea", editoptions: { cols: 30, rows: 10 }, editrules: { required: true } },
                          { name: 'Created', index: 'Created', width: 60, align: 'left', editrules: { edithidden: true }, formatter: "date", formatoptions: { newformat: "m/d/Y" } }],
