@@ -1,1 +1,45 @@
-﻿
+﻿@model  BugOutNetLibrary.Models.ViewModels.UserViewModel
+
+<div class="container" style="width: 600px;">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <fieldset style="padding: 5px;">
+                @Html.AntiForgeryToken()
+                <h3 class="form-signin-heading">New Bug</h3>
+                <label>Username:</label>@Html.TextBoxFor( model => model.UserName, new { @class = "form-control", placeholder = "Name", required = "required", autofocus = "true", maxlength = "50" } )
+                <label>Project:</label>@Html.DropDownListFor( model => model., BugOutNet.Classes.CacheManager.GetProjects(), new { @class = "form-control" } )
+                <label>Category:</label>@Html.DropDownListFor( model => model.CategoryId, BugOutNet.Classes.CacheManager.GetCategories(), new { @class = "form-control" } )
+                <label>Priority:</label>@Html.DropDownListFor( model => model.PriorityId, BugOutNet.Classes.CacheManager.GetPriorities(), new { @class = "form-control" } )
+                <label>Status:</label>@Html.DropDownListFor( model => model.StatusId, BugOutNet.Classes.CacheManager.GetStatuses(), new { @class = "form-control" } )
+                <label>Assigned To:</label>@Html.DropDownListFor( model => model.AssigntedToId, BugOutNet.Classes.CacheManager.GetUsers(), new { @class = "form-control" } )
+                <label>Description:</label>@Html.TextAreaFor( model => model.Description, new { @class = "form-control", placeholder = "Description", required = "required" } )<br />
+                <button type="submit" class="btn btn-primary" value="buttonSave" id="buttonSave">Save USer</button>
+                <button type="button" class="btn btn-primary" onclick="onCancel();">Cancel</button>
+            </fieldset>
+        </div>
+    </div>
+</div>
+function onCancel() {
+        $("#divBugsContainer").html("");
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action( "GetBugView", "Bugs" )',
+            data: {
+            bugstyle: "bugs"
+            },
+            beforeSend: function () {
+            $("#divBugsContainer").hide();
+            $("#divSpinner").show();
+            },
+            success: function (result) {
+            $('#divBugsContainer').html(result);
+            },
+            complete: function () {
+            $("#divSpinner").hide();
+            $("#divBugsContainer").show();
+            }
+            });
+
+            }
+            </script>

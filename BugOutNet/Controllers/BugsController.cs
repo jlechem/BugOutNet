@@ -213,10 +213,11 @@ namespace BugOutNet.Controllers
         /// <summary>
         /// Gets the bug view.
         /// </summary>
-        /// <param name="name">The name.</param>
+        /// <param name="bugstyle">The bugstyle.</param>
+        /// <param name="id">The identifier.</param>
         /// <returns></returns>
         [UserActionFilter]
-        public ActionResult GetBugView( string bugstyle )
+        public ActionResult GetBugView( string bugstyle, int? id = null )
         {
             string viewName = String.Empty;
 
@@ -231,8 +232,28 @@ namespace BugOutNet.Controllers
                     break;
 
                 case "editbug":
+
                     viewName = "_EditBug";
-                    break;
+
+                    var bug = _db.Bugs.Find( id.Value );
+
+                    if( bug != null )
+                    {
+                        BugViewModel model = new BugViewModel();
+                        model.Id = bug.Id;
+                        model.Description = bug.Description;
+                        model.Name = bug.Name;
+                        model.ProjectId = bug.ProjectId;
+                        model.CategoryId = bug.CategoryId;
+                        model.PriorityId = bug.PriorityId;
+                        model.StatusId = bug.StatusId;
+                        model.AssigntedToId = bug.AssignedToId;
+
+                        return PartialView( viewName, model );
+
+                    }
+
+                    return PartialView( viewName );
 
                 default:
                     break;

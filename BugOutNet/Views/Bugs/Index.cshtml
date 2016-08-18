@@ -3,8 +3,13 @@
 }
 
 <div class="container" id="divBugsContainer">
-    <div id="divSpinner" style="text-align:center; display:none;">
+    <div id="divSpinner" style="text-align:center;">
         <img src="~/Content/images/loading.gif" style="border:none;" />
     </div>
    @Html.Partial("_Bugs")
 </div>
+<script>
+    $(document).ready(function () {
+        $("#divSpinner").hide();
+    });
+</script>

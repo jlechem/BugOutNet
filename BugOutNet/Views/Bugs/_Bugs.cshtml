@@ -34,12 +34,13 @@
         });
     }
 
-    function editBug() {
+    function editBug( id ) {
         $.ajax({
             type: 'GET',
             url: '@Url.Action( "GetBugView", "Bugs" )',
             data: {
-                bugstyle: 'editbug'
+                bugstyle: 'editbug',
+                id: id
             },
             beforeSend: function () {
                 $("#divBugsContainer").hide();
@@ -97,7 +98,7 @@
     });
 
     function addLink(cellvalue, options, rowObject) {
-        return "<a href='#' type='button' title='Slet' onclick=\"editBug()\" >" + rowObject.Name + "</a>";
+        return "<a href='#' type='button' title='Slet' onclick=\"editBug(" + rowObject.Id + " )\" >" + rowObject.Name + "</a>";
     }
 
 </script>
