@@ -4,7 +4,7 @@
     </div>
     <div style="float:left; text-align: right"><button type="button" class="btn btn-primary" onclick="addNewBug();">Add New Bug</button></div>
     <div style="float: right;">
-        <h4><span class="label label-primary">Projects:&nbsp;</span>&nbsp;&nbsp;@Html.DropDownList( "ddlProjects", BugOutNet.Classes.CacheManager.GetProjects(), "All" )</h4>
+        <h4><span class="label label-primary">Projects:&nbsp;</span>&nbsp;&nbsp;@Html.DropDownList( "ddlProjects", BugOutNet.Classes.CacheManager.GetProjects(), "All", new { @onchange = "onChange();" } )</h4>
     </div>
 </div>
 <hr />
@@ -14,6 +14,24 @@
 </div>
 
 <script>
+    var selectedProjectId = selectedProjectId = $("#ddlProjects").val();
+
+    if (selectedProjectId == "") {
+        selectedProjectId = 0;
+    };
+
+    function onChange() {
+        selectedProjectId = $("#ddlProjects").val();
+
+        if (selectedProjectId == "") {
+            selectedProjectId = 0;
+        }
+
+        var url = "@Url.Action( "GetBugs","Bugs")" + "?projectId=" + selectedProjectId;
+        $("#jqGrid").jqGrid('setGridParam', { url: url });
+        $("#jqGrid").trigger("reloadGrid");
+    }
+
     function addNewBug() {
         $("#divBugsContainer").html("");
 
@@ -61,7 +79,7 @@
 
     $(document).ready(function () {
         jQuery("#jqGrid").jqGrid({
-            url: "@Url.Action( "GetBugs","Bugs", new { projectId = 0 }  )",
+            url: "@Url.Action( "GetBugs","Bugs")" + "?projectId=" + selectedProjectId,
             datatype: "json",
             mtype: 'GET',
             colNames: ['Bug Id', 'Name', 'Description', 'Project', 'Category', 'Priority', 'Status', 'Assigned To'],
