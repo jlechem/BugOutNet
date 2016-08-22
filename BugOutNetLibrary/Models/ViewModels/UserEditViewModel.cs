@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace BugOutNetLibrary.Models.ViewModels
 {
-    public class UserViewModel
+    public class UserEditViewModel
     {
-        #region Properties
-
         /// <summary>
         /// Gets or sets the identifier.
         /// </summary>
@@ -115,7 +113,6 @@ namespace BugOutNetLibrary.Models.ViewModels
         /// <value>
         /// The password.
         /// </value>
-        [Required]
         public string Password { get; set; }
 
         /// <summary>
@@ -124,19 +121,7 @@ namespace BugOutNetLibrary.Models.ViewModels
         /// <value>
         /// The confirm password.
         /// </value>
-        [Required]
-        [CompareAttribute( "Password", ErrorMessage = "Passwords don't match" )]
         public string ConfirmPassword { get; set; }
-
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UserViewModel"/> class.
-        /// </summary>
-        public UserViewModel()
-        {
-
-        }
 
     }
 }

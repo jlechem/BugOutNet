@@ -76,32 +76,35 @@
     }
 
     function onComplete(data) {
-        $("#divLoader").hide();
         $("#divUsersContent").show();
+        $("#divLoader").hide();
     }
 
     function onFailure(data) {
-        $('#divUsersContent').html(result);
+        alert(data.statusText);
     }
 
     function onSuccess(data) {
-        $('#divUsersContent').html(result);
+        sendAjax("users");
     }
 
     function onCancel() {
-        $("#divUsersContent").html("");
+        sendAjax("users");
+    }
 
+    function sendAjax(viewname, id) {
         $.ajax({
             type: 'GET',
             url: '@Url.Action( "GetPartialView", "Users" )',
             data: {
-                viewname: "users"
+                viewname: viewname
             },
             beforeSend: function () {
                 $("#divUsersContent").hide();
                 $("#divLoader").show();
             },
             success: function (result) {
+                $("#divUsersContent").html("");
                 $('#divUsersContent').html(result);
             },
             complete: function () {
@@ -109,6 +112,5 @@
                 $("#divUsersContent").show();
             }
         });
-
     }
 </script>

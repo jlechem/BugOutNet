@@ -182,8 +182,10 @@ namespace BugOutNet.Controllers
 
         [HttpPost]
         [AdminActionFilter]
-        public ActionResult Edit( UserViewModel model )
+        public ActionResult Edit( UserEditViewModel model )
         {
+            HttpStatusCodeResult result = new HttpStatusCodeResult( HttpStatusCode.OK );
+
             if( model != null && ModelState.IsValid )
             {
                 try
@@ -207,18 +209,22 @@ namespace BugOutNet.Controllers
 
                         _db.SaveChanges();
                     }
+                    else
+                    {
+                        result = new HttpStatusCodeResult( HttpStatusCode.NotFound, "User with Id: " + model.Id + " not found." );
+                    }
                 }
                 catch( Exception ex )
                 {
-                    return new HttpStatusCodeResult( HttpStatusCode.InternalServerError, ex.ToString() );
+                    result = new HttpStatusCodeResult( HttpStatusCode.InternalServerError, ex.ToString() );
                 }
             }
             else
             {
-                return new HttpStatusCodeResult( HttpStatusCode.BadRequest );
+                result = new HttpStatusCodeResult( HttpStatusCode.BadRequest );
             }
 
-            return RedirectToAction( "Index", "Bugs" );
+            return result;
         }
 
         [AdminActionFilter]
@@ -275,7 +281,7 @@ namespace BugOutNet.Controllers
                 case "edituser":
                     partialViewName = "~/Views/Admin/_EditUser.cshtml";
 
-                    UserViewModel model = GetUserViewModel( id.Value );
+                    UserEditViewModel model = GetUserViewModel( id.Value );
 
                     if( model != null )
                     {
@@ -298,15 +304,15 @@ namespace BugOutNet.Controllers
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        private UserViewModel GetUserViewModel(int id)
+        private UserEditViewModel GetUserViewModel(int id)
         {
-            UserViewModel model = null;
+            UserEditViewModel model = null;
 
             User user = _db.Users.Find( id );
 
             if( user != null )
             {
-                model = new UserViewModel();
+                model = new UserEditViewModel();
 
                 model.Id = user.Id;
                 model.UserName = user.UserName;
