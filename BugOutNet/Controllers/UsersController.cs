@@ -1,4 +1,5 @@
-﻿using BugOutNet.CustomActionFilters;
+﻿using BugOutNet.Classes;
+using BugOutNet.CustomActionFilters;
 using BugOutNetLibrary.Helpers;
 using BugOutNetLibrary.Managers;
 using BugOutNetLibrary.Models.DB;
@@ -166,6 +167,10 @@ namespace BugOutNet.Controllers
                         } );
 
                     _db.SaveChanges();
+
+                    // anytime we edit/add/delete users and succeed we need to refresh the cache
+                    CacheManager.GetUsers( true );
+
                 }
                 catch( Exception ex )
                 {
@@ -208,6 +213,10 @@ namespace BugOutNet.Controllers
                         user.Password = HashHelper.HashPassword( model.Password + salt );
 
                         _db.SaveChanges();
+
+                        // anytime we edit/add/delete users and succeed we need to refresh the cache
+                        CacheManager.GetUsers( true );
+
                     }
                     else
                     {
@@ -247,6 +256,10 @@ namespace BugOutNet.Controllers
                 {
                     _db.Users.Remove( user );
                     _db.SaveChanges();
+
+                    // anytime we edit/add/delete users and succeed we need to refresh the cache
+                    CacheManager.GetUsers( true );
+
                 }
             }
             catch( Exception ex )

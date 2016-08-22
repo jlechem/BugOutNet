@@ -78,8 +78,8 @@ namespace BugOutNet.Classes
         public static List<SelectListItem> GetProjects()
         {
             var projects = Get( ProjectsCacheKey ) as List<SelectListItem>;
-            
-            if( projects == null)
+
+            if( projects == null )
             {
                 using( var db = new Entities() )
                 {
@@ -89,7 +89,7 @@ namespace BugOutNet.Classes
                         Text = project.Name,
                         Value = project.Id.ToString()
                     } ).ToList();
-                    
+
                 }
 
                 Add( ProjectsCacheKey, projects );
@@ -98,7 +98,7 @@ namespace BugOutNet.Classes
 
             return projects;
 
-            
+
         }
 
         /// <summary>
@@ -118,12 +118,12 @@ namespace BugOutNet.Classes
                         Text = category.Name,
                         Value = category.Id.ToString()
                     } ).ToList();
-                    
+
                     Add( CagtegoriesCacheKey, categories );
 
                 }
             }
-           
+
             return categories;
 
         }
@@ -145,7 +145,7 @@ namespace BugOutNet.Classes
                         Text = status.Name,
                         Value = status.Id.ToString()
                     } ).ToList();
-                    
+
                     Add( StatusesCacheKey, statuses );
 
                 }
@@ -172,12 +172,12 @@ namespace BugOutNet.Classes
                         Text = priority.Name,
                         Value = priority.Id.ToString()
                     } ).ToList();
-                    
+
                     Add( PrioritiesCacheKey, priorities );
 
                 }
             }
-            
+
             return priorities;
 
         }
@@ -200,7 +200,7 @@ namespace BugOutNet.Classes
                         Text = priority.UserName,
                         Value = priority.Id.ToString()
                     } ).ToList();
-                    
+
                     Add( UsersCacheKey, users );
 
                 }
@@ -214,31 +214,12 @@ namespace BugOutNet.Classes
         /// </summary>
         /// <param name="user">The user to add.</param>
         /// <returns></returns>
-        public static List<SelectListItem> GetUsers(User user)
+        public static List<SelectListItem> GetUsers( bool refresh )
         {
-            using( var db = new Entities() )
-            {
-                // add the new user
-                db.Users.Add( user );
-                db.SaveChanges();
+            Remove( UsersCacheKey );
 
-                // remove the old users from the cache
-                Remove( UsersCacheKey );
+            return GetUsers();
 
-                // create a new list of users
-                var users = db.Users.Select( priority =>
-                   new SelectListItem
-                   {
-                       Text = priority.UserName,
-                       Value = priority.Id.ToString()
-                   } ).ToList();
-
-                // add it back to the cache
-                Add( UsersCacheKey, users );
-
-                return users;
-
-            }
         }
 
     }
