@@ -102,6 +102,37 @@ namespace BugOutNet.Classes
         }
 
         /// <summary>
+        /// Gets the projects.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        public static List<SelectListItem> GetProjects( int userId )
+        {
+            var projects = Get( ProjectsCacheKey ) as List<SelectListItem>;
+
+            if( projects == null )
+            {
+                using( var db = new Entities() )
+                {
+                    projects = db.Users_Projects.Where( x => x.UserId == userId )
+                        .Select( project =>
+                            new SelectListItem
+                            {
+                                Text = project.Project.Name,
+                                Value = project.Project.Id.ToString()
+                            } ).ToList();
+                }
+
+                Add( ProjectsCacheKey, projects );
+
+            }
+
+            return projects;
+
+
+        }
+
+        /// <summary>
         /// Gets the categories.
         /// </summary>
         public static List<SelectListItem> GetCategories()
