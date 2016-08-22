@@ -1,21 +1,56 @@
 ﻿@model  BugOutNetLibrary.Models.ViewModels.BugViewModel
 
-@using( Html.BeginForm( "Add", "Bugs", FormMethod.Post ) )
+@using( Html.BeginForm( "Edit", "Bugs", FormMethod.Post ) )
 {
-    <div class="container" style="width: 600px;">
+    <div class="container" style="width: 750px;">
         <div class="panel panel-default">
             <div class="panel-body">
                 <fieldset style="padding: 5px;">
                     @Html.AntiForgeryToken()
                     <h3 class="form-signin-heading">Edit Bug</h3>
                     @Html.HiddenFor(model => model.Id )
-                    <label>Name:</label>@Html.TextBoxFor( model => model.Name, new { @class = "form-control", placeholder = "Name", required = "required", autofocus = "true", maxlength = "150" } )
-                    <label>Project:</label>@Html.DropDownListFor( model => model.ProjectId, BugOutNet.Classes.CacheManager.GetProjects(), new { @class = "form-control" } )
-                    <label>Category:</label>@Html.DropDownListFor( model => model.CategoryId, BugOutNet.Classes.CacheManager.GetCategories(), new { @class = "form-control" } )
-                    <label>Priority:</label>@Html.DropDownListFor( model => model.PriorityId, BugOutNet.Classes.CacheManager.GetPriorities(), new { @class = "form-control" } )
-                    <label>Status:</label>@Html.DropDownListFor( model => model.StatusId, BugOutNet.Classes.CacheManager.GetStatuses(), new { @class = "form-control" } )
-                    <label>Assigned To:</label>@Html.DropDownListFor( model => model.AssigntedToId, BugOutNet.Classes.CacheManager.GetUsers(), new { @class = "form-control" } )
-                    <label>Description:</label>@Html.TextAreaFor( model => model.Description, new { @class = "form-control", placeholder = "Description", required = "required" } )<br />
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label">Name:</label>
+                        <div class="col-xs-10">
+                           @Html.TextBoxFor( model => model.Name, new { @class = "form-control", placeholder = "Name", required = "required", autofocus = "true", maxlength = "150" } )
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label">Project:</label>
+                        <div class="col-xs-10">
+                           @Html.DropDownListFor( model => model.ProjectId, BugOutNet.Classes.CacheManager.GetProjects(), new { @class = "form-control" } )
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label">Category:</label>
+                        <div class="col-xs-10">
+                           @Html.DropDownListFor( model => model.CategoryId, BugOutNet.Classes.CacheManager.GetCategories(), new { @class = "form-control" } )
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label">Priority:</label>
+                        <div class="col-xs-10">
+                          @Html.DropDownListFor( model => model.PriorityId, BugOutNet.Classes.CacheManager.GetPriorities(), new { @class = "form-control" } )
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label">Status:</label>
+                        <div class="col-xs-10">
+                            @Html.DropDownListFor( model => model.StatusId, BugOutNet.Classes.CacheManager.GetStatuses(), new { @class = "form-control" } )
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label">Assigned To:</label>
+                        <div class="col-xs-10">
+                            @Html.DropDownListFor( model => model.AssigntedToId, BugOutNet.Classes.CacheManager.GetUsers(), new { @class = "form-control" } )
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label">Description:</label>
+                        <div class="col-xs-10">
+                            @Html.TextAreaFor( model => model.Description, new { @class = "form-control", placeholder = "Description", required = "required" } )
+                        </div>
+                    </div>
                     <button type="submit" class="btn btn-primary" value="buttonSave" id="buttonSave">Save Bug</button>
                     <button type="button" class="btn btn-primary" onclick="onCancel();">Cancel</button>
                 </fieldset>

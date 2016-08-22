@@ -214,7 +214,62 @@ namespace BugOutNet.Controllers
         [UserActionFilter]
         public ActionResult Edit(BugViewModel model)
         {
-            return View();
+            if( model != null && ModelState.IsValid )
+            {
+                try
+                {
+                    var bug = _db.Bugs.Find( model.Id );
+
+                    if( bug != null )
+                    {
+                        // updaate the bug into the DB
+                        bug.Name = model.Name;
+                        bug.Description = model.Description;
+                        bug.AssignedToId = model.AssigntedToId;
+                        bug.ProjectId = model.ProjectId;
+                        bug.CategoryId = model.CategoryId;
+                        bug.PriorityId = model.PriorityId;
+                        bug.StatusId = model.StatusId;
+                        bug.LatUpdated = DateTime.Now;
+                        bug.LastUpdatedId = SessionManager.User.Id;
+                            
+                        _db.SaveChanges();
+                    }
+                    else
+                    {
+
+                    }
+                }
+                catch( Exception ex )
+                {
+                    return new HttpStatusCodeResult( HttpStatusCode.InternalServerError, ex.ToString() );
+                }
+            }
+            else
+            {
+                return new HttpStatusCodeResult( HttpStatusCode.BadRequest );
+            }
+
+            return RedirectToAction( "Index", "Bugs" );
+
+        }
+
+        [UserActionFilter]
+        public ActionResult Delete(int id)
+        {
+            var bug = _db.Bugs.Find( id );
+
+            if( bug != null )
+            {
+                _db.Bugs.Remove( bug );
+                _db.SaveChanges();
+
+                return new HttpStatusCodeResult( HttpStatusCode.OK );
+
+            }
+
+            return new HttpStatusCodeResult( HttpStatusCode.NotFound, "Bug with Id: " + id + " not found." );
+
         }
 
         /// <summary>

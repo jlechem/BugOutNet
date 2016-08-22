@@ -1,8 +1,11 @@
 ﻿<div>
-    <div style="float: left;">
+    <div id="divFilters">
+
+    </div>
+    <div style="float:left; text-align: right"><button type="button" class="btn btn-primary" onclick="addNewBug();">Add New Bug</button></div>
+    <div style="float: right;">
         <h4><span class="label label-primary">Projects:&nbsp;</span>&nbsp;&nbsp;@Html.DropDownList( "ddlProjects", BugOutNet.Classes.CacheManager.GetProjects(), "All" )</h4>
     </div>
-    <div style="float:right; text-align: right"><button type="button" class="btn btn-primary" onclick="addNewBug();">Add New Bug</button></div>
 </div>
 <hr />
 <div style="clear: both;">
@@ -94,10 +97,47 @@
                 Id: "0"
             }
         });
+
+        $("#jqGrid").jqGrid('navGrid', '#jqGridPager',
+                {
+                    add: false,
+                    edit: false,
+                    del: true,
+                    search: false,
+                    view: false,
+                    refresh: false,
+                    addtext: "",
+                    addtitle: ""
+                },
+                // edit options
+                {
+                },
+                // add options
+                {
+                },
+                // delete
+                {
+                    caption: "Delete",
+                    url: "@Url.Action( "Delete", "Bugs" )",
+                    closeAfterAdd: true,
+                    msg: "Are you sure you want to delete this bug?",
+                    bSubmit: "Delete",
+                    bCancel: "Cancel",
+                    width: "auto",
+                    height: "auto",
+                    resize: false
+                },
+                //other fucking options
+                // search
+                {},
+                {
+                    closeOnEscape: true
+                });
+
     });
 
     function addLink(cellvalue, options, rowObject) {
-        return "<a href='#' type='button' title='Slet' onclick=\"editBug(" + rowObject.Id + " )\" >" + rowObject.Name + "</a>";
+        return "<a href='#' type='button' title='' onclick=\"editBug(" + rowObject.Id + " )\" >" + rowObject.Name + "</a>";
     }
 
 </script>
