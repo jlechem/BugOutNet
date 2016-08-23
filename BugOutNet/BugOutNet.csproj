@@ -606,6 +606,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\themes\Excitebike\package.json" />
     <Content Include="Content\themes\BlackTile\package.json" />
+    <None Include="Properties\PublishProfiles\Testbed.pubxml" />
     <None Include="Scripts\jquery-3.1.0.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
