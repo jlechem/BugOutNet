@@ -1,10 +1,12 @@
-﻿<div>
+﻿@using BugOutNetLibrary.Managers
+
+<div>
     <div id="divFilters">
 
     </div>
     <div style="float:left; text-align: right"><button type="button" class="btn btn-primary" onclick="addNewBug();">Add New Bug</button></div>
     <div style="float: right;">
-        <h4><span class="label label-primary">Projects:&nbsp;</span>&nbsp;&nbsp;@Html.DropDownList( "ddlProjects", BugOutNet.Classes.CacheManager.GetProjects(), "All", new { @onchange = "onChange();" } )</h4>
+        <h4><span class="label label-primary">Projects:&nbsp;</span>&nbsp;&nbsp;@Html.DropDownList( "ddlProjects", BugOutNet.Classes.CacheManager.GetProjects(), "All", new { @class = "dropdown-toggle", @onchange = "onChange();" } )</h4>
     </div>
 </div>
 <hr />
@@ -14,7 +16,7 @@
 </div>
 
 <script>
-    var selectedProjectId = selectedProjectId = $("#ddlProjects").val();
+    var selectedProjectId = @SessionManager.SelectedProjectId;// selectedProjectId = $("#ddlProjects").val();
 
     if (selectedProjectId == "") {
         selectedProjectId = 0;
@@ -78,6 +80,13 @@
     }
 
     $(document).ready(function () {
+        if( selectedProjectId > 0 ){
+            $("#ddlProjects").val(selectedProjectId)
+        }
+        else{
+            $("#ddlProjects").selectedIndex = 0;
+        }
+        
         jQuery("#jqGrid").jqGrid({
             url: "@Url.Action( "GetBugs","Bugs")" + "?projectId=" + selectedProjectId,
             datatype: "json",

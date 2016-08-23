@@ -23,5 +23,28 @@ namespace BugOutNetLibrary.Managers
             }
         }
 
+        /// <summary>
+        /// Gets or sets the selected project identifier.
+        /// </summary>
+        /// <value>
+        /// The selected project identifier.
+        /// </value>
+        public static int SelectedProjectId
+        {
+            get
+            {
+                if( HttpContext.Current.Session["SelectedProjectId"] == null )
+                {
+                    HttpContext.Current.Session["SelectedProjectId"] = 0;
+                }
+
+                return (int)HttpContext.Current.Session["SelectedProjectId"];
+            }
+            set
+            {
+                HttpContext.Current.Session["SelectedProjectId"] = value;
+            }
+        }
+
     }
 }

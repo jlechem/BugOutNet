@@ -33,6 +33,8 @@ namespace BugOutNet.Controllers
         [UserActionFilter]
         public ActionResult GetBugs( int projectId, string sidx, string sord, int page, int rows )
         {
+            SessionManager.SelectedProjectId = projectId;
+
             sord = ( sord == null ) ? "" : sord;
             int pageIndex = Convert.ToInt32( page ) - 1;
             int pageSize = rows;
@@ -45,19 +47,23 @@ namespace BugOutNet.Controllers
                 tempBugs = tempBugs.Where( bug => bug.ProjectId == projectId );
             }
 
-            var bugs = tempBugs.Select( bug =>
-                new BugGridModel
-                {
-                    Id = bug.Id,
-                    AssignedTo = bug.User.UserName,
-                    Category = bug.Category.Name,
-                    Description = bug.Description,
-                    Name = bug.Name,
-                    Project = bug.Project.Name,
-                    Priority = bug.Priority.Name,
-                    Status = bug.Status.Name,
-                    LastUpdatedOn = bug.LatUpdated
-                } );
+            var bugs = from bug in tempBugs
+                       join project in _db.Projects on bug.ProjectId equals project.Id
+                       join category in _db.Categories on bug.CategoryId equals category.Id
+                       join status in _db.Statuses on bug.StatusId equals status.Id
+                       join priority in _db.Priorities on bug.PriorityId equals priority.Id
+                       select new BugGridModel
+                       {
+                           Id = bug.Id,
+                           Name = bug.Name,
+                           Description = bug.Description,
+                           AssignedTo = bug.User.UserName,
+                           Project = project.Name,
+                           Category = category.Name,
+                           Priority = priority.Name,
+                           Status = status.Name,
+                           LastUpdatedOn = bug.LatUpdated
+                       };
 
             int totalRecords = bugs.Count();
             var totalPages = (int)Math.Ceiling( (float)totalRecords / (float)rows );
