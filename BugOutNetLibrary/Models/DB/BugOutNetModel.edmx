@@ -5,6 +5,14 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="BugOutNetModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BugAttachments">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BugId" Type="int" Nullable="false" />
+          <Property Name="Attachment" Type="varbinary(max)" Nullable="false" />
+        </EntityType>
         <EntityType Name="BugComments">
           <Key>
             <PropertyRef Name="Id" />
@@ -133,6 +141,18 @@
           <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK_BugAttachments_Bugs">
+          <End Role="Bugs" Type="Self.Bugs" Multiplicity="1" />
+          <End Role="BugAttachments" Type="Self.BugAttachments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bugs">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BugAttachments">
+              <PropertyRef Name="BugId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_BugComments_Bugs">
           <End Role="Bugs" Type="Self.Bugs" Multiplicity="1" />
           <End Role="BugComments" Type="Self.BugComments" Multiplicity="*" />
@@ -338,6 +358,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="BugOutNetModelStoreContainer">
+          <EntitySet Name="BugAttachments" EntityType="Self.BugAttachments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BugComments" EntityType="Self.BugComments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Bugs" EntityType="Self.Bugs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
@@ -349,6 +370,10 @@
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users_Projects" EntityType="Self.Users_Projects" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users_Roles" EntityType="Self.Users_Roles" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_BugAttachments_Bugs" Association="Self.FK_BugAttachments_Bugs">
+            <End Role="Bugs" EntitySet="Bugs" />
+            <End Role="BugAttachments" EntitySet="BugAttachments" />
+          </AssociationSet>
           <AssociationSet Name="FK_BugComments_Bugs" Association="Self.FK_BugComments_Bugs">
             <End Role="Bugs" EntitySet="Bugs" />
             <End Role="BugComments" EntitySet="BugComments" />
@@ -502,6 +527,11 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Users_Roles" EntitySet="Users_Roles" />
           </AssociationSet>
+          <EntitySet Name="BugAttachments" EntityType="BugOutNetModel.BugAttachment" />
+          <AssociationSet Name="FK_BugAttachments_Bugs" Association="BugOutNetModel.FK_BugAttachments_Bugs">
+            <End Role="Bug" EntitySet="Bugs" />
+            <End Role="BugAttachment" EntitySet="BugAttachments" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="BugComment">
           <Key>
@@ -537,6 +567,7 @@
           <NavigationProperty Name="Project" Relationship="BugOutNetModel.FK_Bugs_Projects" FromRole="Bug" ToRole="Project" />
           <NavigationProperty Name="Status" Relationship="BugOutNetModel.FK_Bugs_Status" FromRole="Bug" ToRole="Status" />
           <NavigationProperty Name="User1" Relationship="BugOutNetModel.FK_Bugs_Users" FromRole="Bug" ToRole="User" />
+          <NavigationProperty Name="BugAttachments" Relationship="BugOutNetModel.FK_BugAttachments_Bugs" FromRole="Bug" ToRole="BugAttachment" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
@@ -869,6 +900,27 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="BugAttachment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BugId" Type="Int32" Nullable="false" />
+          <Property Name="Attachment" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="Bug" Relationship="BugOutNetModel.FK_BugAttachments_Bugs" FromRole="BugAttachment" ToRole="Bug" />
+        </EntityType>
+        <Association Name="FK_BugAttachments_Bugs">
+          <End Type="BugOutNetModel.Bug" Role="Bug" Multiplicity="1" />
+          <End Type="BugOutNetModel.BugAttachment" Role="BugAttachment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bug">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BugAttachment">
+              <PropertyRef Name="BugId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1010,6 +1062,15 @@
               <MappingFragment StoreEntitySet="Users_Roles">
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BugAttachments">
+            <EntityTypeMapping TypeName="BugOutNetModel.BugAttachment">
+              <MappingFragment StoreEntitySet="BugAttachments">
+                <ScalarProperty Name="Attachment" ColumnName="Attachment" />
+                <ScalarProperty Name="BugId" ColumnName="BugId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

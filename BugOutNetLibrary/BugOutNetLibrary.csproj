@@ -63,6 +63,9 @@
     <Compile Include="Models\DB\Bug.cs">
       <DependentUpon>BugOutNetModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DB\BugAttachment.cs">
+      <DependentUpon>BugOutNetModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DB\BugComment.cs">
       <DependentUpon>BugOutNetModel.tt</DependentUpon>
     </Compile>

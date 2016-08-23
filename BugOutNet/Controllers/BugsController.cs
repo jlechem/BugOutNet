@@ -7,6 +7,7 @@ using BugOutNetLibrary.Repos;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -177,30 +178,53 @@ namespace BugOutNet.Controllers
         [HttpPost]
         [UserActionFilter]
         [ValidateAntiForgeryToken]
-        public ActionResult Add( BugViewModel model )
+        public ActionResult Add( BugViewModel model  )
         {
             if( model != null && ModelState.IsValid )
             {
                 try
                 {
-                    // save the bug into the DB
-                    _db.Bugs.Add(
-                        new Bug
-                        {
-                            Name = model.Name,
-                            Description = model.Description,
-                            AssignedToId = model.AssigntedToId,
-                            ProjectId = model.ProjectId,
-                            CategoryId = model.CategoryId,
-                            PriorityId = model.PriorityId,
-                            StatusId = model.StatusId,
-                            Created = DateTime.Now,
-                            LatUpdated = DateTime.Now,
-                            CreatorId = SessionManager.User.Id,
-                            LastUpdatedId = SessionManager.User.Id
-                        } );
+                    Bug newBug = new Bug();
+                    newBug.Name = model.Name;
+                    newBug.Description = model.Description;
+                    newBug.AssignedToId = model.AssigntedToId;
+                    newBug.ProjectId = model.ProjectId;
+                    newBug.CategoryId = model.CategoryId;
+                    newBug.PriorityId = model.PriorityId;
+                    newBug.StatusId = model.StatusId;
+                    newBug.Created = DateTime.Now;
+                    newBug.LatUpdated = DateTime.Now;
+                    newBug.CreatorId = SessionManager.User.Id;
+                    newBug.LastUpdatedId = SessionManager.User.Id;
 
+                    // save the bug into the DB
+                    _db.Bugs.Add( newBug );
+
+                    // make sure our Id is now new    
                     _db.SaveChanges();
+
+                    if( model.FileUpload.InputStream != null )
+                    {
+                        BugAttachment newAttachment = new BugAttachment();
+                        newAttachment.BugId = newBug.Id;
+
+                        using( var inputStream = model.FileUpload.InputStream )
+                        {
+                            MemoryStream memoryStream = inputStream as MemoryStream;
+
+                            if( memoryStream == null )
+                            {
+                                memoryStream = new MemoryStream();
+                                inputStream.CopyTo( memoryStream );
+                            }
+
+                            newAttachment.Attachment = memoryStream.ToArray();
+
+                            _db.BugAttachments.Add( newAttachment );
+                            _db.SaveChanges();
+
+                        }
+                    }               
                 }
                 catch( Exception ex )
                 {

@@ -33,6 +33,8 @@
         <AssociationConnector Association="BugOutNetModel.FK_Tokens_Users" />
         <AssociationConnector Association="BugOutNetModel.FK_Users_Projects_Users" />
         <AssociationConnector Association="BugOutNetModel.FK_Users_Roles_Users" />
+        <EntityTypeShape EntityType="BugOutNetModel.BugAttachment" Width="1.5" PointX="7.5" PointY="12.75" />
+        <AssociationConnector Association="BugOutNetModel.FK_BugAttachments_Bugs" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
