@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace BugOutNetLibrary.Models.ViewModels
 {
@@ -168,7 +169,7 @@ namespace BugOutNetLibrary.Models.ViewModels
         /// <value>
         /// The comments.
         /// </value>
-        List<BugCommentViewModel> Comments { get; set; }
+        public List<BugCommentViewModel> Comments { get; set; }
 
         /// <summary>
         /// Gets or sets the attachments.
@@ -176,7 +177,15 @@ namespace BugOutNetLibrary.Models.ViewModels
         /// <value>
         /// The attachments.
         /// </value>
-        List<BugAttachmentViewModel> Attachments { get; set; }
+        public List<BugAttachmentViewModel> Attachments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the file upload.
+        /// </summary>
+        /// <value>
+        /// The file upload.
+        /// </value>
+        public HttpPostedFileBase FileUpload { get; set; }
 
         #endregion
 
