@@ -17,7 +17,11 @@ namespace BugOutNetLibrary.Models.DB
         public int Id { get; set; }
         public int BugId { get; set; }
         public byte[] Attachment { get; set; }
+        public string FileName { get; set; }
+        public int UploadedById { get; set; }
+        public System.DateTime Created { get; set; }
     
         public virtual Bug Bug { get; set; }
+        public virtual User User { get; set; }
     }
 }

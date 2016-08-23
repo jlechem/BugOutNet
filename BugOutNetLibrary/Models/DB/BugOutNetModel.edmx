@@ -12,6 +12,9 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BugId" Type="int" Nullable="false" />
           <Property Name="Attachment" Type="varbinary(max)" Nullable="false" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="UploadedById" Type="int" Nullable="false" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="BugComments">
           <Key>
@@ -150,6 +153,18 @@
             </Principal>
             <Dependent Role="BugAttachments">
               <PropertyRef Name="BugId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BugAttachments_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="BugAttachments" Type="Self.BugAttachments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BugAttachments">
+              <PropertyRef Name="UploadedById" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -374,6 +389,10 @@
             <End Role="Bugs" EntitySet="Bugs" />
             <End Role="BugAttachments" EntitySet="BugAttachments" />
           </AssociationSet>
+          <AssociationSet Name="FK_BugAttachments_Users" Association="Self.FK_BugAttachments_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="BugAttachments" EntitySet="BugAttachments" />
+          </AssociationSet>
           <AssociationSet Name="FK_BugComments_Bugs" Association="Self.FK_BugComments_Bugs">
             <End Role="Bugs" EntitySet="Bugs" />
             <End Role="BugComments" EntitySet="BugComments" />
@@ -532,6 +551,10 @@
             <End Role="Bug" EntitySet="Bugs" />
             <End Role="BugAttachment" EntitySet="BugAttachments" />
           </AssociationSet>
+          <AssociationSet Name="FK_BugAttachments_Users" Association="BugOutNetModel.FK_BugAttachments_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="BugAttachment" EntitySet="BugAttachments" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="BugComment">
           <Key>
@@ -675,6 +698,7 @@
           <NavigationProperty Name="Tokens" Relationship="BugOutNetModel.FK_Tokens_Users" FromRole="User" ToRole="Token" />
           <NavigationProperty Name="Users_Projects" Relationship="BugOutNetModel.FK_Users_Projects_Users" FromRole="User" ToRole="Users_Projects" />
           <NavigationProperty Name="Users_Roles" Relationship="BugOutNetModel.FK_Users_Roles_Users" FromRole="User" ToRole="Users_Roles" />
+          <NavigationProperty Name="BugAttachments" Relationship="BugOutNetModel.FK_BugAttachments_Users" FromRole="User" ToRole="BugAttachment" />
         </EntityType>
         <EntityType Name="Users_Projects">
           <Key>
@@ -908,6 +932,10 @@
           <Property Name="BugId" Type="Int32" Nullable="false" />
           <Property Name="Attachment" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
           <NavigationProperty Name="Bug" Relationship="BugOutNetModel.FK_BugAttachments_Bugs" FromRole="BugAttachment" ToRole="Bug" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="UploadedById" Type="Int32" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="User" Relationship="BugOutNetModel.FK_BugAttachments_Users" FromRole="BugAttachment" ToRole="User" />
         </EntityType>
         <Association Name="FK_BugAttachments_Bugs">
           <End Type="BugOutNetModel.Bug" Role="Bug" Multiplicity="1" />
@@ -918,6 +946,18 @@
             </Principal>
             <Dependent Role="BugAttachment">
               <PropertyRef Name="BugId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BugAttachments_Users">
+          <End Type="BugOutNetModel.User" Role="User" Multiplicity="1" />
+          <End Type="BugOutNetModel.BugAttachment" Role="BugAttachment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BugAttachment">
+              <PropertyRef Name="UploadedById" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1069,6 +1109,9 @@
           <EntitySetMapping Name="BugAttachments">
             <EntityTypeMapping TypeName="BugOutNetModel.BugAttachment">
               <MappingFragment StoreEntitySet="BugAttachments">
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="UploadedById" ColumnName="UploadedById" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="Attachment" ColumnName="Attachment" />
                 <ScalarProperty Name="BugId" ColumnName="BugId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

@@ -35,6 +35,7 @@
         <AssociationConnector Association="BugOutNetModel.FK_Users_Roles_Users" />
         <EntityTypeShape EntityType="BugOutNetModel.BugAttachment" Width="1.5" PointX="7.5" PointY="12.75" />
         <AssociationConnector Association="BugOutNetModel.FK_BugAttachments_Bugs" />
+        <AssociationConnector Association="BugOutNetModel.FK_BugAttachments_Users" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -219,6 +219,9 @@ namespace BugOutNet.Controllers
                             }
 
                             newAttachment.Attachment = memoryStream.ToArray();
+                            newAttachment.FileName = model.FileUpload.FileName;
+                            newAttachment.Created = DateTime.Now;
+                            newAttachment.UploadedById = newBug.CreatorId;
 
                             _db.BugAttachments.Add( newAttachment );
                             _db.SaveChanges();
