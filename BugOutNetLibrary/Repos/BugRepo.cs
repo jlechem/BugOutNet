@@ -11,5 +11,16 @@ namespace BugOutNetLibrary.Repos
 {
     public static class BugRepo
     {
+        /// <summary>
+        /// Gets the bugs.
+        /// </summary>
+        /// <returns></returns>
+        public static IQueryable<Bug> GetBugs()
+        {
+            using( var db = new Entities() )
+            {
+                return db.Bugs;
+            }
+        }
     }
 }

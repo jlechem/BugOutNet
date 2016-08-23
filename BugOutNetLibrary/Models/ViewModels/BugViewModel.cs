@@ -194,7 +194,8 @@ namespace BugOutNetLibrary.Models.ViewModels
         /// </summary>
         public BugViewModel()
         {
-
+            Attachments = new List<BugAttachmentViewModel>();
+            Comments = new List<BugCommentViewModel>();
         }
 
     }

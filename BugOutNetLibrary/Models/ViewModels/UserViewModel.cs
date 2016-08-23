@@ -127,7 +127,7 @@ namespace BugOutNetLibrary.Models.ViewModels
         [Required]
         [CompareAttribute( "Password", ErrorMessage = "Passwords don't match" )]
         public string ConfirmPassword { get; set; }
-
+        
         #endregion
 
         /// <summary>
@@ -135,7 +135,6 @@ namespace BugOutNetLibrary.Models.ViewModels
         /// </summary>
         public UserViewModel()
         {
-
         }
 
     }

@@ -329,26 +329,8 @@ namespace BugOutNet.Controllers
                 case "editbug":
 
                     viewName = "_EditBug";
-
-                    var bug = _db.Bugs.Find( id.Value );
-
-                    if( bug != null )
-                    {
-                        BugViewModel model = new BugViewModel();
-                        model.Id = bug.Id;
-                        model.Description = bug.Description;
-                        model.Name = bug.Name;
-                        model.ProjectId = bug.ProjectId;
-                        model.CategoryId = bug.CategoryId;
-                        model.PriorityId = bug.PriorityId;
-                        model.StatusId = bug.StatusId;
-                        model.AssigntedToId = bug.AssignedToId;
-
-                        return PartialView( viewName, model );
-
-                    }
-
-                    return PartialView( viewName );
+                    var bugModel = GetBugModel( id.Value );
+                    return PartialView( viewName, bugModel );
 
                 default:
                     break;
@@ -356,6 +338,54 @@ namespace BugOutNet.Controllers
             }
 
             return PartialView( viewName );
+        }
+
+        public ActionResult GetFile( int id )
+        {
+            var file = _db.BugAttachments.FirstOrDefault( attachment => attachment.Id == id );
+
+            if( file != null )
+            {
+                return File( file.Attachment, "application/octet-stream", file.FileName );
+            }
+            else
+            {
+                throw new HttpException( 404, "Couldn't find file." );
+            }
+        }
+
+        /// <summary>
+        /// Gets the bug model.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        private BugViewModel GetBugModel(int id)
+        {
+            BugViewModel model = null;
+
+            var bug = _db.Bugs.Find( id );
+
+            if( bug != null )
+            {
+                model = new BugViewModel();
+                model.Id = bug.Id;
+                model.Description = bug.Description;
+                model.Name = bug.Name;
+                model.ProjectId = bug.ProjectId;
+                model.CategoryId = bug.CategoryId;
+                model.PriorityId = bug.PriorityId;
+                model.StatusId = bug.StatusId;
+                model.AssigntedToId = bug.AssignedToId;
+
+                model.Attachments.AddRange( bug.BugAttachments.Select( attachment => new BugAttachmentViewModel
+                {
+                    Id = attachment.Id,
+                    FileName = attachment.FileName
+                } ) );
+            }
+
+            return model;
+
         }
 
     }

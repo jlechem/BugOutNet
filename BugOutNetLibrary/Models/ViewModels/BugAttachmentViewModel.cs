@@ -9,8 +9,6 @@ namespace BugOutNetLibrary.Models.ViewModels
     public class BugAttachmentViewModel
     {
         public int Id { get; set; }
-        public int BugId { get; set; }
-        public byte[] Attachment { get; set; }
-
+        public string FileName { get; set; }
     }
 }

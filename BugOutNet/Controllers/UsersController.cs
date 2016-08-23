@@ -195,8 +195,6 @@ namespace BugOutNet.Controllers
             {
                 try
                 {
-                    string salt = HashHelper.CreateSalt( 10 );
-
                     User user = _db.Users.Find( model.Id );
 
                     if( user != null )
@@ -209,8 +207,14 @@ namespace BugOutNet.Controllers
                         user.IsBlocked = model.IsBlocked;
                         user.IsVerified = model.IsVerified;
                         user.DefaultProjectId = model.DefaultProjectId;
-                        user.Salt = salt;
-                        user.Password = HashHelper.HashPassword( model.Password + salt );
+
+                        // only change password if it's included
+                        if( model.Password.Trim().Length > 0 )
+                        {
+                            string salt = HashHelper.CreateSalt( 10 );
+                            user.Salt = salt;
+                            user.Password = HashHelper.HashPassword( model.Password + salt );
+                        }
 
                         _db.SaveChanges();
 
