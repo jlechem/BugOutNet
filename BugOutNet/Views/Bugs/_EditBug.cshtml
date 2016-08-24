@@ -1,6 +1,6 @@
 ﻿@model  BugOutNetLibrary.Models.ViewModels.BugViewModel
 
-@using( Html.BeginForm( "Edit", "Bugs", FormMethod.Post ) )
+@using( Html.BeginForm( "Edit", "Bugs", FormMethod.Post, new { enctype = "multipart/form-data" } ) )
 {
     <div class="container" style="width: 770px;">
         <div class="panel panel-default">
@@ -71,9 +71,21 @@
                             </div>
                             <div id="collapse3" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                    <div>
+                                        <h5>New Comment</h5>
+                                        @Html.TextAreaFor(model => model.NewComment, new { @class = "form-control" } )
+                                    </div>
+                                    <div class="pre-scrollable">
+                                        <h5>Existing Comments</h5>
+                                        @{ foreach( var comment in Model.Comments )
+                                            {
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">@comment.CreatedBy on @comment.Created wrote:</div>
+                                                    <div class="panel-body">@comment.Comment</div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -85,18 +97,22 @@
                             </div>
                             <div id="collapse2" class="panel-collapse collapse">
                                 <div class="panel-body">
+                                    <div id="divNewUpload">
+                                        <h5>Add New Upload</h5>
+                                        @Html.TextBoxFor( model => model.FileUpload, new { type = "file", @class = "form-control" } )
+                                    </div>
                                     <div class="pre-scrollable">
+                                        <h5>Existing Uploads</h5>
                                         @{ foreach( var attachment in Model.Attachments )
                                             {
-                                                @Html.ActionLink(attachment.FileName, "GetFile", "Bugs", new { id  = attachment.Id }, null )
-                                                @*<a href="@attachment.Attachment" target="_blank">@attachment.FileName</a>*@
+                                                @Html.ActionLink(attachment.FileName, "GetFile", "Bugs", new { id  = attachment.Id, @class = "form-control" }, null )<br/>
                                             }
                                         }
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div style="padding-top: 5px;">
+                        <div style="padding-top: 10px;">
                             <button type="submit" class="btn btn-primary" value="buttonSave" id="buttonSave">Save Bug</button>
                             <button type="button" class="btn btn-primary" onclick="onCancel();">Cancel</button>
                         </div>

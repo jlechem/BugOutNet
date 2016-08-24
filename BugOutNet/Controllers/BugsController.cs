@@ -184,50 +184,7 @@ namespace BugOutNet.Controllers
             {
                 try
                 {
-                    Bug newBug = new Bug();
-                    newBug.Name = model.Name;
-                    newBug.Description = model.Description;
-                    newBug.AssignedToId = model.AssigntedToId;
-                    newBug.ProjectId = model.ProjectId;
-                    newBug.CategoryId = model.CategoryId;
-                    newBug.PriorityId = model.PriorityId;
-                    newBug.StatusId = model.StatusId;
-                    newBug.Created = DateTime.Now;
-                    newBug.LatUpdated = DateTime.Now;
-                    newBug.CreatorId = SessionManager.User.Id;
-                    newBug.LastUpdatedId = SessionManager.User.Id;
-
-                    // save the bug into the DB
-                    _db.Bugs.Add( newBug );
-
-                    // make sure our Id is now new    
-                    _db.SaveChanges();
-
-                    if( model.FileUpload.InputStream != null )
-                    {
-                        BugAttachment newAttachment = new BugAttachment();
-                        newAttachment.BugId = newBug.Id;
-
-                        using( var inputStream = model.FileUpload.InputStream )
-                        {
-                            MemoryStream memoryStream = inputStream as MemoryStream;
-
-                            if( memoryStream == null )
-                            {
-                                memoryStream = new MemoryStream();
-                                inputStream.CopyTo( memoryStream );
-                            }
-
-                            newAttachment.Attachment = memoryStream.ToArray();
-                            newAttachment.FileName = model.FileUpload.FileName;
-                            newAttachment.Created = DateTime.Now;
-                            newAttachment.UploadedById = newBug.CreatorId;
-
-                            _db.BugAttachments.Add( newAttachment );
-                            _db.SaveChanges();
-
-                        }
-                    }               
+                    this.AddNewBug( model );           
                 }
                 catch( Exception ex )
                 {
@@ -255,22 +212,11 @@ namespace BugOutNet.Controllers
 
                     if( bug != null )
                     {
-                        // updaate the bug into the DB
-                        bug.Name = model.Name;
-                        bug.Description = model.Description;
-                        bug.AssignedToId = model.AssigntedToId;
-                        bug.ProjectId = model.ProjectId;
-                        bug.CategoryId = model.CategoryId;
-                        bug.PriorityId = model.PriorityId;
-                        bug.StatusId = model.StatusId;
-                        bug.LatUpdated = DateTime.Now;
-                        bug.LastUpdatedId = SessionManager.User.Id;
-                            
-                        _db.SaveChanges();
+                        EditBug( bug, model );
                     }
                     else
                     {
-
+                        return new HttpStatusCodeResult( HttpStatusCode.NotFound, "Bug : " + model.Name + " not found." );
                     }
                 }
                 catch( Exception ex )
@@ -340,6 +286,13 @@ namespace BugOutNet.Controllers
             return PartialView( viewName );
         }
 
+        /// <summary>
+        /// Gets the file.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="HttpException">404;Couldn't find file.</exception>
+        [UserActionFilter]
         public ActionResult GetFile( int id )
         {
             var file = _db.BugAttachments.FirstOrDefault( attachment => attachment.Id == id );
@@ -382,9 +335,139 @@ namespace BugOutNet.Controllers
                     Id = attachment.Id,
                     FileName = attachment.FileName
                 } ) );
+
+                model.Comments.AddRange( bug.BugComments.Select( comment => new BugCommentViewModel
+                {
+                    Id = comment.Id,
+                    Comment = comment.Comment,
+                    Created = comment.Created,
+                    CreatedBy = _db.Users.Where( user => user.Id == comment.CreatorId ).FirstOrDefault() == null ?  String.Empty :
+                                _db.Users.Where( user => user.Id == comment.CreatorId ).FirstOrDefault().UserName
+                } ) );
+                
             }
 
             return model;
+
+        }
+
+        /// <summary>
+        /// Adds the new bug.
+        /// </summary>
+        /// <param name="bug">The bug.</param>
+        /// <param name="model">The model.</param>
+        private void AddNewBug( BugViewModel model )
+        {
+            Bug newBug = new Bug();
+            newBug.Name = model.Name;
+            newBug.Description = model.Description;
+            newBug.AssignedToId = model.AssigntedToId;
+            newBug.ProjectId = model.ProjectId;
+            newBug.CategoryId = model.CategoryId;
+            newBug.PriorityId = model.PriorityId;
+            newBug.StatusId = model.StatusId;
+            newBug.Created = DateTime.Now;
+            newBug.LatUpdated = DateTime.Now;
+            newBug.CreatorId = SessionManager.User.Id;
+            newBug.LastUpdatedId = SessionManager.User.Id;
+
+            // save the bug into the DB
+            _db.Bugs.Add( newBug );
+
+            // make sure our Id is new after insert  
+            _db.SaveChanges();
+
+            if( model.FileUpload != null &&
+                model.FileUpload.InputStream != null )
+            {
+                BugAttachment newAttachment = new BugAttachment();
+                newAttachment.BugId = newBug.Id;
+
+                using( var inputStream = model.FileUpload.InputStream )
+                {
+                    MemoryStream memoryStream = inputStream as MemoryStream;
+
+                    if( memoryStream == null )
+                    {
+                        memoryStream = new MemoryStream();
+                        inputStream.CopyTo( memoryStream );
+                    }
+
+                    newAttachment.Attachment = memoryStream.ToArray();
+                    newAttachment.FileName = model.FileUpload.FileName;
+                    newAttachment.Created = DateTime.Now;
+                    newAttachment.UploadedById = newBug.CreatorId;
+
+                    _db.BugAttachments.Add( newAttachment );
+                    _db.SaveChanges();
+
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Edits the bug.
+        /// </summary>
+        /// <param name="bug">The bug.</param>
+        /// <param name="model">The model.</param>
+        private void EditBug( Bug bug, BugViewModel model)
+        {
+            // updaate the bug into the DB
+            bug.Name = model.Name;
+            bug.Description = model.Description;
+            bug.AssignedToId = model.AssigntedToId;
+            bug.ProjectId = model.ProjectId;
+            bug.CategoryId = model.CategoryId;
+            bug.PriorityId = model.PriorityId;
+            bug.StatusId = model.StatusId;
+            bug.LatUpdated = DateTime.Now;
+            bug.LastUpdatedId = SessionManager.User.Id;
+
+            _db.SaveChanges();
+
+            // add new attachment if needed
+            if( model.FileUpload != null &&
+                model.FileUpload.InputStream != null )
+            {
+                BugAttachment newAttachment = new BugAttachment();
+                newAttachment.BugId = bug.Id;
+
+                using( var inputStream = model.FileUpload.InputStream )
+                {
+                    MemoryStream memoryStream = inputStream as MemoryStream;
+
+                    if( memoryStream == null )
+                    {
+                        memoryStream = new MemoryStream();
+                        inputStream.CopyTo( memoryStream );
+                    }
+
+                    newAttachment.Attachment = memoryStream.ToArray();
+                    newAttachment.FileName = model.FileUpload.FileName;
+                    newAttachment.Created = DateTime.Now;
+                    newAttachment.UploadedById = bug.CreatorId;
+
+                    _db.BugAttachments.Add( newAttachment );
+                    _db.SaveChanges();
+
+                }
+            }
+
+            // add new comment if needed
+            if( model.NewComment.Trim().Length > 0)
+            {
+                _db.BugComments.Add( new BugComment
+                {
+                    BugId = bug.Id,
+                    Comment = model.NewComment.Trim(),
+                    Created = DateTime.Now,
+                    CreatorId = bug.CreatorId
+                } );
+
+                _db.SaveChanges();
+
+            }
 
         }
 

@@ -164,6 +164,14 @@ namespace BugOutNetLibrary.Models.ViewModels
         public string LastUpatedBy { get; set; }
 
         /// <summary>
+        /// Gets or sets the new comment.
+        /// </summary>
+        /// <value>
+        /// The new comment.
+        /// </value>
+        public string NewComment { get; set; }
+
+        /// <summary>
         /// Gets or sets the comments.
         /// </summary>
         /// <value>
