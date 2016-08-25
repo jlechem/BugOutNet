@@ -1,5 +1,6 @@
 ﻿using BugOutNet.CustomActionFilters;
 using BugOutNetLibrary.Helpers;
+using BugOutNetLibrary.Logging;
 using BugOutNetLibrary.Managers;
 using BugOutNetLibrary.Models.DB;
 using BugOutNetLibrary.Models.GridModels;
@@ -189,7 +190,8 @@ namespace BugOutNet.Controllers
                 }
                 catch( Exception ex )
                 {
-                    return new HttpStatusCodeResult( HttpStatusCode.InternalServerError, ex.ToString() );
+                    Logger.Error( ex );
+                    return View( "Error" );
                 }
             }
             else
@@ -203,6 +205,7 @@ namespace BugOutNet.Controllers
 
         [HttpPost]
         [UserActionFilter]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(BugViewModel model)
         {
             if( model != null && ModelState.IsValid )
@@ -222,7 +225,8 @@ namespace BugOutNet.Controllers
                 }
                 catch( Exception ex )
                 {
-                    return new HttpStatusCodeResult( HttpStatusCode.InternalServerError, ex.ToString() );
+                    Logger.Error( ex );
+                    return View( "Error" );
                 }
             }
             else
@@ -237,15 +241,23 @@ namespace BugOutNet.Controllers
         [UserActionFilter]
         public ActionResult Delete(int id)
         {
-            var bug = _db.Bugs.Find( id );
-
-            if( bug != null )
+            try
             {
-                _db.Bugs.Remove( bug );
-                _db.SaveChanges();
+                var bug = _db.Bugs.Find( id );
 
-                return new HttpStatusCodeResult( HttpStatusCode.OK );
+                if( bug != null )
+                {
+                    _db.Bugs.Remove( bug );
+                    _db.SaveChanges();
 
+                    return new HttpStatusCodeResult( HttpStatusCode.OK );
+
+                }
+            }
+            catch( Exception ex )
+            {
+                Logger.Error( ex );
+                return new HttpStatusCodeResult( HttpStatusCode.InternalServerError, ex.Message );
             }
 
             return new HttpStatusCodeResult( HttpStatusCode.NotFound, "Bug with Id: " + id + " not found." );
@@ -430,8 +442,10 @@ namespace BugOutNet.Controllers
 
             }
 
+            var i = model.NewComment.Trim();
+
             // add new comment if needed
-            if( model.NewComment.Trim().Length > 0)
+            if( !String.IsNullOrEmpty(model.NewComment))
             {
                 _db.BugComments.Add( new BugComment
                 {

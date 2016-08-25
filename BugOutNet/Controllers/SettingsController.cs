@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BugOutNetLibrary.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -36,8 +37,9 @@ namespace BugOutNet.Controllers
 
                 return RedirectToAction("Index");
             }
-            catch
+            catch(Exception ex)
             {
+                Logger.Error( ex );
                 return View();
             }
         }

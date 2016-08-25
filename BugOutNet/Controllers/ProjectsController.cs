@@ -1,4 +1,5 @@
 ﻿using BugOutNet.CustomActionFilters;
+using BugOutNetLibrary.Logging;
 using BugOutNetLibrary.Managers;
 using BugOutNetLibrary.Models.DB;
 using BugOutNetLibrary.Models.GridModels;
@@ -149,6 +150,7 @@ namespace BugOutNet.Controllers
                 }
                 catch( Exception ex )
                 {
+                    Logger.Error( ex );
                     return new HttpStatusCodeResult( HttpStatusCode.InternalServerError, ex.ToString() );
                 }
             }
@@ -186,6 +188,7 @@ namespace BugOutNet.Controllers
                 }
                 catch(Exception ex)
                 {
+                    Logger.Error( ex );
                     return new HttpStatusCodeResult( HttpStatusCode.InternalServerError, ex.ToString() );
                 }
 
@@ -223,6 +226,7 @@ namespace BugOutNet.Controllers
             }
             catch( Exception ex )
             {
+                Logger.Error( ex );
                 return new HttpStatusCodeResult( HttpStatusCode.InternalServerError, ex.ToString() );
             }
 

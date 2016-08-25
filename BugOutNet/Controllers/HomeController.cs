@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using System.Data.Entity;
 using BugOutNetLibrary.Managers;
 using BugOutNetLibrary.Constants;
+using BugOutNetLibrary.Logging;
 
 namespace BugOutNet.Controllers
 {

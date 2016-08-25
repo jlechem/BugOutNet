@@ -17,6 +17,7 @@ namespace BugOutNetLibrary.Models.DB
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
+            this.BugAttachments = new HashSet<BugAttachment>();
             this.Bugs = new HashSet<Bug>();
             this.Bugs1 = new HashSet<Bug>();
             this.Categories = new HashSet<Category>();
@@ -27,7 +28,6 @@ namespace BugOutNetLibrary.Models.DB
             this.Tokens = new HashSet<Token>();
             this.Users_Projects = new HashSet<Users_Projects>();
             this.Users_Roles = new HashSet<Users_Roles>();
-            this.BugAttachments = new HashSet<BugAttachment>();
         }
     
         public int Id { get; set; }
@@ -50,6 +50,8 @@ namespace BugOutNetLibrary.Models.DB
         public Nullable<System.DateTime> Created { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BugAttachment> BugAttachments { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Bug> Bugs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Bug> Bugs1 { get; set; }
@@ -69,7 +71,5 @@ namespace BugOutNetLibrary.Models.DB
         public virtual ICollection<Users_Projects> Users_Projects { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Users_Roles> Users_Roles { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BugAttachment> BugAttachments { get; set; }
     }
 }

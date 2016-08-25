@@ -57,8 +57,10 @@
   <ItemGroup>
     <Compile Include="Caching\CacheManager.cs" />
     <Compile Include="Constants\Constants.cs" />
+    <Compile Include="Enums\ErrorStatus.cs" />
     <Compile Include="Helpers\HashHelper.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
+    <Compile Include="Logging\Logger.cs" />
     <Compile Include="Managers\SessionManager.cs" />
     <Compile Include="Managers\SettingsManager.cs" />
     <Compile Include="Models\DB\Bug.cs">
@@ -88,6 +90,12 @@
     <Compile Include="Models\DB\Category.cs">
       <DependentUpon>BugOutNetModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DB\Error.cs">
+      <DependentUpon>BugOutNetModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DB\ErrorStatu.cs">
+      <DependentUpon>BugOutNetModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DB\Priority.cs">
       <DependentUpon>BugOutNetModel.tt</DependentUpon>
     </Compile>
@@ -112,6 +120,7 @@
     <Compile Include="Models\DB\Users_Roles.cs">
       <DependentUpon>BugOutNetModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ExceptionModel.cs" />
     <Compile Include="Models\GridModels\BugGridModel.cs" />
     <Compile Include="Models\GridModels\CategoryGridModel.cs" />
     <Compile Include="Models\GridModels\GridModel.cs" />

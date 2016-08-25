@@ -5,17 +5,21 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="b42828a3c4b1476791cc12c4bd67d5c3" Name="Diagram1">
-        <EntityTypeShape EntityType="BugOutNetModel.BugComment" Width="1.5" PointX="7.5" PointY="15.5" />
-        <EntityTypeShape EntityType="BugOutNetModel.Bug" Width="1.5" PointX="5.25" PointY="14.25" />
-        <EntityTypeShape EntityType="BugOutNetModel.Category" Width="1.5" PointX="3" PointY="11" />
-        <EntityTypeShape EntityType="BugOutNetModel.Priority" Width="1.5" PointX="3" PointY="19.5" />
-        <EntityTypeShape EntityType="BugOutNetModel.Project" Width="1.5" PointX="3" PointY="25.75" />
-        <EntityTypeShape EntityType="BugOutNetModel.Role" Width="1.5" PointX="3" PointY="22.625" />
-        <EntityTypeShape EntityType="BugOutNetModel.Status" Width="1.5" PointX="3" PointY="4.75" />
-        <EntityTypeShape EntityType="BugOutNetModel.Token" Width="1.5" PointX="3" PointY="7.875" />
-        <EntityTypeShape EntityType="BugOutNetModel.User" Width="1.5" PointX="0.75" PointY="10.625" />
-        <EntityTypeShape EntityType="BugOutNetModel.Users_Projects" Width="1.5" PointX="8.25" PointY="18.625" />
-        <EntityTypeShape EntityType="BugOutNetModel.Users_Roles" Width="1.5" PointX="5.25" PointY="19.875" />
+        <EntityTypeShape EntityType="BugOutNetModel.BugAttachment" Width="1.5" PointX="6" PointY="16.375" />
+        <EntityTypeShape EntityType="BugOutNetModel.BugComment" Width="1.5" PointX="7.5" PointY="20.625" />
+        <EntityTypeShape EntityType="BugOutNetModel.Bug" Width="1.5" PointX="5.25" PointY="21.25" />
+        <EntityTypeShape EntityType="BugOutNetModel.Category" Width="1.5" PointX="3" PointY="8.5" />
+        <EntityTypeShape EntityType="BugOutNetModel.ErrorStatu" Width="1.5" PointX="0.75" PointY="21.875" />
+        <EntityTypeShape EntityType="BugOutNetModel.Priority" Width="1.5" PointX="3" PointY="30" />
+        <EntityTypeShape EntityType="BugOutNetModel.Project" Width="1.5" PointX="3" PointY="36.25" />
+        <EntityTypeShape EntityType="BugOutNetModel.Role" Width="1.5" PointX="3" PointY="33.125" />
+        <EntityTypeShape EntityType="BugOutNetModel.Status" Width="1.5" PointX="3" PointY="14.875" />
+        <EntityTypeShape EntityType="BugOutNetModel.Token" Width="1.5" PointX="3" PointY="26.875" />
+        <EntityTypeShape EntityType="BugOutNetModel.User" Width="1.5" PointX="0.75" PointY="14.25" />
+        <EntityTypeShape EntityType="BugOutNetModel.Users_Projects" Width="1.5" PointX="5.25" PointY="27.625" />
+        <EntityTypeShape EntityType="BugOutNetModel.Users_Roles" Width="1.5" PointX="8.25" PointY="23.875" />
+        <AssociationConnector Association="BugOutNetModel.FK_BugAttachments_Bugs" />
+        <AssociationConnector Association="BugOutNetModel.FK_BugAttachments_Users" />
         <AssociationConnector Association="BugOutNetModel.FK_BugComments_Bugs" />
         <AssociationConnector Association="BugOutNetModel.FK_Bugs_AssignedTo" />
         <AssociationConnector Association="BugOutNetModel.FK_Bugs_Categories" />
@@ -33,9 +37,7 @@
         <AssociationConnector Association="BugOutNetModel.FK_Tokens_Users" />
         <AssociationConnector Association="BugOutNetModel.FK_Users_Projects_Users" />
         <AssociationConnector Association="BugOutNetModel.FK_Users_Roles_Users" />
-        <EntityTypeShape EntityType="BugOutNetModel.BugAttachment" Width="1.5" PointX="7.5" PointY="12.75" />
-        <AssociationConnector Association="BugOutNetModel.FK_BugAttachments_Bugs" />
-        <AssociationConnector Association="BugOutNetModel.FK_BugAttachments_Users" />
+        <EntityTypeShape EntityType="BugOutNetModel.Error" Width="1.5" PointX="0.75" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

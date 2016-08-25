@@ -1,5 +1,6 @@
 ﻿using BugOutNet.CustomActionFilters;
 using BugOutNetLibrary.Helpers;
+using BugOutNetLibrary.Logging;
 using BugOutNetLibrary.Managers;
 using BugOutNetLibrary.Models.DB;
 using BugOutNetLibrary.Models.ViewModels;
@@ -100,6 +101,7 @@ namespace BugOutNet.Controllers
                                 }
                                 catch( ArgumentException ex )
                                 {
+                                    Logger.Error( ex );
                                     ModelState.AddModelError( "e", "Invalid avatar image file" );
                                     isValid = false;
                                 }
@@ -141,6 +143,7 @@ namespace BugOutNet.Controllers
             }
             catch(Exception ex)
             {
+                Logger.Error( ex );
                 model.SaveResult = String.Format( "<span style='color:red'>Error updating profile:{0}</span>", ex.Message );
                 return View( "Index", model );
             }

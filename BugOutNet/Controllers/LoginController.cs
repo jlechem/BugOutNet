@@ -1,5 +1,6 @@
 ﻿using BugOutNetLibrary.Constants;
 using BugOutNetLibrary.Helpers;
+using BugOutNetLibrary.Logging;
 using BugOutNetLibrary.Managers;
 using BugOutNetLibrary.Models.DB;
 using System;
@@ -84,6 +85,7 @@ namespace BugOutNet.Controllers
             }
             catch( Exception ex )
             {
+                Logger.Error( ex );
                 return Json( new { Success = false, ErrorMessage = ex.ToString() }, JsonRequestBehavior.AllowGet );
             }
         }

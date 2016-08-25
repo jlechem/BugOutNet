@@ -25,9 +25,11 @@ namespace BugOutNetLibrary.Models.DB
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<BugAttachment> BugAttachments { get; set; }
         public virtual DbSet<BugComment> BugComments { get; set; }
         public virtual DbSet<Bug> Bugs { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<ErrorStatu> ErrorStatus { get; set; }
         public virtual DbSet<Priority> Priorities { get; set; }
         public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
@@ -36,6 +38,6 @@ namespace BugOutNetLibrary.Models.DB
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Users_Projects> Users_Projects { get; set; }
         public virtual DbSet<Users_Roles> Users_Roles { get; set; }
-        public virtual DbSet<BugAttachment> BugAttachments { get; set; }
+        public virtual DbSet<Error> Errors { get; set; }
     }
 }

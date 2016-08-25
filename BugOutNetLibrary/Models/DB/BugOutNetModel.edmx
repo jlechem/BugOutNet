@@ -53,6 +53,23 @@
           <Property Name="Created" Type="datetime" Nullable="false" />
           <Property Name="CreatorId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Errors">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ErrorStatusId" Type="int" Nullable="false" />
+          <Property Name="ErrorMessage" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="StackTrace" Type="nvarchar(max)" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ErrorStatus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="Priorities">
           <Key>
             <PropertyRef Name="Id" />
@@ -377,6 +394,8 @@
           <EntitySet Name="BugComments" EntityType="Self.BugComments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Bugs" EntityType="Self.Bugs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Errors" EntityType="Self.Errors" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ErrorStatus" EntityType="Self.ErrorStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Priorities" EntityType="Self.Priorities" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Projects" EntityType="Self.Projects" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
@@ -467,9 +486,11 @@
     <edmx:ConceptualModels>
       <Schema Namespace="BugOutNetModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BugAttachments" EntityType="BugOutNetModel.BugAttachment" />
           <EntitySet Name="BugComments" EntityType="BugOutNetModel.BugComment" />
           <EntitySet Name="Bugs" EntityType="BugOutNetModel.Bug" />
           <EntitySet Name="Categories" EntityType="BugOutNetModel.Category" />
+          <EntitySet Name="ErrorStatus" EntityType="BugOutNetModel.ErrorStatu" />
           <EntitySet Name="Priorities" EntityType="BugOutNetModel.Priority" />
           <EntitySet Name="Projects" EntityType="BugOutNetModel.Project" />
           <EntitySet Name="Roles" EntityType="BugOutNetModel.Role" />
@@ -478,6 +499,14 @@
           <EntitySet Name="Users" EntityType="BugOutNetModel.User" />
           <EntitySet Name="Users_Projects" EntityType="BugOutNetModel.Users_Projects" />
           <EntitySet Name="Users_Roles" EntityType="BugOutNetModel.Users_Roles" />
+          <AssociationSet Name="FK_BugAttachments_Bugs" Association="BugOutNetModel.FK_BugAttachments_Bugs">
+            <End Role="Bug" EntitySet="Bugs" />
+            <End Role="BugAttachment" EntitySet="BugAttachments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BugAttachments_Users" Association="BugOutNetModel.FK_BugAttachments_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="BugAttachment" EntitySet="BugAttachments" />
+          </AssociationSet>
           <AssociationSet Name="FK_BugComments_Bugs" Association="BugOutNetModel.FK_BugComments_Bugs">
             <End Role="Bug" EntitySet="Bugs" />
             <End Role="BugComment" EntitySet="BugComments" />
@@ -546,21 +575,26 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Users_Roles" EntitySet="Users_Roles" />
           </AssociationSet>
-          <EntitySet Name="BugAttachments" EntityType="BugOutNetModel.BugAttachment" />
-          <AssociationSet Name="FK_BugAttachments_Bugs" Association="BugOutNetModel.FK_BugAttachments_Bugs">
-            <End Role="Bug" EntitySet="Bugs" />
-            <End Role="BugAttachment" EntitySet="BugAttachments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_BugAttachments_Users" Association="BugOutNetModel.FK_BugAttachments_Users">
-            <End Role="User" EntitySet="Users" />
-            <End Role="BugAttachment" EntitySet="BugAttachments" />
-          </AssociationSet>
+          <EntitySet Name="Errors" EntityType="BugOutNetModel.Error" />
         </EntityContainer>
+        <EntityType Name="BugAttachment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BugId" Type="Int32" Nullable="false" />
+          <Property Name="Attachment" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="UploadedById" Type="Int32" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Bug" Relationship="BugOutNetModel.FK_BugAttachments_Bugs" FromRole="BugAttachment" ToRole="Bug" />
+          <NavigationProperty Name="User" Relationship="BugOutNetModel.FK_BugAttachments_Users" FromRole="BugAttachment" ToRole="User" />
+        </EntityType>
         <EntityType Name="BugComment">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Comment" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="BugId" Type="Int32" Nullable="false" />
           <Property Name="CreatorId" Type="Int32" Nullable="false" />
@@ -583,6 +617,7 @@
           <Property Name="Created" Type="DateTime" Precision="3" />
           <Property Name="LatUpdated" Type="DateTime" Precision="3" />
           <Property Name="LastUpdatedId" Type="Int32" />
+          <NavigationProperty Name="BugAttachments" Relationship="BugOutNetModel.FK_BugAttachments_Bugs" FromRole="Bug" ToRole="BugAttachment" />
           <NavigationProperty Name="BugComments" Relationship="BugOutNetModel.FK_BugComments_Bugs" FromRole="Bug" ToRole="BugComment" />
           <NavigationProperty Name="User" Relationship="BugOutNetModel.FK_Bugs_AssignedTo" FromRole="Bug" ToRole="User" />
           <NavigationProperty Name="Category" Relationship="BugOutNetModel.FK_Bugs_Categories" FromRole="Bug" ToRole="Category" />
@@ -590,7 +625,6 @@
           <NavigationProperty Name="Project" Relationship="BugOutNetModel.FK_Bugs_Projects" FromRole="Bug" ToRole="Project" />
           <NavigationProperty Name="Status" Relationship="BugOutNetModel.FK_Bugs_Status" FromRole="Bug" ToRole="Status" />
           <NavigationProperty Name="User1" Relationship="BugOutNetModel.FK_Bugs_Users" FromRole="Bug" ToRole="User" />
-          <NavigationProperty Name="BugAttachments" Relationship="BugOutNetModel.FK_BugAttachments_Bugs" FromRole="Bug" ToRole="BugAttachment" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
@@ -603,6 +637,13 @@
           <Property Name="CreatorId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Bugs" Relationship="BugOutNetModel.FK_Bugs_Categories" FromRole="Category" ToRole="Bug" />
           <NavigationProperty Name="User" Relationship="BugOutNetModel.FK_Categories_Users" FromRole="Category" ToRole="User" />
+        </EntityType>
+        <EntityType Name="ErrorStatu">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Priority">
           <Key>
@@ -688,6 +729,7 @@
           <Property Name="Address" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Address2" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Created" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="BugAttachments" Relationship="BugOutNetModel.FK_BugAttachments_Users" FromRole="User" ToRole="BugAttachment" />
           <NavigationProperty Name="Bugs" Relationship="BugOutNetModel.FK_Bugs_AssignedTo" FromRole="User" ToRole="Bug" />
           <NavigationProperty Name="Bugs1" Relationship="BugOutNetModel.FK_Bugs_Users" FromRole="User" ToRole="Bug" />
           <NavigationProperty Name="Categories" Relationship="BugOutNetModel.FK_Categories_Users" FromRole="User" ToRole="Category" />
@@ -698,7 +740,6 @@
           <NavigationProperty Name="Tokens" Relationship="BugOutNetModel.FK_Tokens_Users" FromRole="User" ToRole="Token" />
           <NavigationProperty Name="Users_Projects" Relationship="BugOutNetModel.FK_Users_Projects_Users" FromRole="User" ToRole="Users_Projects" />
           <NavigationProperty Name="Users_Roles" Relationship="BugOutNetModel.FK_Users_Roles_Users" FromRole="User" ToRole="Users_Roles" />
-          <NavigationProperty Name="BugAttachments" Relationship="BugOutNetModel.FK_BugAttachments_Users" FromRole="User" ToRole="BugAttachment" />
         </EntityType>
         <EntityType Name="Users_Projects">
           <Key>
@@ -720,6 +761,30 @@
           <NavigationProperty Name="Role" Relationship="BugOutNetModel.FK_Users_Roles_Users_Roles1" FromRole="Users_Roles" ToRole="Role" />
           <NavigationProperty Name="User" Relationship="BugOutNetModel.FK_Users_Roles_Users" FromRole="Users_Roles" ToRole="User" />
         </EntityType>
+        <Association Name="FK_BugAttachments_Bugs">
+          <End Type="BugOutNetModel.Bug" Role="Bug" Multiplicity="1" />
+          <End Type="BugOutNetModel.BugAttachment" Role="BugAttachment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bug">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BugAttachment">
+              <PropertyRef Name="BugId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BugAttachments_Users">
+          <End Type="BugOutNetModel.User" Role="User" Multiplicity="1" />
+          <End Type="BugOutNetModel.BugAttachment" Role="BugAttachment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BugAttachment">
+              <PropertyRef Name="UploadedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_BugComments_Bugs">
           <End Type="BugOutNetModel.Bug" Role="Bug" Multiplicity="1" />
           <End Type="BugOutNetModel.BugComment" Role="BugComment" Multiplicity="*" />
@@ -924,49 +989,34 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="BugAttachment">
+        <EntityType Name="Error">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="BugId" Type="Int32" Nullable="false" />
-          <Property Name="Attachment" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
-          <NavigationProperty Name="Bug" Relationship="BugOutNetModel.FK_BugAttachments_Bugs" FromRole="BugAttachment" ToRole="Bug" />
-          <Property Name="FileName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="UploadedById" Type="Int32" Nullable="false" />
+          <Property Name="ErrorStatusId" Type="Int32" Nullable="false" />
+          <Property Name="ErrorMessage" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="StackTrace" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="User" Relationship="BugOutNetModel.FK_BugAttachments_Users" FromRole="BugAttachment" ToRole="User" />
         </EntityType>
-        <Association Name="FK_BugAttachments_Bugs">
-          <End Type="BugOutNetModel.Bug" Role="Bug" Multiplicity="1" />
-          <End Type="BugOutNetModel.BugAttachment" Role="BugAttachment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Bug">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="BugAttachment">
-              <PropertyRef Name="BugId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_BugAttachments_Users">
-          <End Type="BugOutNetModel.User" Role="User" Multiplicity="1" />
-          <End Type="BugOutNetModel.BugAttachment" Role="BugAttachment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="BugAttachment">
-              <PropertyRef Name="UploadedById" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="BugOutNetModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="BugAttachments">
+            <EntityTypeMapping TypeName="BugOutNetModel.BugAttachment">
+              <MappingFragment StoreEntitySet="BugAttachments">
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="UploadedById" ColumnName="UploadedById" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="Attachment" ColumnName="Attachment" />
+                <ScalarProperty Name="BugId" ColumnName="BugId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="BugComments">
             <EntityTypeMapping TypeName="BugOutNetModel.BugComment">
               <MappingFragment StoreEntitySet="BugComments">
@@ -1003,6 +1053,14 @@
                 <ScalarProperty Name="Created" ColumnName="Created" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ErrorStatus">
+            <EntityTypeMapping TypeName="BugOutNetModel.ErrorStatu">
+              <MappingFragment StoreEntitySet="ErrorStatus">
+                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1106,14 +1164,13 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="BugAttachments">
-            <EntityTypeMapping TypeName="BugOutNetModel.BugAttachment">
-              <MappingFragment StoreEntitySet="BugAttachments">
+          <EntitySetMapping Name="Errors">
+            <EntityTypeMapping TypeName="BugOutNetModel.Error">
+              <MappingFragment StoreEntitySet="Errors">
                 <ScalarProperty Name="Created" ColumnName="Created" />
-                <ScalarProperty Name="UploadedById" ColumnName="UploadedById" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
-                <ScalarProperty Name="Attachment" ColumnName="Attachment" />
-                <ScalarProperty Name="BugId" ColumnName="BugId" />
+                <ScalarProperty Name="StackTrace" ColumnName="StackTrace" />
+                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="ErrorStatusId" ColumnName="ErrorStatusId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
