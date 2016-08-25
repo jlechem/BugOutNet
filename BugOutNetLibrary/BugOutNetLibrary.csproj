@@ -58,6 +58,7 @@
     <Compile Include="Caching\CacheManager.cs" />
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Helpers\HashHelper.cs" />
+    <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Managers\SessionManager.cs" />
     <Compile Include="Managers\SettingsManager.cs" />
     <Compile Include="Models\DB\Bug.cs">

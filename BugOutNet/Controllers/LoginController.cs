@@ -27,7 +27,7 @@ namespace BugOutNet.Controllers
         /// <param name="cbRemember">if set to <c>true</c> [cb remember].</param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult PerformLogin( string textUsername, string textPassword, bool cbRemember = false )
         {
             try
@@ -99,8 +99,9 @@ namespace BugOutNet.Controllers
 
             if( cookie != null)
             {
-                Request.Cookies.Remove( Constants.BugOutCookeName );
-                Request.Cookies.Clear();
+                // expire the cookie and overwrite it
+                cookie.Expires = DateTime.Now.AddDays( -1 );
+                Response.Cookies.Add( cookie );
             }
 
             SessionManager.User = null;

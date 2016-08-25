@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace BugOutNetLibrary.Helpers
 {
@@ -39,6 +41,36 @@ namespace BugOutNetLibrary.Helpers
                 // Return a Base64 string representation of the random number.
                 return Convert.ToBase64String( buff );
             }
+        }
+
+        /// <summary>
+        /// Gets the bytes from upload.
+        /// </summary>
+        /// <param name="file">The file.</param>
+        /// <returns></returns>
+        public static byte[] GetBytesFromUpload( HttpPostedFileBase file )
+        {
+            byte[] result = null; 
+
+            if( file != null )
+            {
+                using( var inputStream = file.InputStream )
+                {
+                    MemoryStream memoryStream = inputStream as MemoryStream;
+
+                    if( memoryStream == null )
+                    {
+                        memoryStream = new MemoryStream();
+                        inputStream.CopyTo( memoryStream );
+                    }
+
+                    result = memoryStream.ToArray();
+
+                }
+            }
+
+            return result;
+
         }
 
     }

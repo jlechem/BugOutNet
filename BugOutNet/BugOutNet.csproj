@@ -478,9 +478,11 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\PrioritiesController.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Controllers\StatusesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="CustomActionFilters\AdminActionFilter.cs" />
@@ -725,6 +727,8 @@
     <Content Include="Views\Admin\_AddUser.cshtml" />
     <Content Include="Views\Admin\_EditUser.cshtml" />
     <Content Include="Views\Admin\_UsersGrid.cshtml" />
+    <Content Include="Views\Settings\Index.cshtml" />
+    <Content Include="Views\Profile\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />

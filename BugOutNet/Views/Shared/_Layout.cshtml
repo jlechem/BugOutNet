@@ -53,16 +53,26 @@
                 
                 @{ if( SessionManager.User.IsAdmin )
                     {
-                    <li><a href="@Url.Action( "Index", "Admin" )">Admin</a></li>
-                        }
+                        <li><a href="@Url.Action( "Index", "Admin" )">Admin</a></li>
                     }
+                }
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img src="http://justin-lecheminant.com/favicon.png" style="width: 20px; height: 20px; border: none;" /><span class="caret"></span></a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    @{
+                        var imgSrc = String.Empty;
+
+                        if( SessionManager.User.Avatar != null )
+                        {
+                            var base64 = Convert.ToBase64String( SessionManager.User.Avatar );
+                            imgSrc = String.Format( "data:image/gif;base64,{0}", base64 );
+                        }
+                    }
+                    <img src="@imgSrc" style="width: 20px; height: 20px; border: none;" /><span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Profile</a></li>
-                        <li><a href="#">Settings</a></li>
+                        <li><a href="@Url.Action("Index","Profile")">Profile</a></li>
+                        <li><a href="@Url.Action("Index","Settings")">Settings</a></li>
                         <li><a href="@Url.Action("Logoff","Login")">Logoff</a></li>
                     </ul>
                 </li>

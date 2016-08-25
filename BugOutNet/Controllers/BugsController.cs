@@ -1,4 +1,5 @@
 ﻿using BugOutNet.CustomActionFilters;
+using BugOutNetLibrary.Helpers;
 using BugOutNetLibrary.Managers;
 using BugOutNetLibrary.Models.DB;
 using BugOutNetLibrary.Models.GridModels;
@@ -382,26 +383,13 @@ namespace BugOutNet.Controllers
             {
                 BugAttachment newAttachment = new BugAttachment();
                 newAttachment.BugId = newBug.Id;
+                newAttachment.Attachment = HashHelper.GetBytesFromUpload( model.FileUpload );
+                newAttachment.FileName = model.FileUpload.FileName;
+                newAttachment.Created = DateTime.Now;
+                newAttachment.UploadedById = newBug.CreatorId;
 
-                using( var inputStream = model.FileUpload.InputStream )
-                {
-                    MemoryStream memoryStream = inputStream as MemoryStream;
-
-                    if( memoryStream == null )
-                    {
-                        memoryStream = new MemoryStream();
-                        inputStream.CopyTo( memoryStream );
-                    }
-
-                    newAttachment.Attachment = memoryStream.ToArray();
-                    newAttachment.FileName = model.FileUpload.FileName;
-                    newAttachment.Created = DateTime.Now;
-                    newAttachment.UploadedById = newBug.CreatorId;
-
-                    _db.BugAttachments.Add( newAttachment );
-                    _db.SaveChanges();
-
-                }
+                _db.BugAttachments.Add( newAttachment );
+                _db.SaveChanges();
             }
 
         }
@@ -432,26 +420,14 @@ namespace BugOutNet.Controllers
             {
                 BugAttachment newAttachment = new BugAttachment();
                 newAttachment.BugId = bug.Id;
+                newAttachment.Attachment = HashHelper.GetBytesFromUpload( model.FileUpload );
+                newAttachment.FileName = model.FileUpload.FileName;
+                newAttachment.Created = DateTime.Now;
+                newAttachment.UploadedById = bug.CreatorId;
 
-                using( var inputStream = model.FileUpload.InputStream )
-                {
-                    MemoryStream memoryStream = inputStream as MemoryStream;
+                _db.BugAttachments.Add( newAttachment );
+                _db.SaveChanges();
 
-                    if( memoryStream == null )
-                    {
-                        memoryStream = new MemoryStream();
-                        inputStream.CopyTo( memoryStream );
-                    }
-
-                    newAttachment.Attachment = memoryStream.ToArray();
-                    newAttachment.FileName = model.FileUpload.FileName;
-                    newAttachment.Created = DateTime.Now;
-                    newAttachment.UploadedById = bug.CreatorId;
-
-                    _db.BugAttachments.Add( newAttachment );
-                    _db.SaveChanges();
-
-                }
             }
 
             // add new comment if needed

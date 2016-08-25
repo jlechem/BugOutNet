@@ -57,13 +57,9 @@ namespace BugOutNet.Controllers
                     return View();
                 }
             }
-            // otherwise we need to destroy the cookie and token and send them to the login page
+            // otherwise we need to destroy the token and send them to the login page
             else
             {
-                // destroy cookie
-                Request.Cookies.Remove( Constants.BugOutCookeName );
-                Request.Cookies.Clear();
-
                 // destory token
                 var dbToken = _db.Tokens.FirstOrDefault( t => t.Token1 == token );
 

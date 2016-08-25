@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace BugOutNetLibrary.Models.ViewModels
 {
@@ -122,6 +123,30 @@ namespace BugOutNetLibrary.Models.ViewModels
         /// The confirm password.
         /// </value>
         public string ConfirmPassword { get; set; }
+
+        /// <summary>
+        /// Gets or sets the avatar.
+        /// </summary>
+        /// <value>
+        /// The avatar.
+        /// </value>
+        public byte[] Avatar { get; set; }
+
+        /// <summary>
+        /// Gets or sets the new avatar.
+        /// </summary>
+        /// <value>
+        /// The new avatar.
+        /// </value>
+        public HttpPostedFileBase NewAvatar { get; set; }
+
+        /// <summary>
+        /// Gets or sets the save result.
+        /// </summary>
+        /// <value>
+        /// The save result.
+        /// </value>
+        public string SaveResult { get; set; }
 
     }
 }
