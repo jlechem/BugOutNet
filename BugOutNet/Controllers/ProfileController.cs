@@ -95,8 +95,7 @@ namespace BugOutNet.Controllers
                                         image.Size.Width > 20 )
                                     {
                                         image = ImageHelper.ResizeImage( image, 20, 20 );
-                                        user.Avatar = ImageHelper.ConvertImageToBytes( image );
-                                        model.Avatar = user.Avatar;
+                                        model.Avatar = user.Avatar = ImageHelper.ConvertImageToBytes( image );
                                     }
                                 }
                                 catch( ArgumentException ex )
@@ -142,7 +141,7 @@ namespace BugOutNet.Controllers
             }
             catch(Exception ex)
             {
-                model.SaveResult = String.Format( "<span style='color:red'>Error updating profile: {0}</span>", ex.Message );
+                model.SaveResult = String.Format( "<span style='color:red'>Error updating profile:{0}</span>", ex.Message );
                 return View( "Index", model );
             }
         }
