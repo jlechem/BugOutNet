@@ -1,0 +1,43 @@
+﻿<div>
+    <table id="gridErrors"></table>
+    <div id="pagerErrors"></div>
+</div>
+<script>
+    $(document).ready(function () {
+        jQuery("#gridErrors").jqGrid(
+        {
+            url: "@Url.Action( "GetErrors", "Admin" )",
+            datatype: "json",
+            mtype: 'GET',
+            colNames: ['Error Id', 'Error Message', 'Stack Trace', 'Created On'],
+            colModel: [
+                         { name: 'Id', index: 'Id', key: true, width: 40 },
+                         { name: 'ErrorMessage', index: 'ErrorMessage', width: 80 },
+                         { name: 'StackTrace', index: 'StackTrace', width: 250, align: 'left' },
+                         { name: 'Created', index: 'Created', width: 50, align: 'left', formatoptions: { newformat: "m/d/Y" } }],
+            pager: "#pagerErrors",
+            viewrecords: true,
+            autowidth: true,
+            shrinkToFit: true,
+            multiselect: false,
+            gridview: true,
+            height: '100%',
+            width: '100%',
+            rowNum: 20,
+            caption: 'Errors',
+            emptyrecords: 'No Errors',
+            rowList: [10, 20, 30, 40, 50],
+            altRows: true,
+            loadonce: false,
+            loadtext: "Loading Errors...",
+            jsonReader: {
+                root: "rows",
+                page: "page",
+                total: "total",
+                records: "records",
+                repeatitems: false,
+                Id: "0"
+            }
+        });
+    });
+</script>

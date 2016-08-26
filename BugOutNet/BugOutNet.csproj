@@ -729,6 +729,7 @@
     <Content Include="Views\Admin\_UsersGrid.cshtml" />
     <Content Include="Views\Settings\Index.cshtml" />
     <Content Include="Views\Profile\Index.cshtml" />
+    <Content Include="Views\Admin\_Errors.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
