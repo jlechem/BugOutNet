@@ -354,7 +354,7 @@ namespace BugOutNet.Controllers
                     Id = attachment.Id,
                     FileName = attachment.FileName
                 } ) );
-
+                
                 model.Comments.AddRange( bug.BugComments.Select( comment => new BugCommentViewModel
                 {
                     Id = comment.Id,
@@ -363,7 +363,9 @@ namespace BugOutNet.Controllers
                     CreatedBy = _db.Users.Where( user => user.Id == comment.CreatorId ).FirstOrDefault() == null ?  String.Empty :
                                 _db.Users.Where( user => user.Id == comment.CreatorId ).FirstOrDefault().UserName
                 } ) );
-                
+
+                model.Comments.OrderBy( x => x.Created );
+
             }
 
             return model;
