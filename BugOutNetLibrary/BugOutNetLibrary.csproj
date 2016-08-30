@@ -166,6 +166,21 @@
       <DependentUpon>BugOutNetModel.edmx</DependentUpon>
       <LastGenOutput>BugOutNetModel.cs</LastGenOutput>
     </Content>
+    <Content Include="Scripts\BugAttachments.sql" />
+    <Content Include="Scripts\BugComments.sql" />
+    <Content Include="Scripts\BugOutNet_DB_Create.sql" />
+    <Content Include="Scripts\Bugs.sql" />
+    <Content Include="Scripts\Categories.sql" />
+    <Content Include="Scripts\Errors.sql" />
+    <Content Include="Scripts\ErrorStatus.sql" />
+    <Content Include="Scripts\Priorities.sql" />
+    <Content Include="Scripts\Projects.sql" />
+    <Content Include="Scripts\Roles.sql" />
+    <Content Include="Scripts\Statuses.sql" />
+    <Content Include="Scripts\Tokens.sql" />
+    <Content Include="Scripts\Users.sql" />
+    <Content Include="Scripts\Users_Projects.sql" />
+    <Content Include="Scripts\User_Roles.sql" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
