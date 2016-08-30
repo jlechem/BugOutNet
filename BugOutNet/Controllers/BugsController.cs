@@ -218,8 +218,11 @@ namespace BugOutNet.Controllers
 
                     if( bug != null )
                     {
+                        // save and refresh the bug
                         EditBug( bug, model );
+                        model = GetBugModel( model.Id );
                         model.SaveStatus = "<label style='color:green;'>Save Successfull</label>";
+                        model.NewComment = null;
                     }
                     else
                     {

@@ -1,5 +1,9 @@
 ﻿@using BugOutNetLibrary.Managers
 
+@{
+    var selectedId = @SessionManager.SelectedProjectId;
+}
+
 <div>
     <div id="divFilters">
 
@@ -16,7 +20,7 @@
 </div>
 
 <script>
-    var selectedProjectId = @SessionManager.SelectedProjectId;// selectedProjectId = $("#ddlProjects").val();
+    var selectedProjectId = @selectedId; // selectedProjectId = $("#ddlProjects").val();
 
     if (selectedProjectId == "") {
         selectedProjectId = 0;
@@ -86,7 +90,7 @@
         else{
             $("#ddlProjects").selectedIndex = 0;
         }
-        
+
         jQuery("#jqGrid").jqGrid({
             url: "@Url.Action( "GetBugs","Bugs")" + "?projectId=" + selectedProjectId,
             datatype: "json",

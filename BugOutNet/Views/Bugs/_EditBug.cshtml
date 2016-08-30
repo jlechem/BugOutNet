@@ -69,7 +69,7 @@
                                     <a data-toggle="collapse" href="#collapse3">Comments</a>
                                 </h4>
                             </div>
-                            <div id="collapse3" class="panel-collapse collapse">
+                            <div id="collapse3" class="panel-collapse collapse in">
                                 <div class="panel-body">
                                     <div>
                                         <h5>New Comment</h5>
@@ -95,7 +95,7 @@
                                     <a data-toggle="collapse" href="#collapse2">Attachments</a>
                                 </h4>
                             </div>
-                            <div id="collapse2" class="panel-collapse collapse">
+                            <div id="collapse2" class="panel-collapse collapse in">
                                 <div class="panel-body">
                                     <div id="divNewUpload">
                                         <h5>Add New Upload</h5>
@@ -114,7 +114,7 @@
                         </div>
                         <div style="padding-top: 10px;">
                             <button type="submit" class="btn btn-primary" value="buttonSave" id="buttonSave">Save Bug</button>
-                            <button type="button" class="btn btn-primary" onclick="window.location='@Url.Action("Index","Bugs")'">Cancel</button>
+                            <button type="button" class="btn btn-primary" onclick="window.location='@Url.Action("Index","Bugs")'">Back To Bugs</button>
                             @Html.Raw( Model.SaveStatus )
                         </div>
                     </fieldset>

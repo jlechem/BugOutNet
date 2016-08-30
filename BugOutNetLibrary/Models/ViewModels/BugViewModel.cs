@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
+using System.Web.Mvc;
 
 namespace BugOutNetLibrary.Models.ViewModels
 {
@@ -33,6 +31,7 @@ namespace BugOutNetLibrary.Models.ViewModels
         /// <value>
         /// The description.
         /// </value>
+        [AllowHtml]
         public string Description { get; set; }
 
         /// <summary>
@@ -169,6 +168,7 @@ namespace BugOutNetLibrary.Models.ViewModels
         /// <value>
         /// The new comment.
         /// </value>
+        [AllowHtml]
         public string NewComment { get; set; }
 
         /// <summary>
@@ -177,6 +177,7 @@ namespace BugOutNetLibrary.Models.ViewModels
         /// <value>
         /// The comments.
         /// </value>
+        [AllowHtml]
         public List<BugCommentViewModel> Comments { get; set; }
 
         /// <summary>
