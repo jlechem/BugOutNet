@@ -2,10 +2,10 @@
 
 @using( Html.BeginForm( "Edit", "Bugs", FormMethod.Post, new { enctype = "multipart/form-data" } ) )
 {
-    <div class="container" style="width: 770px;">
+    <div class="container">
         <div class="panel panel-default">
             <div class="panel-body">
-                <div class="panel-group" style="height: 700px; overflow-y: auto; overflow-x: hidden;">
+                <div class="panel-group">
                     <fieldset style="padding: 5px;">
                         @Html.HiddenFor( model => model.Id )
                         <h3 class="form-signin-heading">Edit Bug</h3>
@@ -57,7 +57,7 @@
                                     <div class="form-group row">
                                         <label class="col-xs-2 col-form-label">Description:</label>
                                         <div class="col-xs-10">
-                                            @Html.TextAreaFor( model => model.Description, new { @class = "form-control", placeholder = "Description", required = "required" } )
+                                            @Html.TextAreaFor( model => model.Description, new { @class = "form-control", placeholder = "Description", required = "required", rows = "10" } )
                                         </div>
                                     </div>
                                 </div>
@@ -114,7 +114,8 @@
                         </div>
                         <div style="padding-top: 10px;">
                             <button type="submit" class="btn btn-primary" value="buttonSave" id="buttonSave">Save Bug</button>
-                            <button type="button" class="btn btn-primary" onclick="onCancel();">Cancel</button>
+                            <button type="button" class="btn btn-primary" onclick="window.location='@Url.Action("Index","Bugs")'">Cancel</button>
+                            @Html.Raw( Model.SaveStatus )
                         </div>
                     </fieldset>
                 </div>
@@ -122,29 +123,3 @@
         </div>
     </div>
 }
-
-<script>
-    function onCancel() {
-        $("#divBugsContainer").html("");
-
-        $.ajax({
-            type: 'GET',
-            url: '@Url.Action( "GetBugView", "Bugs" )',
-            data: {
-                bugstyle: "bugs"
-            },
-            beforeSend: function () {
-                $("#divBugsContainer").hide();
-                $("#divSpinner").show();
-            },
-            success: function (result) {
-                $('#divBugsContainer').html(result);
-            },
-            complete: function () {
-                $("#divSpinner").hide();
-                $("#divBugsContainer").show();
-            }
-        });
-
-    }
-</script>

@@ -195,6 +195,14 @@ namespace BugOutNetLibrary.Models.ViewModels
         /// </value>
         public HttpPostedFileBase FileUpload { get; set; }
 
+        /// <summary>
+        /// Gets or sets the save status.
+        /// </summary>
+        /// <value>
+        /// The save status.
+        /// </value>
+        public string SaveStatus { get; set; }
+            
         #endregion
 
         /// <summary>

@@ -200,7 +200,7 @@ namespace BugOutNet.Controllers
             }
 
             return RedirectToAction( "Index", "Bugs" );
-
+            
         }
 
         [HttpPost]
@@ -212,11 +212,14 @@ namespace BugOutNet.Controllers
             {
                 try
                 {
+                    model.SaveStatus = String.Empty;
+
                     var bug = _db.Bugs.Find( model.Id );
 
                     if( bug != null )
                     {
                         EditBug( bug, model );
+                        model.SaveStatus = "<label style='color:green;'>Save Successfull</label>";
                     }
                     else
                     {
@@ -226,7 +229,7 @@ namespace BugOutNet.Controllers
                 catch( Exception ex )
                 {
                     Logger.Error( ex );
-                    return View( "Error" );
+                    model.SaveStatus = "<label style='color:red;'>Save Failed</label>";
                 }
             }
             else
@@ -234,7 +237,7 @@ namespace BugOutNet.Controllers
                 return new HttpStatusCodeResult( HttpStatusCode.BadRequest );
             }
 
-            return RedirectToAction( "Index", "Bugs" );
+            return View( "_EditBug", model );
 
         }
 
@@ -441,11 +444,9 @@ namespace BugOutNet.Controllers
                 _db.SaveChanges();
 
             }
-
-            var i = model.NewComment.Trim();
-
+            
             // add new comment if needed
-            if( !String.IsNullOrEmpty(model.NewComment))
+            if( !String.IsNullOrWhiteSpace(model.NewComment))
             {
                 _db.BugComments.Add( new BugComment
                 {
@@ -458,7 +459,6 @@ namespace BugOutNet.Controllers
                 _db.SaveChanges();
 
             }
-
         }
 
     }
