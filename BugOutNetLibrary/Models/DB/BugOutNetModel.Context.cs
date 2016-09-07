@@ -39,5 +39,8 @@ namespace BugOutNetLibrary.Models.DB
         public virtual DbSet<Users_Projects> Users_Projects { get; set; }
         public virtual DbSet<Users_Roles> Users_Roles { get; set; }
         public virtual DbSet<Error> Errors { get; set; }
+        public virtual DbSet<Bug_Relationships> Bug_Relationships { get; set; }
+        public virtual DbSet<Filter> Filters { get; set; }
+        public virtual DbSet<Relationship> Relationships { get; set; }
     }
 }

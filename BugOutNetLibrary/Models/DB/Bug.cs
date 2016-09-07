@@ -19,6 +19,7 @@ namespace BugOutNetLibrary.Models.DB
         {
             this.BugAttachments = new HashSet<BugAttachment>();
             this.BugComments = new HashSet<BugComment>();
+            this.Bug_Relationships = new HashSet<Bug_Relationships>();
         }
     
         public int Id { get; set; }
@@ -44,5 +45,7 @@ namespace BugOutNetLibrary.Models.DB
         public virtual Project Project { get; set; }
         public virtual Status Status { get; set; }
         public virtual User User1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Bug_Relationships> Bug_Relationships { get; set; }
     }
 }

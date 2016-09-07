@@ -5,6 +5,14 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="BugOutNetModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Bug_Relationships">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BugId" Type="int" Nullable="false" />
+          <Property Name="RelationshipId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="BugAttachments">
           <Key>
             <PropertyRef Name="Id" />
@@ -70,6 +78,17 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Status" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="Filters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ColumnName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="SortDirection" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="Priorities">
           <Key>
             <PropertyRef Name="Id" />
@@ -90,6 +109,15 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="CreatorId" Type="int" Nullable="false" />
           <Property Name="Created" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Relationships">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
@@ -161,8 +189,34 @@
           <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
         </EntityType>
-        <Association Name="FK_BugAttachments_Bugs">
+        <Association Name="FK_Bug_Relationships_Bugs">
           <End Role="Bugs" Type="Self.Bugs" Multiplicity="1" />
+          <End Role="Bug_Relationships" Type="Self.Bug_Relationships" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bugs">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bug_Relationships">
+              <PropertyRef Name="BugId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bug_Relationships_Relationships">
+          <End Role="Relationships" Type="Self.Relationships" Multiplicity="1" />
+          <End Role="Bug_Relationships" Type="Self.Bug_Relationships" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Relationships">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bug_Relationships">
+              <PropertyRef Name="RelationshipId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BugAttachments_Bugs">
+          <End Role="Bugs" Type="Self.Bugs" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="BugAttachments" Type="Self.BugAttachments" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Bugs">
@@ -186,7 +240,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_BugComments_Bugs">
-          <End Role="Bugs" Type="Self.Bugs" Multiplicity="1" />
+          <End Role="Bugs" Type="Self.Bugs" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="BugComments" Type="Self.BugComments" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Bugs">
@@ -194,6 +250,18 @@
             </Principal>
             <Dependent Role="BugComments">
               <PropertyRef Name="BugId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BugRelationships_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Relationships" Type="Self.Relationships" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Relationships">
+              <PropertyRef Name="CreatedBy" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -390,20 +458,31 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="BugOutNetModelStoreContainer">
+          <EntitySet Name="Bug_Relationships" EntityType="Self.Bug_Relationships" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BugAttachments" EntityType="Self.BugAttachments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BugComments" EntityType="Self.BugComments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Bugs" EntityType="Self.Bugs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Errors" EntityType="Self.Errors" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ErrorStatus" EntityType="Self.ErrorStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Filters" EntityType="Self.Filters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Priorities" EntityType="Self.Priorities" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Projects" EntityType="Self.Projects" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Relationships" EntityType="Self.Relationships" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Statuses" EntityType="Self.Statuses" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tokens" EntityType="Self.Tokens" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users_Projects" EntityType="Self.Users_Projects" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users_Roles" EntityType="Self.Users_Roles" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Bug_Relationships_Bugs" Association="Self.FK_Bug_Relationships_Bugs">
+            <End Role="Bugs" EntitySet="Bugs" />
+            <End Role="Bug_Relationships" EntitySet="Bug_Relationships" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bug_Relationships_Relationships" Association="Self.FK_Bug_Relationships_Relationships">
+            <End Role="Relationships" EntitySet="Relationships" />
+            <End Role="Bug_Relationships" EntitySet="Bug_Relationships" />
+          </AssociationSet>
           <AssociationSet Name="FK_BugAttachments_Bugs" Association="Self.FK_BugAttachments_Bugs">
             <End Role="Bugs" EntitySet="Bugs" />
             <End Role="BugAttachments" EntitySet="BugAttachments" />
@@ -415,6 +494,10 @@
           <AssociationSet Name="FK_BugComments_Bugs" Association="Self.FK_BugComments_Bugs">
             <End Role="Bugs" EntitySet="Bugs" />
             <End Role="BugComments" EntitySet="BugComments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BugRelationships_Users" Association="Self.FK_BugRelationships_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Relationships" EntitySet="Relationships" />
           </AssociationSet>
           <AssociationSet Name="FK_Bugs_AssignedTo" Association="Self.FK_Bugs_AssignedTo">
             <End Role="Users" EntitySet="Users" />
@@ -576,6 +659,21 @@
             <End Role="Users_Roles" EntitySet="Users_Roles" />
           </AssociationSet>
           <EntitySet Name="Errors" EntityType="BugOutNetModel.Error" />
+          <EntitySet Name="Bug_Relationships" EntityType="BugOutNetModel.Bug_Relationships" />
+          <EntitySet Name="Filters" EntityType="BugOutNetModel.Filter" />
+          <EntitySet Name="Relationships" EntityType="BugOutNetModel.Relationship" />
+          <AssociationSet Name="FK_Bug_Relationships_Bugs" Association="BugOutNetModel.FK_Bug_Relationships_Bugs">
+            <End Role="Bug" EntitySet="Bugs" />
+            <End Role="Bug_Relationships" EntitySet="Bug_Relationships" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bug_Relationships_Relationships" Association="BugOutNetModel.FK_Bug_Relationships_Relationships">
+            <End Role="Relationship" EntitySet="Relationships" />
+            <End Role="Bug_Relationships" EntitySet="Bug_Relationships" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BugRelationships_Users" Association="BugOutNetModel.FK_BugRelationships_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Relationship" EntitySet="Relationships" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="BugAttachment">
           <Key>
@@ -625,6 +723,7 @@
           <NavigationProperty Name="Project" Relationship="BugOutNetModel.FK_Bugs_Projects" FromRole="Bug" ToRole="Project" />
           <NavigationProperty Name="Status" Relationship="BugOutNetModel.FK_Bugs_Status" FromRole="Bug" ToRole="Status" />
           <NavigationProperty Name="User1" Relationship="BugOutNetModel.FK_Bugs_Users" FromRole="Bug" ToRole="User" />
+          <NavigationProperty Name="Bug_Relationships" Relationship="BugOutNetModel.FK_Bug_Relationships_Bugs" FromRole="Bug" ToRole="Bug_Relationships" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
@@ -740,6 +839,7 @@
           <NavigationProperty Name="Tokens" Relationship="BugOutNetModel.FK_Tokens_Users" FromRole="User" ToRole="Token" />
           <NavigationProperty Name="Users_Projects" Relationship="BugOutNetModel.FK_Users_Projects_Users" FromRole="User" ToRole="Users_Projects" />
           <NavigationProperty Name="Users_Roles" Relationship="BugOutNetModel.FK_Users_Roles_Users" FromRole="User" ToRole="Users_Roles" />
+          <NavigationProperty Name="Relationships" Relationship="BugOutNetModel.FK_BugRelationships_Users" FromRole="User" ToRole="Relationship" />
         </EntityType>
         <EntityType Name="Users_Projects">
           <Key>
@@ -999,6 +1099,74 @@
           <Property Name="StackTrace" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
+        <EntityType Name="Bug_Relationships">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BugId" Type="Int32" Nullable="false" />
+          <Property Name="RelationshipId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Bug" Relationship="BugOutNetModel.FK_Bug_Relationships_Bugs" FromRole="Bug_Relationships" ToRole="Bug" />
+          <NavigationProperty Name="Relationship" Relationship="BugOutNetModel.FK_Bug_Relationships_Relationships" FromRole="Bug_Relationships" ToRole="Relationship" />
+        </EntityType>
+        <EntityType Name="Filter">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ColumnName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SortDirection" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Relationship">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Bug_Relationships" Relationship="BugOutNetModel.FK_Bug_Relationships_Relationships" FromRole="Relationship" ToRole="Bug_Relationships" />
+          <NavigationProperty Name="User" Relationship="BugOutNetModel.FK_BugRelationships_Users" FromRole="Relationship" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Bug_Relationships_Bugs">
+          <End Type="BugOutNetModel.Bug" Role="Bug" Multiplicity="1" />
+          <End Type="BugOutNetModel.Bug_Relationships" Role="Bug_Relationships" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bug">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bug_Relationships">
+              <PropertyRef Name="BugId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bug_Relationships_Relationships">
+          <End Type="BugOutNetModel.Relationship" Role="Relationship" Multiplicity="1" />
+          <End Type="BugOutNetModel.Bug_Relationships" Role="Bug_Relationships" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Relationship">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bug_Relationships">
+              <PropertyRef Name="RelationshipId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BugRelationships_Users">
+          <End Type="BugOutNetModel.User" Role="User" Multiplicity="1" />
+          <End Type="BugOutNetModel.Relationship" Role="Relationship" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Relationship">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1171,6 +1339,37 @@
                 <ScalarProperty Name="StackTrace" ColumnName="StackTrace" />
                 <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
                 <ScalarProperty Name="ErrorStatusId" ColumnName="ErrorStatusId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Bug_Relationships">
+            <EntityTypeMapping TypeName="BugOutNetModel.Bug_Relationships">
+              <MappingFragment StoreEntitySet="Bug_Relationships">
+                <ScalarProperty Name="RelationshipId" ColumnName="RelationshipId" />
+                <ScalarProperty Name="BugId" ColumnName="BugId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Filters">
+            <EntityTypeMapping TypeName="BugOutNetModel.Filter">
+              <MappingFragment StoreEntitySet="Filters">
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="SortDirection" ColumnName="SortDirection" />
+                <ScalarProperty Name="ColumnName" ColumnName="ColumnName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Relationships">
+            <EntityTypeMapping TypeName="BugOutNetModel.Relationship">
+              <MappingFragment StoreEntitySet="Relationships">
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

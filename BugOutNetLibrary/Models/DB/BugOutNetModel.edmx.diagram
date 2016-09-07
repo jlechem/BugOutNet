@@ -38,6 +38,12 @@
         <AssociationConnector Association="BugOutNetModel.FK_Users_Projects_Users" />
         <AssociationConnector Association="BugOutNetModel.FK_Users_Roles_Users" />
         <EntityTypeShape EntityType="BugOutNetModel.Error" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="BugOutNetModel.Bug_Relationships" Width="1.5" PointX="10.5" PointY="21.5" />
+        <EntityTypeShape EntityType="BugOutNetModel.Filter" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="BugOutNetModel.Relationship" Width="1.5" PointX="3" PointY="18.5" />
+        <AssociationConnector Association="BugOutNetModel.FK_Bug_Relationships_Bugs" />
+        <AssociationConnector Association="BugOutNetModel.FK_Bug_Relationships_Relationships" />
+        <AssociationConnector Association="BugOutNetModel.FK_BugRelationships_Users" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

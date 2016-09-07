@@ -88,6 +88,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>BugOutNetModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\DB\Bug_Relationships.cs">
+      <DependentUpon>BugOutNetModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DB\Category.cs">
       <DependentUpon>BugOutNetModel.tt</DependentUpon>
     </Compile>
@@ -97,10 +100,16 @@
     <Compile Include="Models\DB\ErrorStatu.cs">
       <DependentUpon>BugOutNetModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DB\Filter.cs">
+      <DependentUpon>BugOutNetModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DB\Priority.cs">
       <DependentUpon>BugOutNetModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\Project.cs">
+      <DependentUpon>BugOutNetModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DB\Relationship.cs">
       <DependentUpon>BugOutNetModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\Role.cs">
