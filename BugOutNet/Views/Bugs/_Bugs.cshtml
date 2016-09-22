@@ -15,19 +15,25 @@
 </div>
 <hr />
 <div style="clear: both;">
-    <div><span>Show Closed Items:&nbsp;</span><input type="checkbox" value="" id="checkBoxShowClosed" onchange="showClosed(); return false;" /></div>
+    <div><span>Show Closed Items:&nbsp;</span><input type="checkbox" value="" id="checkBoxShowClosed" onchange="showClosed(this); return false;" /></div>
     <table id="jqGrid"></table>
     <div id="jqGridPager"></div>
 </div>
 
 <script>
-    var showClosed = false;
+    var isShowClosed = false;
 
     var selectedProjectId = @selectedId; // selectedProjectId = $("#ddlProjects").val();
 
     if (selectedProjectId == "") {
         selectedProjectId = 0;
     };
+
+    function showClosed(e){
+        var url = "@Url.Action( "GetBugs","Bugs")" + "?projectId=" + selectedProjectId + "&showClosed=" + e.checked;
+        $("#jqGrid").jqGrid('setGridParam', { url: url });
+        $("#jqGrid").trigger("reloadGrid");
+    }
 
     function onChange() {
         selectedProjectId = $("#ddlProjects").val();

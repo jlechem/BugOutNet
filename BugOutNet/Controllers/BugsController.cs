@@ -34,7 +34,7 @@ namespace BugOutNet.Controllers
         /// <param name="projectId">The project identifier.</param>
         /// <returns></returns>
         [UserActionFilter]
-        public ActionResult GetBugs( int projectId, string sidx, string sord, int page, int rows )
+        public ActionResult GetBugs( int projectId, bool? showClosed, string sidx, string sord, int page, int rows )
         {
             SessionManager.SelectedProjectId = projectId;
 
@@ -48,6 +48,15 @@ namespace BugOutNet.Controllers
             if( projectId > 0 )
             {
                 tempBugs = tempBugs.Where( bug => bug.ProjectId == projectId );
+            }
+
+            if( !showClosed.HasValue)
+            {
+                tempBugs = tempBugs.Where( bug => bug.Status.Name != "Closed" );
+            }
+            else if( showClosed.HasValue && !showClosed.Value )
+            {
+                tempBugs = tempBugs.Where( bug => bug.Status.Name != "Closed" );
             }
 
             var bugs = from bug in tempBugs
