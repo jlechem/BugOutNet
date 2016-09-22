@@ -15,11 +15,14 @@
 </div>
 <hr />
 <div style="clear: both;">
+    <div><span>Show Closed Items:&nbsp;</span><input type="checkbox" value="" id="checkBoxShowClosed" onchange="showClosed(); return false;" /></div>
     <table id="jqGrid"></table>
     <div id="jqGridPager"></div>
 </div>
 
 <script>
+    var showClosed = false;
+
     var selectedProjectId = @selectedId; // selectedProjectId = $("#ddlProjects").val();
 
     if (selectedProjectId == "") {
@@ -95,16 +98,15 @@
             url: "@Url.Action( "GetBugs","Bugs")" + "?projectId=" + selectedProjectId,
             datatype: "json",
             mtype: 'GET',
-            colNames: ['Bug Id', 'Name', 'Description', 'Project', 'Category', 'Priority', 'Status', 'Assigned To'],
+            colNames: ['Bug Id', 'Name', 'Project', 'Category', 'Priority', 'Status', 'Assigned To'],
             colModel: [
-                        { name: 'Id', index: 'Id', key: true, align: 'left', width: 60 },
-                        { name: 'edit', index: 'edit', width: 90, formatter: addLink },
-                        { name: 'Description', index: 'Description', align: 'left', width: 200 },
-                        { name: 'Project', index: 'Project', align: 'left', width: 60 },
-                        { name: 'Category', index: 'Category', align: 'left', width: 60 },
-                        { name: 'Priority', index: 'Priority', align: 'left', width: 60 },
-                        { name: 'Status', index: 'Status', align: 'left', width: 50 },
-                        { name: 'AssignedTo', index: 'AssignedTo', align: 'left', width: 100 }],
+                        { name: 'Id', index: 'Id', key: true, align: 'center', width: 25 },
+                        { name: 'edit', index: 'edit', width: 160, formatter: addLink },
+                        { name: 'Project', index: 'Project', align: 'left', width: 40 },
+                        { name: 'Category', index: 'Category', align: 'left', width: 40 },
+                        { name: 'Priority', index: 'Priority', align: 'left', width: 40 },
+                        { name: 'Status', index: 'Status', align: 'left', width: 40 },
+                        { name: 'AssignedTo', index: 'AssignedTo', align: 'left', width: 40 }],
             viewrecords: true,
             autowidth: true,
             shrinkToFit: true,
