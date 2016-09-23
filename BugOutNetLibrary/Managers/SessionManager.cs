@@ -46,5 +46,24 @@ namespace BugOutNetLibrary.Managers
             }
         }
 
+        /// <summary>
+        /// Gets or sets the show closed iems.
+        /// </summary>
+        /// <value>
+        /// The show closed iems.
+        /// </value>
+        public static bool? ShowClosedIems
+        {
+            get
+            {
+                return (bool?)HttpContext.Current.Session["ShowClosedIems"];
+            }
+            set
+            {
+                HttpContext.Current.Session["ShowClosedIems"] = value;
+            }
+        }
+
+
     }
 }

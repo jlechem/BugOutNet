@@ -36,12 +36,16 @@ namespace BugOutNet.Controllers
         [UserActionFilter]
         public ActionResult GetBugs( int projectId, bool? showClosed, string sidx, string sord, int page, int rows )
         {
+            // set session variables
             SessionManager.SelectedProjectId = projectId;
+            SessionManager.ShowClosedIems = showClosed;
 
+            // set the sort order and page indexes
             sord = ( sord == null ) ? "" : sord;
             int pageIndex = Convert.ToInt32( page ) - 1;
             int pageSize = rows;
 
+            // get all projects
             var tempBugs = _db.Bugs.Where( x => x.Id > 0 );
 
             // 0 means all projects
@@ -50,6 +54,7 @@ namespace BugOutNet.Controllers
                 tempBugs = tempBugs.Where( bug => bug.ProjectId == projectId );
             }
 
+            // handle showing closed items or not
             if( !showClosed.HasValue)
             {
                 tempBugs = tempBugs.Where( bug => bug.Status.Name != "Closed" );
@@ -59,6 +64,7 @@ namespace BugOutNet.Controllers
                 tempBugs = tempBugs.Where( bug => bug.Status.Name != "Closed" );
             }
 
+            // giant join to get all the names
             var bugs = from bug in tempBugs
                        join project in _db.Projects on bug.ProjectId equals project.Id
                        join category in _db.Categories on bug.CategoryId equals category.Id
@@ -77,9 +83,11 @@ namespace BugOutNet.Controllers
                            LastUpdatedOn = bug.LatUpdated
                        };
 
+            // handle totals
             int totalRecords = bugs.Count();
             var totalPages = (int)Math.Ceiling( (float)totalRecords / (float)rows );
 
+            // giant clusterfuck of sorting columns
             if( sord.ToUpper( CultureInfo.InvariantCulture ) == "DESC" )
             {
                 switch( sidx.ToUpper( CultureInfo.InvariantCulture ) )
