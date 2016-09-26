@@ -15,32 +15,24 @@
 </div>
 <hr />
 <div style="clear: both;">
-    <div><span>Show Closed Items:&nbsp;</span><input type="checkbox" value="true" id="checkBoxShowClosed" onchange="showClosed(this); return false;" /></div>
+    <div>
+    <span>Show Closed Items:&nbsp;</span>
+        <input type="checkbox" checked="@SessionManager.ShowClosedIems" id="checkBoxShowClosed" onchange="showClosed(this); return false;" />
     <table id="jqGrid"></table>
     <div id="jqGridPager"></div>
 </div>
 
 <script>
-    @{ 
-        if( SessionManager.ShowClosedIems.HasValue)
-        {
-            var isShowClosed = SessionManager.ShowClosedIems.Value;
+    var isShowClosed = false;
 
-        }
-        else
-        {
-            var isShowClosed = false;
-        }
-    }
-       
-    var selectedProjectId = @selectedId; // selectedProjectId = $("#ddlProjects").val();
+    var selectedProjectId = @selectedId;
 
     if (selectedProjectId == "") {
         selectedProjectId = 0;
     };
 
     function showClosed(e){
-        var url = "@Url.Action( "GetBugs","Bugs")" + "?projectId=" + selectedProjectId + "&showClosed=" + e.checked;
+        var url = "@Url.Action( "GetBugs","Bugs")" + "?projectId=" + selectedProjectId + "&showClosed=" + $("#checkBoxShowClosed").is(':checked');
         $("#jqGrid").jqGrid('setGridParam', { url: url });
         $("#jqGrid").trigger("reloadGrid");
     }
@@ -52,7 +44,7 @@
             selectedProjectId = 0;
         }
 
-        var url = "@Url.Action( "GetBugs","Bugs")" + "?projectId=" + selectedProjectId;
+        var url = "@Url.Action( "GetBugs","Bugs")" + "?projectId=" + selectedProjectId + "&showClosed=" + $("#checkBoxShowClosed").is(':checked');
         $("#jqGrid").jqGrid('setGridParam', { url: url });
         $("#jqGrid").trigger("reloadGrid");
     }
@@ -111,7 +103,7 @@
         }
 
         jQuery("#jqGrid").jqGrid({
-            url: "@Url.Action( "GetBugs","Bugs")" + "?projectId=" + selectedProjectId,
+            url: "@Url.Action( "GetBugs","Bugs")" + "?projectId=" + selectedProjectId + "&showClosed=" + $("#checkBoxShowClosed").attr("checked"),
             datatype: "json",
             mtype: 'GET',
             colNames: ['Bug Id', 'Name', 'Project', 'Category', 'Priority', 'Status', 'Assigned To'],
