@@ -17,7 +17,20 @@
 <div style="clear: both;">
     <div>
         <span>Show Closed Items:&nbsp;</span>
-            <input type="checkbox" checked="@SessionManager.ShowClosedIems" id="checkBoxShowClosed" onchange="showClosed(this); return false;" />
+        @{
+            if( SessionManager.ShowClosedIems == null )
+            {
+                <input type="checkbox" checked="" id="checkBoxShowClosed" onchange="showClosed(this); return false;" />
+            }
+            else if( SessionManager.ShowClosedIems.HasValue && SessionManager.ShowClosedIems.Value )
+            {
+                <input type="checkbox" checked="checked" id="checkBoxShowClosed" onchange="showClosed(this); return false;" />
+            }
+            else
+            {
+                <input type="checkbox" checked="" id="checkBoxShowClosed" onchange="showClosed(this); return false;" />
+            }
+        }
         <table id="jqGrid"></table>
         <div id="jqGridPager"></div>
     </div>
