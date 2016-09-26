@@ -21,8 +21,18 @@
 </div>
 
 <script>
-    var isShowClosed = false;
+    @{ 
+        if( SessionManager.ShowClosedIems.HasValue)
+        {
+            var isShowClosed = SessionManager.ShowClosedIems.Value;
 
+        }
+        else
+        {
+            var isShowClosed = false;
+        }
+    }
+       
     var selectedProjectId = @selectedId; // selectedProjectId = $("#ddlProjects").val();
 
     if (selectedProjectId == "") {
