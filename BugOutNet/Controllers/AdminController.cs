@@ -17,18 +17,17 @@ using System.Web.Mvc;
 
 namespace BugOutNet.Controllers
 {
+    [AdminActionFilter]
     public class AdminController : Controller
     {
         private Entities _db = new Entities();
 
         // GET: Admin
-        [AdminActionFilter]
         public ActionResult Index()
         {
             return View();
         }
 
-        [AdminActionFilter]
         public ActionResult GetErrors( string sidx, string sord, int page, int rows )
         {
             sord = ( sord == null ) ? "" : sord;
@@ -121,7 +120,6 @@ namespace BugOutNet.Controllers
         /// <param name="userName">Name of the user.</param>
         /// <param name="password">The password.</param>
         /// <returns></returns>
-        [AdminActionFilter]
         public ActionResult CreateUser( string textUsername, string textPassword, bool cbRemember = false )
         {
             return View();
@@ -132,7 +130,6 @@ namespace BugOutNet.Controllers
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        [AdminActionFilter]
         public ActionResult GetMenuData(string name)
         {
             string viewName = String.Empty;
@@ -181,7 +178,6 @@ namespace BugOutNet.Controllers
         }
 
         [HttpPost]
-        [AdminActionFilter]
         public ActionResult EditSettings( SiteSettingsViewModel model)
         {
             HttpStatusCodeResult result = new HttpStatusCodeResult( HttpStatusCode.OK );
@@ -253,7 +249,6 @@ namespace BugOutNet.Controllers
         /// <summary>
         /// Creates the admin account.
         /// </summary>
-        [AdminActionFilter]
         public void CreateAdminAccount()
         {
             using( var db = new Entities() )

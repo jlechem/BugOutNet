@@ -6,41 +6,19 @@
         <img src="~/Content/images/loading.gif" />
     </div>
     <ul class="nav nav-tabs">
-        <li class="tab-pane active"><a data-toggle="tab" class="toggle-loading" href="#content">Projects</a></li>
-        <li class="tab-pane"><a data-toggle="tab" class="toggle-loading" href="#content">Categories</a></li>
-        <li class="tab-pane"><a data-toggle="tab" class="toggle-loading" href="#content">Statuses</a></li>
-        <li class="tab-pane"><a data-toggle="tab" class="toggle-loading" href="#content">Priorities</a></li>
-        <li class="tab-pane"><a data-toggle="tab" class="toggle-loading" href="#content">Users</a></li>
-        <li class="tab-pane"><a data-toggle="tab" class="toggle-loading" href="#content">Settings</a></li>
-        @* Get a controller action to return the view we want to load in the content div, we don't want to load all the content at once. *@
+        <li class="tab-pane active"><a data-toggle="tab" class="toggle-loading" href="#projects">Projects</a></li>
+        <li class="tab-pane"><a data-toggle="tab" class="toggle-loading" href="#categories">Categories</a></li>
+        <li class="tab-pane"><a data-toggle="tab" class="toggle-loading" href="#statuses">Statuses</a></li>
+        <li class="tab-pane"><a data-toggle="tab" class="toggle-loading" href="#priorities">Priorities</a></li>
+        <li class="tab-pane"><a data-toggle="tab" class="toggle-loading" href="#users">Users</a></li>
+        <li class="tab-pane"><a data-toggle="tab" class="toggle-loading" href="#settings">Settings</a></li>
     </ul>
     <div class="tab-content" id="divContent">
-        <div class="tab-pane fade active in" id="content">@Html.Partial("_Projects")</div>
+        <div class="tab-pane fade active in" id="projects">@Html.Partial("_Projects")</div>
+        <div class="tab-pane fade in" id="categories">@Html.Partial( "_Categories" )</div>
+        <div class="tab-pane fade in" id="statuses">@Html.Partial( "_Statuses" )</div>
+        <div class="tab-pane fade in" id="priorities">@Html.Partial( "_Priorities" )</div>
+        <div class="tab-pane fade in" id="users">@Html.Partial( "_Users" )</div>
+        <div class="tab-pane fade in" id="settings">@Html.Partial( "_Settings" )</div>
     </div>
 </div>
-<script>
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        $("#content").html("");       // clear the existing div of content
-        var target = e.target.innerHTML;    // activated tab header
-        
-        // do an ajax call to get the Partial view contents
-         $.ajax({
-             type: 'GET',
-             url: '@Url.Action( "GetMenuData", "Admin" )',
-             data: {
-                 name: target
-             },
-             beforeSend: function () {
-                 $("#divLoader").show();
-                 $("#divContent").hide();
-             },
-             success: function (result) {
-                 $('#content').html(result);
-             },
-             complete: function () {
-                 $("#divLoader").hide();
-                 $("#divContent").show();
-             }
-         });
-    });
-</script>

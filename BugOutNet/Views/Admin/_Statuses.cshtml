@@ -2,10 +2,7 @@
     ViewBag.Title = "BugOutNet - Statuses";
 }
 
-<div class="container" style="height: 500px;">
-    <div style="padding-bottom: 10px; padding-top: 10px;">
-        <button type="button" id="buttonNew" class="btn btn-primary btn-sm" style="background-color: black;" onclick="newButtonClick(); return false;">Add New Status</button>
-    </div>
+<div class="container" style="height: 500px; margin-top: 5px;">
     <table id="statusGrid"></table>
     <div id="statusGridPager"></div>
 </div>
@@ -24,12 +21,12 @@
                          { name: 'Name', index: 'Name', width: 80, align: 'left', editable: true, editrules: { required: true } },
                          { name: 'Description', index: 'Description', width: 250, align: 'left', editable: true, edittype: "textarea", editoptions: { cols: 30, rows: 10 }, editrules: { required: true } },
                          { name: 'Created', index: 'Created', width: 50, align: 'left', editrules: { edithidden: true }, formatter: "date", formatoptions: { newformat: "m/d/Y" } }],
+            id: 'gridStatuses',
             pager: "#statusGridPager",
             viewrecords: true,
-            autowidth: true,
             multiselect: false,
-            height: '100%',
-            width: '100%',
+            height: '430',
+            width: '1140',
             rowNum: 20,
             gridview: true,
             caption: 'Statuses',

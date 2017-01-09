@@ -1,4 +1,4 @@
-﻿<div style="padding-bottom: 10px; padding-top: 10px;">
+﻿<div style="padding-bottom: 10px; margin-top: 5px;">
     <button type="button" id="buttonNew" class="btn btn-primary btn-sm" style="background-color: black;" onclick="addNewUser(); return false;">Add New User</button>
 </div>
 <table id="usersGrid"></table>
@@ -42,12 +42,12 @@
                          { name: 'Name', index: 'Name', width: 100, align: 'left', editable: true, editrules: { required: true } },
                          { name: 'EmailAddress', index: 'EmailAddress', width: 100, align: 'left', editable: true, edittype: "textarea", editoptions: { cols: 30, rows: 10 }, editrules: { required: true } },
                          { name: 'Created', index: 'Created', width: 40, align: 'left', editrules: { edithidden: true }, formatter: "date", formatoptions: { newformat: "m/d/Y" } }],
+            id: 'gridUsers',
             pager: "#usersGridPager",
             viewrecords: true,
-            autowidth: true,
             multiselect: false,
-            height: '100%',
-            width: '100%',
+            height: '430',
+            width: '1140',
             rowNum: 20,
             caption: 'Users',
             emptyrecords: 'No Users',
